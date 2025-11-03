@@ -1,28 +1,207 @@
-:root { --pink:#d6336c; --bg1:#ffe6eb; --bg2:#fff0f5; --bg3:#ffecec; }
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;500&display=swap");
 
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body,#root{height:100%;}
-body{font-family:'Poppins',sans-serif;}
-
-.page {
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
-  color:#333;
-  overflow:hidden;
-  position:relative;
+:root {
+  --pink: #d6336c;
+  --bg1: #ffe6eb;
+  --bg2: #fff0f5;
+  --bg3: #ffecec;
 }
-h1 { font-family: 'Playfair Display', serif; font-size:3rem; color:var(--pink); margin-bottom:10px; animation:fadeInDown 1s; }
-p { font-size:1.2rem; color:#555; margin-bottom:40px; animation:fadeIn 1.5s; }
-#countdown { font-size:2rem; color:var(--pink); text-shadow:0 0 15px rgba(255,102,153,0.3); animation:fadeIn 1.5s, glow 2s infinite alternate; }
-footer { position: absolute; bottom:20px; font-size:0.9rem; color:#888; }
 
-.sparkle { position:absolute; width:6px; height:6px; background:#ff99c8; border-radius:50%; animation:sparkle 5s infinite ease-in-out; }
-@keyframes sparkle { 0% {transform:translateY(0) scale(1); opacity:0.8;} 50%{transform:translateY(-50px) scale(1.3); opacity:0.4;} 100%{transform:translateY(0) scale(1); opacity:0.8;} }
-@keyframes fadeIn { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
-@keyframes fadeInDown { from {opacity:0; transform:translateY(-20px);} to {opacity:1; transform:translateY(0);} }
-@keyframes glow { from { text-shadow: 0 0 10px #ffb3c6, 0 0 20px #ffb3c6;} to { text-shadow:0 0 20px #ff5d8f, 0 0 30px #ff5d8f;} }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* Prevent any native overscroll/scrollbars and avoid 100vw issues */
+html, body {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;                /* remove scrollbars */
+  overscroll-behavior: none;       /* prevent bounce on mobile */
+  -webkit-overflow-scrolling: auto;
+  background-color: var(--bg1);
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Make the page fill viewport exactly without causing overflow.
+   position: fixed + inset:0 avoids subpixel white borders and scrollbars. */
+.page {
+  /* kept layout & visuals unchanged */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+  color: #333;
+
+  /* layout fixes */
+  position: fixed; /* fills viewport and prevents page scrolling */
+  inset: 0;        /* top:0; right:0; bottom:0; left:0; */
+  overflow: hidden; /* keep internal overflow off */
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  color: var(--pink);
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  animation: fadeInDown 1s ease;
+}
+
+p {
+  font-size: 1.2rem;
+  margin-bottom: 40px;
+  color: #555;
+  animation: fadeIn 1.5s ease;
+}
+
+#countdown {
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--pink);
+  text-shadow: 0 0 15px rgba(255, 102, 153, 0.3);
+  animation: fadeIn 1.5s ease, glow 2s infinite alternate;
+}
+
+footer {
+  position: absolute;
+  bottom: 20px;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #ff99c8;
+  border-radius: 50%;
+  animation: sparkle 5s infinite ease-in-out;
+}
+
+@keyframes sparkle {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-50px) scale(1.3);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 10px #ffb3c6, 0 0 20px #ffb3c6;
+  }
+  to {
+    text-shadow: 0 0 20px #ff5d8f, 0 0 30px #ff5d8f;
+  }
+}
+
+/* ✅ Responsive design (same as your HTML) */
+@media (max-width: 1024px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+  p {
+    font-size: 1.1rem;
+  }
+  #countdown {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  p {
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+  #countdown {
+    font-size: 1.6rem;
+  }
+  footer {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 20px;
+  }
+  h1 {
+    font-size: 1.7rem;
+    margin-bottom: 8px;
+  }
+  p {
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+  }
+  #countdown {
+    font-size: 1.4rem;
+  }
+  footer {
+    font-size: 0.75rem;
+    bottom: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  p {
+    font-size: 0.9rem;
+  }
+  #countdown {
+    font-size: 1.2rem;
+  }
+  footer {
+    font-size: 0.7rem;
+  }
+}

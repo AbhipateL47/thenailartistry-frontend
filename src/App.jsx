@@ -4,29 +4,36 @@ import "./index.css";
 export default function App() {
   const [countdown, setCountdown] = useState("");
 
+  // Countdown Timer
   useEffect(() => {
-    const target = new Date("Jan 1, 2026 00:00:00").getTime();
+    const targetDate = new Date("Jan 1, 2026 00:00:00").getTime();
+
     const tick = () => {
       const now = Date.now();
-      const diff = target - now;
-      if (diff < 0) {
+      const distance = targetDate - now;
+
+      if (distance < 0) {
         setCountdown("🎆 Happy New Year 2026!");
         return;
       }
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
       setCountdown(`${days}d ${hours}h ${minutes}m ${seconds}s`);
     };
 
     tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
   }, []);
 
+  // Sparkle Effect
   useEffect(() => {
     const sparkleCount = Math.floor(Math.random() * 6) + 20;
+
     for (let i = 0; i < sparkleCount; i++) {
       const sparkle = document.createElement("div");
       sparkle.className = "sparkle";
@@ -38,8 +45,9 @@ export default function App() {
       sparkle.style.animationDelay = `${delay}s`;
       document.body.appendChild(sparkle);
     }
+
     return () => {
-      document.querySelectorAll(".sparkle").forEach(n => n.remove());
+      document.querySelectorAll(".sparkle").forEach(s => s.remove());
     };
   }, []);
 
