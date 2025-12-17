@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Nail Artistry | Coming Soon</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      width: 100%;
+      background: linear-gradient(135deg, #ffe6eb, #fff0f5, #ffecec);
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #333;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      color: #d6336c;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      animation: fadeInDown 1s ease;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 40px;
+      color: #555;
+      animation: fadeIn 1.5s ease;
+    }
+
+    #countdown {
+      font-size: 2rem;
+      font-weight: 500;
+      color: #d6336c;
+      text-shadow: 0 0 15px rgba(255, 102, 153, 0.3);
+      animation: fadeIn 1.5s ease, glow 2s infinite alternate;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #ff99c8;
+      border-radius: 50%;
+      animation: sparkle 5s infinite ease-in-out;
+    }
+
+    @keyframes sparkle {
+      0% { transform: translateY(0) scale(1); opacity: 0.8; }
+      50% { transform: translateY(-50px) scale(1.3); opacity: 0.4; }
+      100% { transform: translateY(0) scale(1); opacity: 0.8; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #ffb3c6, 0 0 20px #ffb3c6; }
+      to { text-shadow: 0 0 20px #ff5d8f, 0 0 30px #ff5d8f; }
+    }
+
+    footer {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    @media (max-width: 1024px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      p {
+        font-size: 1.1rem;
+      }
+      #countdown {
+        font-size: 1.8rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      p {
+        font-size: 1rem;
+        margin-bottom: 30px;
+      }
+      #countdown {
+        font-size: 1.6rem;
+      }
+      footer {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 1.7rem;
+        margin-bottom: 8px;
+      }
+      p {
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+      }
+      #countdown {
+        font-size: 1.4rem;
+      }
+      footer {
+        font-size: 0.75rem;
+        bottom: 10px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+      p {
+        font-size: 0.9rem;
+      }
+      #countdown {
+        font-size: 1.2rem;
+      }
+      footer {
+        font-size: 0.7rem;
+      }
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <h1>✨ The Nail Artistry ✨</h1>
+  <p>Our beautiful website is getting ready. Stay tuned for the grand reveal!</p>
+
+  <h2 id="countdown"></h2>
+
+  <footer>© 2025 The Nail Artistry. All Rights Reserved.</footer>
+
+    <script>
+    function updateCountdown() {
+      const targetDate = new Date("Jan 1, 2026 00:00:00").getTime();
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        document.getElementById("countdown").innerHTML = "🎆 Happy New Year 2026!";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("countdown").innerHTML =
+        `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+
+    const sparkleCount = Math.floor(Math.random() * 6) + 20;
+    for (let i = 0; i < sparkleCount; i++) {
+      const sparkle = document.createElement("div");
+      sparkle.classList.add("sparkle");
+
+      const top = Math.random() * 100; 
+      const left = Math.random() * 100;
+      const delay = Math.random() * 5;
+
+      sparkle.style.top = `${top}%`;
+      sparkle.style.left = `${left}%`;
+      sparkle.style.animationDelay = `${delay}s`;
+
+      document.body.appendChild(sparkle);
+    }
+  </script>
+
+</body>
+</html>
