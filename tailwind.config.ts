@@ -13,6 +13,55 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        // OPTION 6: Jost + Jost (Currently Active)
+        'heading': ['Jost', 'sans-serif'],
+        'body': ['Jost', 'sans-serif'],
+        'elegant': ['Jost', 'sans-serif'],
+        'sans': ['Jost', 'sans-serif'],
+        
+        // OPTION 1: Playfair Display + Montserrat (commented out)
+        // 'heading': ['Playfair Display', 'serif'],
+        // 'body': ['Montserrat', 'sans-serif'],
+        // 'elegant': ['Playfair Display', 'serif'],
+        // 'sans': ['Montserrat', 'sans-serif'],
+        
+        // OPTION 2: Raleway + Lato (commented out)
+        // 'heading': ['Raleway', 'sans-serif'],
+        // 'body': ['Lato', 'sans-serif'],
+        // 'elegant': ['Raleway', 'sans-serif'],
+        // 'sans': ['Lato', 'sans-serif'],
+        
+        // OPTION 3: Playfair Display + Inter (commented out)
+        // 'heading': ['Playfair Display', 'serif'],
+        // 'body': ['Inter', 'sans-serif'],
+        // 'elegant': ['Playfair Display', 'serif'],
+        // 'sans': ['Inter', 'sans-serif'],
+        
+        // OPTION 4: Cormorant Garamond + Poppins (commented out)
+        // 'heading': ['Cormorant Garamond', 'serif'],
+        // 'body': ['Poppins', 'sans-serif'],
+        // 'elegant': ['Cormorant Garamond', 'serif'],
+        // 'sans': ['Poppins', 'sans-serif'],
+        
+        // OPTION 5: Satoshi + Satoshi (Self-hosted - commented out)
+        // 'heading': ['Satoshi', 'sans-serif'],
+        // 'body': ['Satoshi', 'sans-serif'],
+        // 'elegant': ['Satoshi', 'sans-serif'],
+        // 'sans': ['Satoshi', 'sans-serif'],
+        
+        // OPTION 7: Playfair Display + Poppins
+        // 'heading': ['Playfair Display', 'serif'],
+        // 'body': ['Poppins', 'sans-serif'],
+        // 'elegant': ['Playfair Display', 'serif'],
+        // 'sans': ['Poppins', 'sans-serif'],
+        
+        // OPTION 8: Playfair Display + Inter
+        // 'heading': ['Playfair Display', 'serif'],
+        // 'body': ['Inter', 'sans-serif'],
+        // 'elegant': ['Playfair Display', 'serif'],
+        // 'sans': ['Inter', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
