@@ -1,78 +1,285 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ProfileInfo } from '@/components/profile/ProfileInfo';
-import { Orders } from '@/components/profile/Orders';
-import { Addresses } from '@/components/profile/Addresses';
-import { Notifications } from '@/components/profile/Notifications';
-import { Settings } from '@/components/profile/Settings';
-import { User, Package, MapPin, Bell, Settings as SettingsIcon } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import { 
+  User, Package, MapPin, Bell, Settings as SettingsIcon, LogOut, 
+  ChevronRight, Shield, Camera, Loader2, Trash2
+} from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import { uploadService } from '@/services/uploadService';
+import { Breadcrumbs } from '@/components/common/Breadcrumbs';
+import toast from 'react-hot-toast';
+import { usePageTitle } from '@/hooks/usePageTitle';
+
+// Import tab components
+import { ProfileOverview } from '@/components/profile/ProfileOverview';
+import { ProfileOrders } from '@/components/profile/ProfileOrders';
+import { ProfileAddresses } from '@/components/profile/ProfileAddresses';
+import { ProfileNotifications } from '@/components/profile/ProfileNotifications';
+import { ProfileSettings } from '@/components/profile/ProfileSettings';
+
+type TabType = 'overview' | 'orders' | 'addresses' | 'notifications' | 'settings';
+
+const validTabs: TabType[] = ['overview', 'orders', 'addresses', 'notifications', 'settings'];
 
 const Profile = () => {
-  return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">My Account</h1>
-        
-        <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 h-auto gap-2 bg-transparent">
-            <TabsTrigger 
-              value="profile" 
-              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
-              <User className="w-4 h-4" />
-              <span className="hidden sm:inline">Profile</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="orders"
-              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
-              <Package className="w-4 h-4" />
-              <span className="hidden sm:inline">Orders</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="addresses"
-              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
-              <MapPin className="w-4 h-4" />
-              <span className="hidden sm:inline">Addresses</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="notifications"
-              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
-              <Bell className="w-4 h-4" />
-              <span className="hidden sm:inline">Notifications</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="settings"
-              className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
-              <SettingsIcon className="w-4 h-4" />
-              <span className="hidden sm:inline">Settings</span>
-            </TabsTrigger>
-          </TabsList>
+  const navigate = useNavigate();
+  const { tab } = useParams<{ tab?: string }>();
+  const { user, isLoading, isAuthenticated, logout, refreshUser } = useAuth();
+  
+  // Get active tab from URL or default to 'overview'
+  const activeTab: TabType = tab && validTabs.includes(tab as TabType) ? (tab as TabType) : 'overview';
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-          <div className="mt-8 bg-card rounded-lg border p-6">
-            <TabsContent value="profile" className="mt-0">
-              <ProfileInfo />
-            </TabsContent>
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-            <TabsContent value="orders" className="mt-0">
-              <Orders />
-            </TabsContent>
+    // Validate file type
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      toast.error('Please upload a JPG, PNG, or WebP image');
+      return;
+    }
 
-            <TabsContent value="addresses" className="mt-0">
-              <Addresses />
-            </TabsContent>
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be less than 5MB');
+      return;
+    }
 
-            <TabsContent value="notifications" className="mt-0">
-              <Notifications />
-            </TabsContent>
+    // Show preview immediately
+    const reader = new FileReader();
+    reader.onload = (e) => setPreviewImage(e.target?.result as string);
+    reader.readAsDataURL(file);
 
-            <TabsContent value="settings" className="mt-0">
-              <Settings />
-            </TabsContent>
+    setUploadingImage(true);
+    setUploadProgress(0);
+    try {
+      await uploadService.uploadProfileImage(file, (progress) => {
+        setUploadProgress(progress);
+      });
+      await refreshUser();
+      toast.success('Profile image updated!');
+    } catch (error: any) {
+      setPreviewImage(null); // Reset preview on error
+      toast.error(error.response?.data?.message || 'Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+      setUploadProgress(0);
+      setPreviewImage(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const handleDeleteImage = async () => {
+    if (!user?.profileImage) return;
+    
+    setUploadingImage(true);
+    try {
+      await uploadService.deleteProfileImage();
+      await refreshUser();
+      toast.success('Profile image removed');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to delete image');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate('/login', { state: { from: { pathname: '/profile' } } });
+    }
+  }, [isLoading, isAuthenticated, navigate]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-[#fdf2f8] to-white">
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          <div className="grid md:grid-cols-4 gap-8">
+            <Skeleton className="h-[400px] rounded-2xl" />
+            <div className="md:col-span-3">
+              <Skeleton className="h-[600px] rounded-2xl" />
+            </div>
           </div>
-        </Tabs>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated || !user) {
+    return null;
+  }
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+  const menuItems = [
+    { id: 'overview', label: 'Overview', icon: User, href: '/profile' },
+    { id: 'orders', label: 'My Orders', icon: Package, href: '/profile/orders' },
+    { id: 'addresses', label: 'Addresses', icon: MapPin, href: '/profile/addresses' },
+    { id: 'notifications', label: 'Notifications', icon: Bell, href: '/profile/notifications' },
+    { id: 'settings', label: 'Settings', icon: SettingsIcon, href: '/profile/settings' },
+  ];
+
+  const currentMenuItem = menuItems.find(m => m.id === activeTab);
+  const breadcrumbItems = activeTab === 'overview' 
+    ? [{ label: 'My Account' }]
+    : [{ label: 'My Account', href: '/profile' }, { label: currentMenuItem?.label || '' }];
+
+  // Update page title based on active tab
+  const pageTitle = activeTab === 'overview' 
+    ? 'My Account - Manage Your Profile' 
+    : `${currentMenuItem?.label || 'My Account'} - Account Settings`;
+  usePageTitle(pageTitle);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#fdf2f8] to-white">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <Breadcrumbs items={breadcrumbItems} />
+        <div className="grid md:grid-cols-4 gap-8">
+          {/* Sidebar */}
+          <div className="md:col-span-1">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden sticky top-24">
+              {/* Profile Header */}
+              <div className="bg-gradient-to-r from-[#DD2C6C] to-[#e85a8a] p-6 text-white">
+                <div className="relative w-20 h-20 mx-auto mb-4 group">
+                  {/* Profile Image or Default User Icon */}
+                  {previewImage || user.profileImage ? (
+                    <img
+                      src={previewImage || user.profileImage}
+                      alt={user.name || 'User'}
+                      className="w-20 h-20 rounded-full border-4 border-white/30 bg-white object-cover"
+                    />
+                  ) : (
+                    <div className="w-20 h-20 rounded-full border-4 border-white/30 bg-white/20 flex items-center justify-center">
+                      <User className="w-10 h-10 text-white/80" />
+                    </div>
+                  )}
+                  {/* Progress ring overlay */}
+                  {uploadingImage && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black/50 rounded-full" />
+                      <svg className="w-20 h-20 -rotate-90 relative z-10">
+                        <circle
+                          cx="40"
+                          cy="40"
+                          r="36"
+                          fill="none"
+                          stroke="rgba(255,255,255,0.3)"
+                          strokeWidth="4"
+                        />
+                        <circle
+                          cx="40"
+                          cy="40"
+                          r="36"
+                          fill="none"
+                          stroke="white"
+                          strokeWidth="4"
+                          strokeLinecap="round"
+                          strokeDasharray={`${2 * Math.PI * 36}`}
+                          strokeDashoffset={`${2 * Math.PI * 36 * (1 - uploadProgress / 100)}`}
+                          className="transition-all duration-300"
+                        />
+                      </svg>
+                      <span className="absolute text-sm font-bold text-white z-20">{uploadProgress}%</span>
+                    </div>
+                  )}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  <button 
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploadingImage}
+                    className="absolute bottom-0 right-0 w-7 h-7 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform disabled:opacity-50"
+                  >
+                    {uploadingImage ? (
+                      <Loader2 className="w-3.5 h-3.5 text-[#DD2C6C] animate-spin" />
+                    ) : (
+                      <Camera className="w-3.5 h-3.5 text-[#DD2C6C]" />
+                    )}
+                  </button>
+                  {user.profileImage && !uploadingImage && (
+                    <button 
+                      onClick={handleDeleteImage}
+                      disabled={uploadingImage}
+                      className="absolute top-0 right-0 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform opacity-0 group-hover:opacity-100 disabled:opacity-50"
+                      title="Remove photo"
+                    >
+                      <Trash2 className="w-3 h-3 text-white" />
+                    </button>
+                  )}
+                </div>
+                <h2 className="text-xl font-bold text-center">{user.name || 'User'}</h2>
+                <p className="text-white/80 text-sm text-center mt-1">{user.email}</p>
+                <div className="flex justify-center mt-3">
+                  <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30">
+                    <Shield className="w-3 h-3 mr-1" />
+                    {user.role}
+                  </Badge>
+                </div>
+              </div>
+
+              {/* Navigation Menu */}
+              <nav className="p-3">
+                {menuItems.map((item) => (
+                  <Link
+                    key={item.id}
+                    to={item.href}
+                    className={cn(
+                      'w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all',
+                      activeTab === item.id
+                        ? 'bg-[#DD2C6C]/10 text-[#DD2C6C] font-medium'
+                        : 'text-gray-600 hover:bg-gray-50'
+                    )}
+                  >
+                    <item.icon className="w-5 h-5" />
+                    <span className="flex-1">{item.label}</span>
+                    <ChevronRight className={cn(
+                      'w-4 h-4 transition-transform',
+                      activeTab === item.id && 'rotate-90'
+                    )} />
+                  </Link>
+                ))}
+                
+                <hr className="my-3 border-gray-100" />
+                
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-red-500 hover:bg-red-50 transition-all"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span>Logout</span>
+                </button>
+              </nav>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="md:col-span-3">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+              {activeTab === 'overview' && (
+                <ProfileOverview user={user} onProfileUpdate={refreshUser} />
+              )}
+              {activeTab === 'orders' && <ProfileOrders />}
+              {activeTab === 'addresses' && <ProfileAddresses />}
+              {activeTab === 'notifications' && <ProfileNotifications />}
+              {activeTab === 'settings' && <ProfileSettings />}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Star, Heart, Eye, ShoppingBag } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Product } from '@/services/productService';
+import { Product, productService } from '@/services/productService';
 import { formatCurrency, calculateDiscount } from '@/utils/formatCurrency';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useCart } from '@/contexts/CartContext';
@@ -15,16 +15,26 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) => {
-  const hasDiscount = product.salePrice && product.salePrice < product.price;
-  const discount = hasDiscount ? calculateDiscount(product.price, product.salePrice) : 0;
+  const price = productService.getLowestPrice(product);
+  const mrp = productService.getLowestMrp(product);
+  const hasDiscount = product.isOnSale && product.salePercent && product.salePercent > 0;
+  const discount = hasDiscount ? product.salePercent : (mrp > price ? calculateDiscount(mrp, price) : 0);
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { addItem, openDrawer } = useCart();
-  const isWishlisted = isInWishlist(product.id);
+  const isWishlisted = isInWishlist(product._id);
+  const inStock = productService.isInStock(product);
 
   const handleWishlistClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleWishlist(product);
+    toggleWishlist({
+      _id: product._id,
+      slug: product.slug,
+      name: product.name,
+      primaryImage: product.primaryImage,
+      price: price,
+      mrp: mrp,
+    });
     toast.success(isWishlisted ? 'Removed from wishlist' : 'Added to wishlist');
   };
 
@@ -32,11 +42,12 @@ export const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) =>
     e.preventDefault();
     e.stopPropagation();
     addItem({
-      id: product.id,
-      productId: product.id,
+      id: product._id,
+      productId: product._id,
+      slug: product.slug,
       name: product.name,
-      price: product.salePrice || product.price,
-      image: product.images[0],
+      price: price,
+      image: product.primaryImage,
       quantity: 1,
     });
     toast.success('Item added to bag');
@@ -52,22 +63,17 @@ export const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) =>
   if (viewMode === 'list') {
     return (
       <Link
-        to={`/products/${product.id}`}
-        className="group relative bg-card rounded-lg overflow-hidden border border-border hover:shadow-lg transition-all duration-300 animate-fade-in flex gap-4 p-4"
+        to={`/products/${product.slug}`}
+        className="group relative bg-transparent overflow-hidden transition-all duration-300 animate-fade-in flex gap-4 p-4"
       >
         {/* Image */}
-        <div className="relative w-32 h-32 flex-shrink-0 overflow-hidden bg-muted rounded-md">
+        <div className="relative w-32 h-32 flex-shrink-0 overflow-hidden bg-muted rounded-lg border border-gray-200">
           <img
-            src={product.images[0]}
+            src={product.primaryImage}
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
           />
-          {hasDiscount && (
-            <Badge variant="destructive" className="absolute top-2 left-2 text-xs">
-              -{discount}%
-            </Badge>
-          )}
         </div>
 
         {/* Content */}
@@ -78,14 +84,14 @@ export const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) =>
             </h3>
 
             {/* Rating */}
-            {product.rating && (
+            {product.ratingAvg > 0 && (
               <div className="flex items-center gap-1 mb-2">
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
                       className={`h-3 w-3 ${
-                        i < Math.floor(product.rating!)
+                        i < Math.floor(product.ratingAvg)
                           ? 'fill-yellow-400 text-yellow-400'
                           : 'text-muted-foreground'
                       }`}
@@ -93,7 +99,7 @@ export const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) =>
                   ))}
                 </div>
                 <span className="text-xs text-muted-foreground">
-                  ({product.reviews || 0})
+                  ({product.ratingCount || 0})
                 </span>
               </div>
             )}
@@ -101,11 +107,11 @@ export const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) =>
             {/* Price */}
             <div className="flex items-center gap-2 mb-3">
               <span className="font-bold text-lg">
-                {formatCurrency(product.salePrice || product.price)}
+                {formatCurrency(price)}
               </span>
-              {hasDiscount && (
+              {mrp > price && (
                 <span className="text-sm text-muted-foreground line-through">
-                  {formatCurrency(product.price)}
+                  {formatCurrency(mrp)}
                 </span>
               )}
             </div>
@@ -127,9 +133,10 @@ export const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) =>
             <Button
               onClick={handleAddToCart}
               className="flex-1 h-9 gap-2"
+              disabled={!inStock}
             >
               <ShoppingBag className="h-4 w-4" />
-              Add to Bag
+              {inStock ? 'Add to Bag' : 'Out of Stock'}
             </Button>
           </div>
         </div>
@@ -138,24 +145,16 @@ export const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) =>
   }
 
   return (
-    <div className="group relative bg-card rounded-lg overflow-hidden border border-border hover:shadow-lg transition-all duration-300 animate-fade-in">
-      <Link to={`/products/${product.id}`} className="block">
+    <div className="group relative bg-transparent overflow-hidden transition-all duration-300 animate-fade-in">
+      <Link to={`/products/${product.slug}`} className="block">
         {/* Image */}
-        <div className="relative aspect-square overflow-hidden bg-muted">
+        <div className="relative aspect-square overflow-hidden bg-muted rounded-lg border border-gray-200">
           <img
-            src={product.images[0]}
+            src={product.primaryImage}
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
           />
-          {hasDiscount && (
-            <Badge
-              variant="destructive"
-              className="absolute top-2 left-2 font-semibold"
-            >
-              -{discount}%
-            </Badge>
-          )}
 
           {/* Action Icons - Always visible on mobile, hover on desktop */}
           <div className="absolute top-2 right-2 flex flex-col gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
@@ -183,6 +182,7 @@ export const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) =>
               size="icon"
               onClick={handleAddToCart}
               className="h-8 w-8 rounded-full bg-background/90 backdrop-blur-sm hover:bg-background"
+              disabled={!inStock}
             >
               <ShoppingBag className="h-4 w-4" />
             </Button>
@@ -190,47 +190,39 @@ export const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) =>
         </div>
 
         {/* Content */}
-        <div className="p-4">
-          <h3 className="font-semibold text-sm mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+        <div className="pt-2 px-1">
+          <h3 className="font-medium text-sm truncate group-hover:text-primary transition-colors">
             {product.name}
           </h3>
 
-          {/* Rating */}
-          {product.rating && (
-            <div className="flex items-center gap-1 mb-2">
-              <div className="flex">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-3 w-3 ${
-                      i < Math.floor(product.rating!)
-                        ? 'fill-yellow-400 text-yellow-400'
-                        : 'text-muted-foreground'
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="text-xs text-muted-foreground">
-                ({product.reviews || 0})
+          {/* Price & Rating Row */}
+          <div className="flex items-center justify-between mt-1">
+            {/* Price */}
+            <div className="flex items-center gap-1.5">
+              <span className="font-semibold text-sm">
+                {formatCurrency(price)}
               </span>
+              {mrp > price && (
+                <span className="text-xs text-muted-foreground line-through">
+                  {formatCurrency(mrp)}
+                </span>
+              )}
             </div>
-          )}
 
-          {/* Price */}
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-lg">
-              {formatCurrency(product.salePrice || product.price)}
-            </span>
-            {hasDiscount && (
-              <span className="text-sm text-muted-foreground line-through">
-                {formatCurrency(product.price)}
-              </span>
+            {/* Rating */}
+            {product.ratingAvg > 0 && (
+              <div className="flex items-center gap-0.5">
+                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                <span className="text-xs text-muted-foreground">
+                  {product.ratingAvg.toFixed(1)}
+                </span>
+              </div>
             )}
           </div>
 
           {/* Stock Status */}
-          {!product.inStock && (
-            <p className="text-xs text-destructive mt-2">Out of Stock</p>
+          {!inStock && (
+            <p className="text-xs text-destructive mt-1">Out of Stock</p>
           )}
         </div>
       </Link>

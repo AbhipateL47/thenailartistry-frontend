@@ -73,7 +73,7 @@ export const CartItem = ({ item }: CartItemProps) => {
           className="h-8 w-8 text-gray-600 hover:text-gray-900 hover:bg-gray-100"
           asChild
         >
-          <Link to={`/products/${item.productId}`}>
+          <Link to={`/products/${item.slug}`}>
             <Pencil className="h-4 w-4" />
           </Link>
         </Button>

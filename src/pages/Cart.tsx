@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom';
-import { ChevronRight, ShoppingBag, Minus, Plus, Trash2 } from 'lucide-react';
+import { ShoppingBag, Minus, Plus, Trash2 } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { Separator } from '@/components/ui/separator';
+import { Breadcrumbs } from '@/components/common/Breadcrumbs';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 export default function Cart() {
+  usePageTitle('Shopping Cart - Review Your Items');
   const { items, updateQuantity, removeItem, subtotal } = useCart();
 
   if (items.length === 0) {
@@ -27,25 +30,15 @@ export default function Cart() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-        <Link to="/" className="hover:text-foreground transition-colors">
-          Home
-        </Link>
-        <ChevronRight className="h-4 w-4" />
-        <span className="text-foreground font-medium">Your Shopping Cart</span>
-      </nav>
+      <Breadcrumbs items={[{ label: 'Cart' }]} />
 
       {/* Page Title */}
-      <h1 className="text-3xl font-bold mb-2 text-center">Your Cart</h1>
-      <p className="text-center text-muted-foreground mb-8">
-        Home / Your Shopping Cart
-      </p>
+      <h1 className="text-3xl font-bold mb-8">Your Cart</h1>
 
       {/* Cart Layout */}
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid md:grid-cols-3 gap-8">
         {/* Cart Items */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="md:col-span-2 space-y-6">
           {/* Table Header - Desktop Only */}
           <div className="hidden md:grid grid-cols-12 gap-4 pb-4 border-b text-sm font-medium">
             <div className="col-span-6">Product</div>
@@ -124,7 +117,7 @@ export default function Cart() {
         </div>
 
         {/* Order Summary */}
-        <div className="lg:col-span-1">
+        <div className="md:col-span-1">
           <div className="bg-muted/30 rounded-lg p-6 sticky top-24 space-y-6">
             <h2 className="text-xl font-bold">Subtotal</h2>
             

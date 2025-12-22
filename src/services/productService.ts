@@ -1,175 +1,127 @@
 import apiClient from '@/api/client';
 
+export interface ProductVariant {
+  sku: string;
+  price: number;
+  mrp: number;
+  stock: number;
+  attributes: {
+    length?: string;
+    shape?: string;
+    color?: string;
+  };
+  images?: string[];
+}
+
 export interface Product {
-  id: string;
+  _id: string;
+  title: string;
+  slug: string;
   name: string;
   description: string;
-  price: number;
-  salePrice?: number;
-  images: string[];
-  category: string;
-  inStock: boolean;
-  rating?: number;
-  reviews?: number;
+  shortDescription?: string;
+  tags: string[];
+  variants: ProductVariant[];
+  primaryImage: string;
+  gallery: string[];
+  ratingAvg: number;
+  ratingCount: number;
+  isFeatured: boolean;
+  isOnSale: boolean;
+  salePercent?: number;
+  salesData?: {
+    soldIn24Hours: number;
+    totalStock: number;
+    isLowStock: boolean;
+  };
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  count: number;
+export interface ProductsResponse {
+  success: boolean;
+  data: Product[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
 }
 
-// Dummy products data
-const DUMMY_PRODUCTS: Product[] = [
-  {
-    id: '1',
-    name: 'Glitter Calling Nails',
-    description: 'Stunning glitter press-on nails perfect for any occasion',
-    price: 1499,
-    salePrice: 1199,
-    images: ['https://images.unsplash.com/photo-1604654894610-df63bc536371?w=500&h=500&fit=crop'],
-    category: 'Designer',
-    inStock: true,
-    rating: 4.8,
-    reviews: 124,
-  },
-  {
-    id: '2',
-    name: 'Wedding Elegance Set',
-    description: 'Elegant white and gold nails for your special day',
-    price: 2499,
-    images: ['https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=500&h=500&fit=crop'],
-    category: 'Wedding',
-    inStock: true,
-    rating: 4.9,
-    reviews: 89,
-  },
-  {
-    id: '3',
-    name: 'French Manicure Classic',
-    description: 'Timeless French tip design in premium quality',
-    price: 999,
-    images: ['https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=500&h=500&fit=crop'],
-    category: 'French',
-    inStock: true,
-    rating: 4.7,
-    reviews: 156,
-  },
-  {
-    id: '4',
-    name: 'Party Pink Glam',
-    description: 'Bold pink with rhinestone accents for party nights',
-    price: 1799,
-    salePrice: 1399,
-    images: ['https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=500&h=500&fit=crop'],
-    category: 'Party',
-    inStock: true,
-    rating: 4.6,
-    reviews: 98,
-  },
-  {
-    id: '5',
-    name: 'Ombre Sunset Dreams',
-    description: 'Beautiful gradient from pink to orange',
-    price: 1299,
-    images: ['https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=500&h=500&fit=crop'],
-    category: 'Ombre',
-    inStock: true,
-    rating: 4.8,
-    reviews: 203,
-  },
-  {
-    id: '6',
-    name: 'Casual Nude Naturals',
-    description: 'Subtle and sophisticated for everyday wear',
-    price: 899,
-    images: ['https://images.unsplash.com/photo-1599206676335-193c82b13c9e?w=500&h=500&fit=crop'],
-    category: 'Casual',
-    inStock: true,
-    rating: 4.5,
-    reviews: 142,
-  },
-  {
-    id: '7',
-    name: 'Designer Marble Art',
-    description: 'Unique marble pattern with gold flakes',
-    price: 2199,
-    images: ['https://images.unsplash.com/photo-1610992015877-d4d31c3fbcc2?w=500&h=500&fit=crop'],
-    category: 'Designer',
-    inStock: true,
-    rating: 4.9,
-    reviews: 67,
-  },
-  {
-    id: '8',
-    name: 'Festive Holiday Sparkle',
-    description: 'Red and green glitter for the holiday season',
-    price: 1599,
-    salePrice: 1299,
-    images: ['https://images.unsplash.com/photo-1612830960786-1c6b8d8b5a2f?w=500&h=500&fit=crop'],
-    category: 'Party',
-    inStock: true,
-    rating: 4.7,
-    reviews: 178,
-  },
-];
+export interface ProductResponse {
+  success: boolean;
+  data: Product;
+}
+
+export interface ProductFilters {
+  category?: string;
+  search?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  length?: string;
+  shape?: string;
+  sort?: 'price_asc' | 'price_desc' | 'newest' | 'rating' | 'popular';
+  featured?: boolean;
+  onSale?: boolean;
+  page?: number;
+  limit?: number;
+}
 
 export const productService = {
-  async getProducts(params?: {
-    category?: string;
-    search?: string;
-    minPrice?: number;
-    maxPrice?: number;
-    page?: number;
-    limit?: number;
-  }) {
-    // Simulate API call with dummy data
-    return new Promise<{ products: Product[]; total: number }>((resolve) => {
-      setTimeout(() => {
-        let filteredProducts = [...DUMMY_PRODUCTS];
-        
-        // Filter by category
-        if (params?.category) {
-          filteredProducts = filteredProducts.filter(p => 
-            p.category.toLowerCase() === params.category?.toLowerCase()
-          );
-        }
-        
-        // Filter by price range
-        if (params?.minPrice !== undefined && params?.maxPrice !== undefined) {
-          filteredProducts = filteredProducts.filter(p => 
-            p.price >= params.minPrice! && p.price <= params.maxPrice!
-          );
-        }
-        
-        // Pagination
-        const page = params?.page || 1;
-        const limit = params?.limit || 12;
-        const startIndex = (page - 1) * limit;
-        const endIndex = startIndex + limit;
-        const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
-        
-        resolve({
-          products: paginatedProducts,
-          total: filteredProducts.length,
-        });
-      }, 500);
-    });
-  },
+  async getProducts(params?: ProductFilters): Promise<ProductsResponse> {
+    const queryParams = new URLSearchParams();
+    
+    if (params?.category) queryParams.append('category', params.category);
+    if (params?.search) queryParams.append('search', params.search);
+    if (params?.minPrice !== undefined) queryParams.append('minPrice', params.minPrice.toString());
+    if (params?.maxPrice !== undefined) queryParams.append('maxPrice', params.maxPrice.toString());
+    if (params?.length) queryParams.append('length', params.length);
+    if (params?.shape) queryParams.append('shape', params.shape);
+    if (params?.sort) queryParams.append('sort', params.sort);
+    if (params?.featured) queryParams.append('featured', 'true');
+    if (params?.onSale) queryParams.append('onSale', 'true');
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
 
-  async getProduct(id: string) {
-    const response = await apiClient.get<Product>(`/v1/products/${id}`);
+    const response = await apiClient.get<ProductsResponse>(`/v1/products?${queryParams.toString()}`);
     return response.data;
   },
 
-  async getCategories() {
-    const response = await apiClient.get<Category[]>('/v1/categories');
-    return response.data;
+  async getProduct(idOrSlug: string): Promise<Product> {
+    const response = await apiClient.get<ProductResponse>(`/v1/products/${idOrSlug}`);
+    return response.data.data;
   },
 
-  async getFeaturedProducts() {
-    const response = await apiClient.get<Product[]>('/v1/products/featured');
-    return response.data;
+  async getFeaturedProducts(limit?: number): Promise<Product[]> {
+    const response = await apiClient.get<{ success: boolean; data: Product[] }>(
+      `/v1/products/featured${limit ? `?limit=${limit}` : ''}`
+    );
+    return response.data.data;
+  },
+
+  async getSaleProducts(limit?: number): Promise<Product[]> {
+    const response = await apiClient.get<{ success: boolean; data: Product[] }>(
+      `/v1/products/sale${limit ? `?limit=${limit}` : ''}`
+    );
+    return response.data.data;
+  },
+
+  // Helper to get the lowest price from variants
+  getLowestPrice(product: Product): number {
+    if (!product.variants || product.variants.length === 0) return 0;
+    return Math.min(...product.variants.map(v => v.price));
+  },
+
+  // Helper to get the original MRP from variants
+  getLowestMrp(product: Product): number {
+    if (!product.variants || product.variants.length === 0) return 0;
+    return Math.min(...product.variants.map(v => v.mrp));
+  },
+
+  // Helper to check if product is in stock
+  isInStock(product: Product): boolean {
+    if (!product.variants || product.variants.length === 0) return false;
+    return product.variants.some(v => v.stock > 0);
   },
 };

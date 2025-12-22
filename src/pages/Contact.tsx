@@ -4,17 +4,18 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Breadcrumbs } from '@/components/common/Breadcrumbs';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 export default function Contact() {
+  usePageTitle('Contact Us - Get in Touch');
   return (
     <div className="min-h-screen">
       {/* Page header */}
       <div className="bg-secondary border-b">
-        <div className="container mx-auto px-4 py-12 text-center">
-          <h1 className="text-4xl font-bold mb-2">Contact</h1>
-          <p className="text-muted-foreground">
-            <a href="/" className="hover:text-primary">Home</a> / Contact
-          </p>
+        <div className="container mx-auto px-4 py-12">
+          <Breadcrumbs items={[{ label: 'Contact Us' }]} />
+          <h1 className="text-4xl font-bold">Contact Us</h1>
         </div>
       </div>
 

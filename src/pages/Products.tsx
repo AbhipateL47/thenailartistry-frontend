@@ -1,92 +1,114 @@
-import { useState, useEffect, useRef } from 'react';
-import { Filter, X, Grid3x3, List } from 'lucide-react';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Filter, Loader2 } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ProductCard } from '@/components/product/ProductCard';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import { Skeleton } from '@/components/ui/skeleton';
-import { productService } from '@/services/productService';
-import { formatCurrency } from '@/utils/formatCurrency';
-import { cn } from '@/lib/utils';
+import { productService, Product } from '@/services/productService';
+import { ProductFilters } from '@/components/product/listing/ProductFilters';
+import { MobileFilterDrawer } from '@/components/product/listing/MobileFilterDrawer';
+import { ProductGrid } from '@/components/product/listing/ProductGrid';
+import { Breadcrumbs } from '@/components/common/Breadcrumbs';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [priceRange, setPriceRange] = useState([0, 5000]);
-  const [debouncedPriceRange, setDebouncedPriceRange] = useState([0, 5000]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const observerTarget = useRef<HTMLDivElement>(null);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  // Products state
+  const [products, setProducts] = useState<Product[]>([]);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  // Read filters from URL
+  const minPrice = Number(searchParams.get('minPrice')) || 0;
+  const maxPrice = Number(searchParams.get('maxPrice')) || 2000;
+  const priceRange = [minPrice, maxPrice];
   
-  // Get category from URL params
-  const categoryParam = searchParams.get('category');
-  
-  // Debounce price range
+  const selectedCategories = searchParams.get('type')?.split(',').filter(Boolean) || [];
+  const selectedLengths = searchParams.get('length')?.split(',').filter(Boolean) || [];
+  const selectedShapes = searchParams.get('shape')?.split(',').filter(Boolean) || [];
+  const sortBy = searchParams.get('sort') || 'popular';
+
+  // Debounced price range for API calls
+  const [debouncedPriceRange, setDebouncedPriceRange] = useState(priceRange);
+
+  // Debounce price range changes
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedPriceRange(priceRange);
     }, 500);
     return () => clearTimeout(timer);
-  }, [priceRange]);
-  
-  // Set category from URL param
-  useEffect(() => {
-    if (categoryParam) {
-      setSelectedCategories([categoryParam]);
-    }
-  }, [categoryParam]);
+  }, [minPrice, maxPrice]);
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-  } = useInfiniteQuery({
-    queryKey: ['products', debouncedPriceRange, selectedCategories],
-    queryFn: ({ pageParam = 1 }) =>
-      productService.getProducts({
-        page: pageParam,
+  // Create a filter key to detect filter changes
+  const filterKey = `${debouncedPriceRange[0]}-${debouncedPriceRange[1]}-${selectedCategories.join(',')}-${selectedLengths.join(',')}-${selectedShapes.join(',')}-${sortBy}`;
+
+  // Fetch products
+  const fetchProducts = useCallback(async (page: number, append: boolean = false) => {
+    if (append) {
+      setIsLoadingMore(true);
+    } else {
+      setIsLoading(true);
+    }
+
+    try {
+      const response = await productService.getProducts({
+        page,
         limit: 12,
         minPrice: debouncedPriceRange[0],
         maxPrice: debouncedPriceRange[1],
-        category: selectedCategories.length === 1 ? selectedCategories[0] : undefined,
-      }),
-    getNextPageParam: (lastPage, allPages) => {
-      const loadedProducts = allPages.reduce((acc, page) => acc + page.products.length, 0);
-      return loadedProducts < lastPage.total ? allPages.length + 1 : undefined;
-    },
-    initialPageParam: 1,
-  });
-  
-  const handleCategoryToggle = (category: string) => {
-    setSelectedCategories((prev) => {
-      if (prev.includes(category)) {
-        return prev.filter((c) => c !== category);
-      }
-      return [...prev, category];
-    });
-  };
-  
-  const applyFilters = () => {
-    setMobileFiltersOpen(false);
-  };
+        category: selectedCategories.length > 0 ? selectedCategories.join(',') : undefined,
+        length: selectedLengths.length > 0 ? selectedLengths.join(',') : undefined,
+        shape: selectedShapes.length > 0 ? selectedShapes.join(',') : undefined,
+        sort: sortBy as any,
+      });
 
-  // Infinite scroll observer
+      if (append) {
+        setProducts((prev) => [...prev, ...response.data]);
+      } else {
+        setProducts(response.data);
+      }
+
+      setTotalProducts(response.pagination?.total || 0);
+      setCurrentPage(response.pagination?.page || 1);
+      setTotalPages(response.pagination?.pages || 1);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setIsLoading(false);
+      setIsLoadingMore(false);
+    }
+  }, [debouncedPriceRange, selectedCategories, selectedLengths, selectedShapes, sortBy]);
+
+  // Initial fetch and filter change
+  useEffect(() => {
+    setCurrentPage(1);
+    fetchProducts(1, false);
+  }, [filterKey]);
+
+  // Load more products
+  const loadMore = useCallback(() => {
+    if (!isLoadingMore && currentPage < totalPages) {
+      fetchProducts(currentPage + 1, true);
+    }
+  }, [currentPage, totalPages, isLoadingMore, fetchProducts]);
+
+  // Auto load when user reaches the end
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
+        if (entries[0].isIntersecting && currentPage < totalPages && !isLoadingMore && !isLoading) {
+          loadMore();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 1.0 }
     );
 
-    const currentTarget = observerTarget.current;
+    const currentTarget = loadMoreRef.current;
     if (currentTarget) {
       observer.observe(currentTarget);
     }
@@ -96,190 +118,183 @@ export default function Products() {
         observer.unobserve(currentTarget);
       }
     };
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [currentPage, totalPages, isLoadingMore, isLoading, loadMore]);
 
-  const allProducts = data?.pages.flatMap((page) => page.products) ?? [];
-  const totalProducts = data?.pages[0]?.total ?? 0;
+  // Update URL params without page refresh
+  const updateFilters = useCallback((key: string, value: string | null) => {
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      if (value === null || value === '') {
+        newParams.delete(key);
+      } else {
+        newParams.set(key, value);
+      }
+      return newParams;
+    }, { replace: true });
+  }, [setSearchParams]);
 
-  const categories = ['Wedding', 'Party', 'Casual', 'Designer', 'French', 'Ombre'];
-  const lengths = ['Short', 'Medium', 'Long'];
-  const shapes = ['Almond', 'Coffin', 'Square', 'Oval'];
+  // Handle price range change
+  const handlePriceRangeChange = useCallback((range: number[]) => {
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      if (range[0] === 0) {
+        newParams.delete('minPrice');
+      } else {
+        newParams.set('minPrice', range[0].toString());
+      }
+      if (range[1] === 2000) {
+        newParams.delete('maxPrice');
+      } else {
+        newParams.set('maxPrice', range[1].toString());
+      }
+      return newParams;
+    }, { replace: true });
+  }, [setSearchParams]);
+
+  // Handle category toggle
+  const handleCategoryToggle = useCallback((category: string) => {
+    const current = searchParams.get('type')?.split(',').filter(Boolean) || [];
+    const updated = current.includes(category)
+      ? current.filter((c) => c !== category)
+      : [...current, category];
+    updateFilters('type', updated.length > 0 ? updated.join(',') : null);
+  }, [searchParams, updateFilters]);
+
+  // Handle length toggle
+  const handleLengthToggle = useCallback((length: string) => {
+    const current = searchParams.get('length')?.split(',').filter(Boolean) || [];
+    const updated = current.includes(length)
+      ? current.filter((l) => l !== length)
+      : [...current, length];
+    updateFilters('length', updated.length > 0 ? updated.join(',') : null);
+  }, [searchParams, updateFilters]);
+
+  // Handle shape toggle
+  const handleShapeToggle = useCallback((shape: string) => {
+    const current = searchParams.get('shape')?.split(',').filter(Boolean) || [];
+    const updated = current.includes(shape)
+      ? current.filter((s) => s !== shape)
+      : [...current, shape];
+    updateFilters('shape', updated.length > 0 ? updated.join(',') : null);
+  }, [searchParams, updateFilters]);
+
+  // Handle sort change
+  const handleSortChange = useCallback((sort: string) => {
+    updateFilters('sort', sort === 'popular' ? null : sort);
+  }, [updateFilters]);
+
+  // Clear all filters
+  const handleClearFilters = useCallback(() => {
+    setSearchParams({}, { replace: true });
+  }, [setSearchParams]);
+
+  const applyFilters = () => {
+    setMobileFiltersOpen(false);
+  };
+
+  const hasNextPage = currentPage < totalPages;
+
+  // Build breadcrumb based on active filters
+  const getPageTitle = () => {
+    if (selectedCategories.length === 1) return `${selectedCategories[0]} Nails`;
+    if (selectedShapes.length === 1) return `${selectedShapes[0]} Nails`;
+    if (selectedLengths.length === 1) return `${selectedLengths[0]} Nails`;
+    return 'All Products';
+  };
+
+  const breadcrumbItems = selectedCategories.length > 0 || selectedLengths.length > 0 || selectedShapes.length > 0
+    ? [{ label: 'Shop', href: '/products' }, { label: getPageTitle() }]
+    : [{ label: 'Shop' }];
+
+  // Update page title
+  const pageTitle = getPageTitle();
+  if (pageTitle === 'All Products') {
+    usePageTitle('Shop Premium Press - On Nails - 200+ Designs');
+  } else {
+    usePageTitle(`${pageTitle} - Premium Press-On Nails`);
+  }
 
   return (
     <div className="min-h-screen">
       {/* Page header */}
       <div className="bg-secondary border-b">
         <div className="container mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-2">All Products</h1>
+          <Breadcrumbs items={breadcrumbItems} />
+          <h1 className="text-3xl font-bold mb-2">{getPageTitle()}</h1>
           <p className="text-muted-foreground">Browse our complete collection</p>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8">
         <div className="flex gap-8">
-          {/* Sidebar Filters - Desktop */}
-          <aside className="hidden lg:block w-64 flex-shrink-0">
-            <div className="sticky top-24 space-y-6">
-              {/* Price Range */}
-              <div>
-                <h3 className="font-semibold mb-4">Price Range</h3>
-                <Slider
-                  min={0}
-                  max={5000}
-                  step={100}
-                  value={priceRange}
-                  onValueChange={setPriceRange}
-                  className="mb-4"
-                />
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>{formatCurrency(priceRange[0])}</span>
-                  <span>{formatCurrency(priceRange[1])}</span>
-                </div>
-              </div>
-
-              {/* Categories */}
-              <div>
-                <h3 className="font-semibold mb-4">Category</h3>
-                <div className="space-y-3">
-                  {categories.map((category) => (
-                    <div key={category} className="flex items-center gap-2">
-                      <Checkbox 
-                        id={`cat-${category}`}
-                        checked={selectedCategories.includes(category)}
-                        onCheckedChange={() => handleCategoryToggle(category)}
-                      />
-                      <Label htmlFor={`cat-${category}`} className="cursor-pointer">
-                        {category}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Length */}
-              <div>
-                <h3 className="font-semibold mb-4">Length</h3>
-                <div className="space-y-3">
-                  {lengths.map((length) => (
-                    <div key={length} className="flex items-center gap-2">
-                      <Checkbox id={`len-${length}`} />
-                      <Label htmlFor={`len-${length}`} className="cursor-pointer">
-                        {length}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Shape */}
-              <div>
-                <h3 className="font-semibold mb-4">Shape</h3>
-                <div className="space-y-3">
-                  {shapes.map((shape) => (
-                    <div key={shape} className="flex items-center gap-2">
-                      <Checkbox id={`shape-${shape}`} />
-                      <Label htmlFor={`shape-${shape}`} className="cursor-pointer">
-                        {shape}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
+          {/* Sidebar Filters - Tablet & Desktop */}
+          <aside className="hidden md:block w-64 flex-shrink-0">
+            <div className="scrollbar-thin">
+              <ProductFilters
+                priceRange={priceRange}
+                onPriceRangeChange={handlePriceRangeChange}
+                selectedCategories={selectedCategories}
+                onCategoryToggle={handleCategoryToggle}
+                selectedLengths={selectedLengths}
+                onLengthToggle={handleLengthToggle}
+                selectedShapes={selectedShapes}
+                onShapeToggle={handleShapeToggle}
+              />
             </div>
           </aside>
 
           {/* Main Content */}
           <div className="flex-1">
-            {/* Mobile filter button and view toggle */}
-            <div className="lg:hidden mb-6 flex gap-2">
+            {/* Mobile filter button */}
+            <div className="md:hidden mb-6">
               <Button
                 variant="outline"
                 onClick={() => setMobileFiltersOpen(true)}
-                className="flex-1"
+                className="w-full"
               >
                 <Filter className="h-4 w-4 mr-2" />
                 Filters
               </Button>
-              <div className="flex border rounded-lg overflow-hidden">
-                <Button
-                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                  size="icon"
-                  onClick={() => setViewMode('grid')}
-                  className="rounded-none"
-                >
-                  <Grid3x3 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === 'list' ? 'default' : 'ghost'}
-                  size="icon"
-                  onClick={() => setViewMode('list')}
-                  className="rounded-none"
-                >
-                  <List className="h-4 w-4" />
-                </Button>
-              </div>
             </div>
 
-            {/* Products header */}
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-sm text-muted-foreground">
-                {isLoading ? (
-                  'Loading products...'
+            <ProductGrid
+              products={products}
+              isLoading={isLoading}
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
+              totalProducts={totalProducts}
+              showingCount={products.length}
+              sortBy={sortBy}
+              onSortChange={handleSortChange}
+              onClearFilters={handleClearFilters}
+            />
+
+            {/* Load More Section */}
+            {hasNextPage && !isLoading && (
+              <div ref={loadMoreRef} className="mt-10 flex flex-col items-center gap-4">
+                {isLoadingMore ? (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span>Loading more products...</span>
+                  </div>
                 ) : (
-                  `Showing ${allProducts.length} of ${totalProducts} products`
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={loadMore}
+                    className="px-8"
+                  >
+                    Load More
+                  </Button>
                 )}
-              </p>
-              <select className="hidden sm:block border rounded-lg px-3 py-2 text-sm bg-background">
-                <option>Best Selling</option>
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
-                <option>Newest</option>
-              </select>
-            </div>
-
-            {/* Product Grid */}
-            <div className={cn(
-              'gap-6',
-              viewMode === 'grid' 
-                ? 'grid grid-cols-2 lg:grid-cols-3' 
-                : 'flex flex-col space-y-4'
-            )}>
-              {isLoading ? (
-                Array.from({ length: 12 }).map((_, i) => (
-                  <div key={i} className="space-y-4">
-                    <Skeleton className="aspect-square w-full rounded-lg" />
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
-                  </div>
-                ))
-              ) : (
-                allProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} viewMode={viewMode} />
-                ))
-              )}
-            </div>
-
-            {/* Loading more indicator */}
-            {isFetchingNextPage && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="space-y-4">
-                    <Skeleton className="aspect-square w-full rounded-lg" />
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
-                  </div>
-                ))}
               </div>
             )}
 
-            {/* Intersection observer target */}
-            <div ref={observerTarget} className="h-10" />
-
-            {/* Products count footer */}
-            {!isLoading && totalProducts > 0 && (
-              <div className="mt-12 text-center">
+            {/* No more products message */}
+            {!hasNextPage && products.length > 0 && !isLoading && (
+              <div className="mt-10 text-center">
                 <p className="text-sm text-muted-foreground">
-                  Showing {allProducts.length} of {totalProducts} products
+                  You've seen all {totalProducts} products
                 </p>
               </div>
             )}
@@ -288,102 +303,19 @@ export default function Products() {
       </div>
 
       {/* Mobile Filters Drawer */}
-      {mobileFiltersOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden animate-fade-in">
-          <div 
-            className="fixed inset-0 bg-black/50" 
-            onClick={() => setMobileFiltersOpen(false)} 
-          />
-          <div className="fixed inset-y-0 right-0 w-80 max-w-[85vw] bg-background shadow-lg overflow-y-auto animate-slide-in-right">
-            <div className="p-6 space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold">Filters</h2>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setMobileFiltersOpen(false)}
-                >
-                  <X className="h-5 w-5" />
-                </Button>
-              </div>
-
-              {/* Price Range */}
-              <div>
-                <h3 className="font-semibold mb-4">Price Range</h3>
-                <Slider
-                  min={0}
-                  max={5000}
-                  step={100}
-                  value={priceRange}
-                  onValueChange={setPriceRange}
-                  className="mb-4"
-                />
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>{formatCurrency(priceRange[0])}</span>
-                  <span>{formatCurrency(priceRange[1])}</span>
-                </div>
-              </div>
-
-              {/* Categories */}
-              <div>
-                <h3 className="font-semibold mb-4">Category</h3>
-                <div className="space-y-3">
-                  {categories.map((category) => (
-                    <div key={category} className="flex items-center gap-2">
-                      <Checkbox 
-                        id={`mobile-cat-${category}`}
-                        checked={selectedCategories.includes(category)}
-                        onCheckedChange={() => handleCategoryToggle(category)}
-                      />
-                      <Label htmlFor={`mobile-cat-${category}`} className="cursor-pointer">
-                        {category}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Length */}
-              <div>
-                <h3 className="font-semibold mb-4">Length</h3>
-                <div className="space-y-3">
-                  {lengths.map((length) => (
-                    <div key={length} className="flex items-center gap-2">
-                      <Checkbox id={`mobile-len-${length}`} />
-                      <Label htmlFor={`mobile-len-${length}`} className="cursor-pointer">
-                        {length}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Shape */}
-              <div>
-                <h3 className="font-semibold mb-4">Shape</h3>
-                <div className="space-y-3">
-                  {shapes.map((shape) => (
-                    <div key={shape} className="flex items-center gap-2">
-                      <Checkbox id={`mobile-shape-${shape}`} />
-                      <Label htmlFor={`mobile-shape-${shape}`} className="cursor-pointer">
-                        {shape}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Apply button */}
-              <Button 
-                onClick={applyFilters}
-                className="w-full"
-              >
-                Apply Filters
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <MobileFilterDrawer
+        isOpen={mobileFiltersOpen}
+        onClose={() => setMobileFiltersOpen(false)}
+        priceRange={priceRange}
+        onPriceRangeChange={handlePriceRangeChange}
+        selectedCategories={selectedCategories}
+        onCategoryToggle={handleCategoryToggle}
+        selectedLengths={selectedLengths}
+        onLengthToggle={handleLengthToggle}
+        selectedShapes={selectedShapes}
+        onShapeToggle={handleShapeToggle}
+        onApply={applyFilters}
+      />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 export interface CartItem {
   id: string;
   productId: string;
+  slug: string;
   name: string;
   price: number;
   image: string;
@@ -31,6 +32,7 @@ const MOCK_CART_ITEMS: CartItem[] = [
   {
     id: 'cart-1',
     productId: '1',
+    slug: 'holographic-butterfly-presson-nails-set',
     name: 'Holographic Butterfly Presson Nails Set',
     price: 600,
     image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=200&h=200&fit=crop',
@@ -40,6 +42,7 @@ const MOCK_CART_ITEMS: CartItem[] = [
   {
     id: 'cart-2',
     productId: '2',
+    slug: 'shimmering-sunrise-elegance-lightweight-and-long-lasting-press-on-nails',
     name: 'Shimmering Sunrise Elegance Lightweight and Long Lasting Press On Nails',
     price: 700,
     image: 'https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=200&h=200&fit=crop',
@@ -49,6 +52,7 @@ const MOCK_CART_ITEMS: CartItem[] = [
   {
     id: 'cart-3',
     productId: '3',
+    slug: 'french-french-french-nails-set',
     name: 'French French French Nails Set',
     price: 600,
     image: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=200&h=200&fit=crop',

@@ -1,16 +1,17 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Breadcrumbs } from '@/components/common/Breadcrumbs';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 export default function Tutorial() {
+  usePageTitle('Nail Application Tutorial - Step by Step Guide');
   return (
     <div className="min-h-screen">
       {/* Page header */}
       <div className="bg-secondary border-b">
-        <div className="container mx-auto px-4 py-12 text-center">
-          <h1 className="text-4xl font-bold mb-2">Tutorial</h1>
-          <p className="text-muted-foreground">
-            <a href="/" className="hover:text-primary">Home</a> / Tutorial
-          </p>
+        <div className="container mx-auto px-4 py-12">
+          <Breadcrumbs items={[{ label: 'Tutorial' }]} />
+          <h1 className="text-4xl font-bold">Tutorial</h1>
         </div>
       </div>
 
