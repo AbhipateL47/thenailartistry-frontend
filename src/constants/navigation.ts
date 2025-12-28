@@ -30,7 +30,6 @@ export const navLinks: NavLink[] = [
   { href: '/products?category=Sale', label: 'SALE' },
   { href: '/products?category=Designer', label: 'DESIGNER NAILS' },
   { href: '/tutorial', label: 'TUTORIAL' },
-  { href: '/blog', label: 'BLOG' },
   { href: '/contact', label: 'CONTACT US' },
   { href: '/profile', label: 'PROFILE', mobileOnly: true },
   { href: '/wishlist', label: 'WISHLIST', mobileOnly: true },

@@ -52,9 +52,6 @@ export const Footer = () => {
               <Link to="/tutorial" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                 How to Apply
               </Link>
-              <Link to="/blog" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                Nail Trends
-              </Link>
             </nav>
           </div>
 

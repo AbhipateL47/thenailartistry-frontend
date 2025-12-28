@@ -6,7 +6,6 @@ import { productService, Product } from '@/services/productService';
 import { ProductFilters } from '@/components/product/listing/ProductFilters';
 import { MobileFilterDrawer } from '@/components/product/listing/MobileFilterDrawer';
 import { ProductGrid } from '@/components/product/listing/ProductGrid';
-import { Breadcrumbs } from '@/components/common/Breadcrumbs';
 import { usePageTitle } from '@/hooks/usePageTitle';
 
 export default function Products() {
@@ -202,10 +201,6 @@ export default function Products() {
     return 'All Products';
   };
 
-  const breadcrumbItems = selectedCategories.length > 0 || selectedLengths.length > 0 || selectedShapes.length > 0
-    ? [{ label: 'Shop', href: '/products' }, { label: getPageTitle() }]
-    : [{ label: 'Shop' }];
-
   // Update page title
   const pageTitle = getPageTitle();
   if (pageTitle === 'All Products') {
@@ -216,15 +211,6 @@ export default function Products() {
 
   return (
     <div className="min-h-screen">
-      {/* Page header */}
-      <div className="bg-secondary border-b">
-        <div className="container mx-auto px-4 py-8">
-          <Breadcrumbs items={breadcrumbItems} />
-          <h1 className="text-3xl font-bold mb-2">{getPageTitle()}</h1>
-          <p className="text-muted-foreground">Browse our complete collection</p>
-        </div>
-      </div>
-
       <div className="container mx-auto px-4 py-8">
         <div className="flex gap-8">
           {/* Sidebar Filters - Tablet & Desktop */}
