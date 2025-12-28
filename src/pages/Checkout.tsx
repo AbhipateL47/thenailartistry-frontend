@@ -11,7 +11,7 @@ import { Breadcrumbs } from '@/components/common/Breadcrumbs';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { Separator } from '@/components/ui/separator';
 import { Loader2 } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/utils/toast';
 import { useForm, Controller } from 'react-hook-form';
 import { usePageTitle } from '@/hooks/usePageTitle';
 

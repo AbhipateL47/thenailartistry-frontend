@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { Product, productService } from '@/services/productService';
 import { useCart } from '@/contexts/CartContext';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/utils/toast';
 import { cn } from '@/lib/utils';
 
 interface StickyAddToCartBarProps {

@@ -6,15 +6,16 @@ import { Product, productService } from '@/services/productService';
 import { formatCurrency, calculateDiscount } from '@/utils/formatCurrency';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useCart } from '@/contexts/CartContext';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/utils/toast';
 import { cn } from '@/lib/utils';
 
 interface ProductCardProps {
   product: Product;
   viewMode?: 'grid' | 'list';
+  hideStockStatus?: boolean;
 }
 
-export const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) => {
+export const ProductCard = ({ product, viewMode = 'grid', hideStockStatus = false }: ProductCardProps) => {
   const price = productService.getLowestPrice(product);
   const mrp = productService.getLowestMrp(product);
   const hasDiscount = product.isOnSale && product.salePercent && product.salePercent > 0;
@@ -35,7 +36,7 @@ export const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) =>
       price: price,
       mrp: mrp,
     });
-    toast.success(isWishlisted ? 'Removed from wishlist' : 'Added to wishlist');
+    // Toast is handled in WishlistContext
   };
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -221,7 +222,7 @@ export const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) =>
           </div>
 
           {/* Stock Status */}
-          {!inStock && (
+          {!inStock && !hideStockStatus && (
             <p className="text-xs text-destructive mt-1">Out of Stock</p>
           )}
         </div>

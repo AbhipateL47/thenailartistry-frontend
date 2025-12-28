@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/utils/toast';
 
 export interface CartItem {
   id: string;

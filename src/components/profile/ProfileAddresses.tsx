@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { MapPin, Trash2, Edit2, Plus, Home, Building2, Star, Loader2 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { toast } from '@/utils/toast';
 import { cn } from '@/lib/utils';
 
 const addressLabels = [

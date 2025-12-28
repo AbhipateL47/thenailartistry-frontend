@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { uploadService } from '@/services/uploadService';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
-import toast from 'react-hot-toast';
+import { toast } from '@/utils/toast';
 import { usePageTitle } from '@/hooks/usePageTitle';
 
 // Import tab components

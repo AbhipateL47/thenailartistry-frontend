@@ -1,7 +1,6 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster as HotToaster } from "react-hot-toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
+// Initialize custom toast system
+import '@/utils/toast';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
@@ -54,9 +53,6 @@ const App = () => (
         <WishlistProvider>
           <CartProvider>
             <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <HotToaster position="top-center" />
               <BrowserRouter>
                 <ScrollToTop />
                 <AppLayout>

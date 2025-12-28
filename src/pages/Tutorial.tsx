@@ -7,7 +7,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { productService, Product } from '@/services/productService';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { useCart } from '@/contexts/CartContext';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/utils/toast';
 import { cn } from '@/lib/utils';
 
 export default function Tutorial() {

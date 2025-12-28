@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ProductSalesInfo } from './components/ProductSalesInfo';
 import { ProductRating } from './components/ProductRating';
 import { ProductDeliveryTimeline } from './components/ProductDeliveryTimeline';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/utils/toast';
 import { cn } from '@/lib/utils';
 
 interface ProductInfoProps {
@@ -62,7 +62,7 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
       price: price,
       mrp: mrp,
     });
-    toast.success(isWishlisted ? 'Removed from wishlist' : 'Added to wishlist');
+    // Toast is handled in WishlistContext
   };
 
   return (
