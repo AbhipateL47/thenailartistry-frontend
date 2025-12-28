@@ -15,6 +15,12 @@ export const HeaderActions = ({ variant = 'desktop', onCartClick }: HeaderAction
   const { totalItems, openDrawer } = useCart();
   const { wishlist } = useWishlist();
   const { user, isAuthenticated } = useAuth();
+  
+  // Use wishlistCount from user object (lightweight) for header badge
+  // Fallback to wishlist.length for guest users or if count is not available
+  const wishlistCount = isAuthenticated 
+    ? (user?.wishlistCount ?? wishlist.length)
+    : wishlist.length;
 
   const handleCartClick = () => {
     if (onCartClick) {
@@ -87,11 +93,11 @@ export const HeaderActions = ({ variant = 'desktop', onCartClick }: HeaderAction
       >
         <Link to="/wishlist">
           <Heart className="h-5 w-5 text-gray-700" />
-          {wishlist.length > 0 && (
+          {wishlistCount > 0 && (
             <span 
               className="absolute -top-0.5 -right-0.5 bg-[#DD2C6C] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-semibold"
             >
-              {wishlist.length}
+              {wishlistCount}
             </span>
           )}
         </Link>

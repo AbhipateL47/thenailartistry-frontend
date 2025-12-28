@@ -18,7 +18,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Lock, Eye, EyeOff, LogOut, Shield, Loader2, Check, AlertTriangle, Trash2 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { toast } from '@/utils/toast';
 import { cn } from '@/lib/utils';
 
 export const ProfileSettings = () => {

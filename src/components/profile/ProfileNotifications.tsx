@@ -4,7 +4,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Bell, Mail, MessageSquare, Smartphone, Package, Tag, Newspaper } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { toast } from '@/utils/toast';
 import { cn } from '@/lib/utils';
 
 export const ProfileNotifications = () => {

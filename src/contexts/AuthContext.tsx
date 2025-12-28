@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authService, User, LoginCredentials, RegisterCredentials } from '@/services/authService';
-import toast from 'react-hot-toast';
+import { toast } from '@/utils/toast';
 
 interface AuthContextType {
   user: User | null;
@@ -10,6 +10,7 @@ interface AuthContextType {
   register: (credentials: RegisterCredentials) => Promise<boolean>;
   logout: () => void;
   refreshUser: () => Promise<void>;
+  updateWishlistCount: (delta: number) => void; // Update count locally without API call
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -86,6 +87,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Update wishlistCount locally without API call
+  const updateWishlistCount = (delta: number) => {
+    setUser((prevUser) => {
+      if (!prevUser) return prevUser;
+      return {
+        ...prevUser,
+        wishlistCount: Math.max(0, (prevUser.wishlistCount || 0) + delta),
+      };
+    });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -96,6 +108,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         register,
         logout,
         refreshUser,
+        updateWishlistCount,
       }}
     >
       {children}

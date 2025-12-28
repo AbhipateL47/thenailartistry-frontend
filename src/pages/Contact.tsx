@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/utils/toast';
 
 export default function Contact() {
   usePageTitle('Contact Us - Get in Touch');

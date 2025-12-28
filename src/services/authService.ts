@@ -8,6 +8,7 @@ export interface User {
   profileImage?: string;
   role: 'customer' | 'admin' | 'manager';
   addresses?: Address[];
+  wishlistCount?: number;
   isEmailVerified?: boolean;
   createdAt?: string;
 }
