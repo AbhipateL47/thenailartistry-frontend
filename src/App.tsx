@@ -11,6 +11,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/Footer";
 import { CartDrawer } from "@/components/cart/CartDrawer";
+import { ScrollToTop } from "@/components/common/ScrollToTop";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
@@ -57,6 +58,7 @@ const App = () => (
               <Sonner />
               <HotToaster position="top-center" />
               <BrowserRouter>
+                <ScrollToTop />
                 <AppLayout>
                   <Routes>
                     <Route path="/" element={<Home />} />

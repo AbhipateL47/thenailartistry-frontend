@@ -49,23 +49,23 @@ export const featuredProducts: Product[] = [
 export const categories = [
   {
     name: 'Wedding',
-    image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400',
-    href: '/products?category=wedding',
+    image: 'https://images.pexels.com/photos/963757/pexels-photo-963757.jpeg?auto=compress&cs=tinysrgb&w=800&q=80',
+    href: '/products?type=Wedding',
   },
   {
     name: 'Party',
-    image: 'https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=400',
-    href: '/products?category=party',
+    image: 'https://images.pexels.com/photos/1164339/pexels-photo-1164339.jpeg?auto=compress&cs=tinysrgb&w=800&q=80',
+    href: '/products?type=Party',
   },
   {
     name: 'Casual',
-    image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400',
-    href: '/products?category=casual',
+    image: 'https://images.pexels.com/photos/791157/pexels-photo-791157.jpeg?auto=compress&cs=tinysrgb&w=800&q=80',
+    href: '/products?type=Casual',
   },
   {
     name: 'Designer',
-    image: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400',
-    href: '/products?category=designer',
+    image: 'https://images.pexels.com/photos/1328535/pexels-photo-1328535.jpeg?auto=compress&cs=tinysrgb&w=800&q=80',
+    href: '/products?type=Designer',
   },
 ];
 

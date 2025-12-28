@@ -14,8 +14,8 @@ const Login = () => {
   const location = useLocation();
   const { login } = useAuth();
   
-  const [email, setEmail] = useState('abhi.andani5511@gmail.com');
-  const [password, setPassword] = useState('Q123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
