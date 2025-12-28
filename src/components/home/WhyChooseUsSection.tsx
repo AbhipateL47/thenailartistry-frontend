@@ -7,11 +7,11 @@ export const WhyChooseUsSection = () => {
     <section className="py-16">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="animate-fade-in">
+          <div className="animate-fade-in flex items-center justify-center lg:justify-start">
             <img
               src="https://images.unsplash.com/photo-1599206676335-193c82b13c9e?w=600"
               alt="Nail application"
-              className="rounded-lg shadow-lg"
+              className="rounded-lg shadow-lg max-w-sm w-full h-auto object-cover"
             />
           </div>
           <div className="animate-slide-up">
