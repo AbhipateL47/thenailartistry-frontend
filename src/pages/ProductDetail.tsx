@@ -71,11 +71,11 @@ export default function ProductDetail() {
 
   return (
     <>
-      <div className="container mx-auto px-4 py-8 pb-24 md:pb-8">
+      <div className="container mx-auto px-4 py-8 pb-4 md:pb-8">
         <ProductBreadcrumb productName={product.name} />
 
         {/* Product Layout */}
-        <div className="flex flex-col md:grid md:grid-cols-2 gap-6 md:gap-8 mb-16">
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-6 md:gap-8 mb-8 md:mb-16">
           {/* Product Gallery */}
           <div className="order-1">
             <ProductGallery
@@ -92,6 +92,7 @@ export default function ProductDetail() {
 
         {/* Customer Reviews Section */}
         <ProductReviewsSection
+          productId={product._id}
           rating={product.ratingAvg || 0}
           reviewCount={product.ratingCount || 0}
         />

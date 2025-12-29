@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Minus, Plus, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/utils/formatCurrency';
@@ -13,11 +13,24 @@ interface StickyAddToCartBarProps {
 
 export const StickyAddToCartBar = ({ product }: StickyAddToCartBarProps) => {
   const [quantity, setQuantity] = useState(1);
+  const [isVisible, setIsVisible] = useState(false);
   const { addItem, openDrawer } = useCart();
   
   const price = productService.getLowestPrice(product);
   const mrp = productService.getLowestMrp(product);
   const inStock = productService.isInStock(product);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show bar when user scrolls down more than 300px
+      const scrollThreshold = 900;
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      setIsVisible(scrollY > scrollThreshold);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleAddToCart = () => {
     addItem({
@@ -43,7 +56,10 @@ export const StickyAddToCartBar = ({ product }: StickyAddToCartBarProps) => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-50 md:hidden">
+    <div className={cn(
+      "fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-50 md:hidden transition-transform duration-300",
+      isVisible ? "translate-y-0" : "translate-y-full"
+    )}>
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center gap-4">
           {/* Product Image */}
@@ -66,7 +82,7 @@ export const StickyAddToCartBar = ({ product }: StickyAddToCartBarProps) => {
             </div>
           </div>
 
-          {/* Quantity Selector */}
+          {/* Quantity Selector
           <div className="flex items-center border rounded-md">
             <Button
               size="icon"
@@ -86,7 +102,7 @@ export const StickyAddToCartBar = ({ product }: StickyAddToCartBarProps) => {
             >
               <Plus className="h-3 w-3" />
             </Button>
-          </div>
+          </div> */}
 
           {/* Add to Cart Button */}
           <Button

@@ -11,7 +11,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   // Products state

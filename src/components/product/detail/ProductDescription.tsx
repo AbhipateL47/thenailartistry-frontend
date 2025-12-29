@@ -11,7 +11,7 @@ interface ProductDescriptionProps {
 
 export const ProductDescription = ({ description }: ProductDescriptionProps) => {
   return (
-    <div className="mb-16">
+    <div className="mb-6 md:mb-16">
       <Accordion type="single" collapsible className="border rounded-lg">
         <AccordionItem value="description" className="border-none">
           <AccordionTrigger className="px-6 hover:no-underline">

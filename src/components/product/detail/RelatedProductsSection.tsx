@@ -31,7 +31,7 @@ export const RelatedProductsSection = ({
   };
 
   return (
-    <div className="mb-16">
+    <div className="mb-6 md:mb-16">
       <div className="mb-4">
         <h2 className="text-2xl font-bold mb-2">{title}</h2>
         {subtitle && (

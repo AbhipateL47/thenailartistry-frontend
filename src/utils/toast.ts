@@ -36,7 +36,7 @@ const defaultSettings = {
   padding: 10,
   width: 340,
   minWidth: 300,
-  maxWidth: 340,
+  maxWidth: 360,
   height: 'auto',
   minHeight: 60,
   maxHeight: 'none',
@@ -56,6 +56,8 @@ const defaultSettings = {
   showClose: true,
   entranceAnimation: 'slideDown',
   exitAnimation: 'slideUpOut',
+  mobileEntranceAnimation: 'slideUp',
+  mobileExitAnimation: 'slideDownOut',
   animationDuration: 250,
   animationEasing: 'ease-in',
   maxToastCount: 3,
@@ -216,6 +218,28 @@ class CustomToast {
         }
       }
 
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideDownOut {
+        from {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(100%);
+        }
+      }
+
       @keyframes fadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
@@ -250,14 +274,39 @@ class CustomToast {
 
       @media (max-width: 640px) {
         #toast-container {
-          max-width: 100%;
-          padding: 12px;
-          width: 100%;
+          max-width: 100% !important;
+          padding: 12px !important;
+          width: 100% !important;
+          bottom: 0 !important;
+          top: auto !important;
+          left: 0 !important;
+          right: 0 !important;
+          transform: none !important;
+          align-items: stretch !important;
+          gap: 12px !important;
+        }
+        /* Override ALL position classes on mobile to ensure bottom positioning */
+        #toast-container.toast-top-start,
+        #toast-container.toast-top-center,
+        #toast-container.toast-top-end,
+        #toast-container.toast-middle-start,
+        #toast-container.toast-middle-center,
+        #toast-container.toast-middle-end,
+        #toast-container.toast-bottom-start,
+        #toast-container.toast-bottom-center,
+        #toast-container.toast-bottom-end {
+          top: auto !important;
+          bottom: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          transform: none !important;
         }
         .toast-item {
-          min-width: auto !important;
-          max-width: calc(100% - 24px) !important;
-          width: calc(100% - 24px) !important;
+          min-width: 100% !important;
+          max-width: 100% !important;
+          width: 100% !important;
+          border-radius: 8px !important;
+          margin: 0 !important;
         }
       }
     `;
@@ -267,17 +316,70 @@ class CustomToast {
   private createContainer() {
     if (this.container) return;
 
+    const isMobile = window.innerWidth <= 640;
+    const initialPosition = isMobile ? 'bottom-center' : this.defaultPosition;
+
     this.container = document.createElement('div');
     this.container.id = 'toast-container';
-    this.container.className = `toast-${this.defaultPosition}`;
+    this.container.className = `toast-${initialPosition}`;
+    
+    // Apply base container styles
+    this.container.style.position = 'fixed';
+    this.container.style.zIndex = '10000';
+    this.container.style.pointerEvents = 'none';
+    this.container.style.display = 'flex';
+    this.container.style.flexDirection = 'column';
+    
+    // Apply mobile-specific styles with setProperty for !important
+    if (isMobile) {
+      this.container.style.setProperty('bottom', '0', 'important');
+      this.container.style.setProperty('top', 'auto', 'important');
+      this.container.style.setProperty('left', '0', 'important');
+      this.container.style.setProperty('right', '0', 'important');
+      this.container.style.setProperty('width', '100%', 'important');
+      this.container.style.setProperty('max-width', '100%', 'important');
+      this.container.style.setProperty('padding', '12px', 'important');
+      this.container.style.setProperty('transform', 'none', 'important');
+      this.container.style.gap = '12px';
+      this.container.style.alignItems = 'stretch';
+    }
+    
     document.body.appendChild(this.container);
   }
 
   private updatePosition(position: ToastPosition) {
     this.defaultPosition = position;
     if (this.container) {
+      const isMobile = window.innerWidth <= 640;
+      
       this.container.className = this.container.className.replace(/toast-\w+-\w+/g, '');
       this.container.classList.add(`toast-${position}`);
+      
+      // Apply mobile styles directly via inline styles with !important
+      if (isMobile) {
+        this.container.style.setProperty('bottom', '0', 'important');
+        this.container.style.setProperty('top', 'auto', 'important');
+        this.container.style.setProperty('left', '0', 'important');
+        this.container.style.setProperty('right', '0', 'important');
+        this.container.style.setProperty('width', '100%', 'important');
+        this.container.style.setProperty('max-width', '100%', 'important');
+        this.container.style.setProperty('padding', '12px', 'important');
+        this.container.style.setProperty('transform', 'none', 'important');
+        this.container.style.gap = '12px';
+        this.container.style.alignItems = 'stretch';
+      } else {
+        // Remove mobile-specific inline styles on desktop to let CSS handle it
+        this.container.style.removeProperty('bottom');
+        this.container.style.removeProperty('top');
+        this.container.style.removeProperty('left');
+        this.container.style.removeProperty('right');
+        this.container.style.removeProperty('width');
+        this.container.style.removeProperty('max-width');
+        this.container.style.removeProperty('padding');
+        this.container.style.removeProperty('transform');
+        this.container.style.gap = '';
+        this.container.style.alignItems = '';
+      }
     }
   }
 
@@ -307,6 +409,8 @@ class CustomToast {
     }
 
     const id = this.generateId();
+    const isMobile = window.innerWidth <= 640;
+    
     const {
       type = 'info',
       title,
@@ -315,9 +419,20 @@ class CustomToast {
       position = this.defaultPosition,
     } = options;
 
-    // Update position if provided
-    if (position) {
-      this.updatePosition(position);
+    // On mobile, always use bottom-center (full width, no start/center/end)
+    const finalPosition = isMobile ? 'bottom-center' : position;
+    
+    // Update position
+    this.updatePosition(finalPosition);
+
+    // Get max toast count (1 for mobile, default for desktop)
+    const maxToastCount = isMobile ? 1 : defaultSettings.maxToastCount;
+
+    // Check if we've reached max toast count (before creating toast element)
+    if (this.toasts.size >= maxToastCount) {
+      // Add to queue
+      this.toastQueue.push({ options, id });
+      return id;
     }
 
     // Get icon color based on type
@@ -334,22 +449,29 @@ class CustomToast {
     toast.className = 'toast-item';
     toast.id = id;
 
-    // Apply responsive width
-    const isMobile = window.innerWidth <= 640;
+    // Apply responsive width and styling
     if (isMobile) {
-      toast.style.width = 'calc(100% - 24px)';
-      toast.style.minWidth = 'auto';
-      toast.style.maxWidth = '100%';
+      toast.style.setProperty('width', '100%', 'important');
+      toast.style.setProperty('min-width', '100%', 'important');
+      toast.style.setProperty('max-width', '100%', 'important');
+      toast.style.setProperty('border-radius', '8px', 'important');
+      toast.style.setProperty('margin', '0', 'important');
+    } else {
+      // Desktop: use default width settings
+      toast.style.width = `${defaultSettings.width}px`;
+      toast.style.minWidth = `${defaultSettings.minWidth}px`;
+      toast.style.maxWidth = `${defaultSettings.maxWidth}px`;
     }
 
-    // Apply entrance animation
-    const entranceAnim = defaultSettings.entranceAnimation;
+    // Apply entrance animation (different for mobile - slide up from bottom)
+    const entranceAnim = isMobile ? defaultSettings.mobileEntranceAnimation : defaultSettings.entranceAnimation;
     const animDuration = defaultSettings.animationDuration;
     const animEasing = defaultSettings.animationEasing;
     toast.style.animation = `${entranceAnim} ${animDuration}ms ${animEasing}`;
 
-    // Store exit animation
-    toast.dataset.exitAnimation = defaultSettings.exitAnimation;
+    // Store exit animation (different for mobile - slide down to bottom)
+    const exitAnim = isMobile ? defaultSettings.mobileExitAnimation : defaultSettings.exitAnimation;
+    toast.dataset.exitAnimation = exitAnim;
     toast.dataset.animDuration = String(animDuration);
     toast.dataset.animEasing = animEasing;
 
@@ -372,14 +494,6 @@ class CustomToast {
     
     toast.innerHTML = html;
 
-    // Check if we've reached max toast count
-    const maxCount = defaultSettings.maxToastCount;
-    if (this.toasts.size >= maxCount) {
-      // Add to queue
-      this.toastQueue.push({ options, id });
-      return id;
-    }
-
     // Append to container
     this.container!.appendChild(toast);
     this.toasts.set(id, { element: toast, duration, timeoutId: null });
@@ -396,7 +510,8 @@ class CustomToast {
   }
 
   private processQueue() {
-    const maxCount = defaultSettings.maxToastCount;
+    const isMobile = window.innerWidth <= 640;
+    const maxCount = isMobile ? 1 : defaultSettings.maxToastCount;
     while (this.toasts.size < maxCount && this.toastQueue.length > 0) {
       const queued = this.toastQueue.shift();
       if (queued) {
@@ -412,6 +527,8 @@ class CustomToast {
       this.createContainer();
     }
 
+    const isMobile = window.innerWidth <= 640;
+    
     const {
       type = 'info',
       title,
@@ -420,10 +537,11 @@ class CustomToast {
       position = this.defaultPosition,
     } = options;
 
-    // Update position if provided
-    if (position) {
-      this.updatePosition(position);
-    }
+    // On mobile, always use bottom-center (full width, no start/center/end)
+    const finalPosition = isMobile ? 'bottom-center' : position;
+    
+    // Update position
+    this.updatePosition(finalPosition);
 
     // Get icon color based on type
     const iconColorMap = {
@@ -439,22 +557,29 @@ class CustomToast {
     toast.className = 'toast-item';
     toast.id = id;
 
-    // Apply responsive width
-    const isMobile = window.innerWidth <= 640;
+    // Apply responsive width and styling
     if (isMobile) {
-      toast.style.width = 'calc(100% - 24px)';
-      toast.style.minWidth = 'auto';
-      toast.style.maxWidth = '100%';
+      toast.style.setProperty('width', '100%', 'important');
+      toast.style.setProperty('min-width', '100%', 'important');
+      toast.style.setProperty('max-width', '100%', 'important');
+      toast.style.setProperty('border-radius', '8px', 'important');
+      toast.style.setProperty('margin', '0', 'important');
+    } else {
+      // Desktop: use default width settings
+      toast.style.width = `${defaultSettings.width}px`;
+      toast.style.minWidth = `${defaultSettings.minWidth}px`;
+      toast.style.maxWidth = `${defaultSettings.maxWidth}px`;
     }
 
-    // Apply entrance animation
-    const entranceAnim = defaultSettings.entranceAnimation;
+    // Apply entrance animation (different for mobile - slide up from bottom)
+    const entranceAnim = isMobile ? defaultSettings.mobileEntranceAnimation : defaultSettings.entranceAnimation;
     const animDuration = defaultSettings.animationDuration;
     const animEasing = defaultSettings.animationEasing;
     toast.style.animation = `${entranceAnim} ${animDuration}ms ${animEasing}`;
 
-    // Store exit animation
-    toast.dataset.exitAnimation = defaultSettings.exitAnimation;
+    // Store exit animation (different for mobile - slide down to bottom)
+    const exitAnim = isMobile ? defaultSettings.mobileExitAnimation : defaultSettings.exitAnimation;
+    toast.dataset.exitAnimation = exitAnim;
     toast.dataset.animDuration = String(animDuration);
     toast.dataset.animEasing = animEasing;
 

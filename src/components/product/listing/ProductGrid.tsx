@@ -122,7 +122,7 @@ export const ProductGrid = ({
           'gap-6',
           viewMode === 'grid' 
             ? 'grid grid-cols-2 md:grid-cols-3' 
-            : 'flex flex-col space-y-4'
+            : 'flex flex-col space-y-2'
         )}>
           {isLoading ? (
             Array.from({ length: 12 }).map((_, i) => (

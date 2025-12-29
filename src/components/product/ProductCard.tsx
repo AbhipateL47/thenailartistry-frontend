@@ -28,14 +28,7 @@ export const ProductCard = ({ product, viewMode = 'grid', hideStockStatus = fals
   const handleWishlistClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleWishlist({
-      _id: product._id,
-      slug: product.slug,
-      name: product.name,
-      primaryImage: product.primaryImage,
-      price: price,
-      mrp: mrp,
-    });
+    toggleWishlist(product);
     // Toast is handled in WishlistContext
   };
 
@@ -65,7 +58,7 @@ export const ProductCard = ({ product, viewMode = 'grid', hideStockStatus = fals
     return (
       <Link
         to={`/products/${product.slug}`}
-        className="group relative bg-transparent overflow-hidden transition-all duration-300 animate-fade-in flex gap-4 p-4"
+        className="group relative bg-transparent overflow-hidden transition-all duration-300 animate-fade-in flex gap-4 p-2"
       >
         {/* Image */}
         <div className="relative w-32 h-32 flex-shrink-0 overflow-hidden bg-muted rounded-lg border border-gray-200">
@@ -80,13 +73,13 @@ export const ProductCard = ({ product, viewMode = 'grid', hideStockStatus = fals
         {/* Content */}
         <div className="flex-1 flex flex-col justify-between">
           <div>
-            <h3 className="font-semibold text-base mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+            <h3 className="font-semibold text-base mb-1 line-clamp-2 group-hover:text-primary transition-colors">
               {product.name}
             </h3>
 
             {/* Rating */}
             {product.ratingAvg > 0 && (
-              <div className="flex items-center gap-1 mb-2">
+              <div className="flex items-center gap-1 mb-1">
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
                     <Star
@@ -106,7 +99,7 @@ export const ProductCard = ({ product, viewMode = 'grid', hideStockStatus = fals
             )}
 
             {/* Price */}
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-2">
               <span className="font-bold text-lg">
                 {formatCurrency(price)}
               </span>
