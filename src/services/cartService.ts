@@ -7,25 +7,34 @@ export interface CartItemAPI {
   price: number;
   image: string;
   quantity: number;
-  variant?: string;
+  variantSku?: string;
+}
+
+export interface CartResponse {
+  success: boolean;
+  data: {
+    items: CartItemAPI[];
+  };
 }
 
 export const cartService = {
-  async addToCart(productId: string, quantity: number) {
-    const response = await apiClient.post<CartItemAPI>('/v1/cart', {
+  async addToCart(productId: string, quantity: number, variantSku?: string, price?: number) {
+    const response = await apiClient.post<CartResponse>('/v1/cart', {
       productId,
       quantity,
+      variantSku,
+      price,
     });
     return response.data;
   },
 
-  async getCart() {
-    const response = await apiClient.get<{ items: CartItemAPI[] }>('/v1/cart');
+  async getCart(): Promise<CartResponse> {
+    const response = await apiClient.get<CartResponse>('/v1/cart');
     return response.data;
   },
 
   async updateCartItem(itemId: string, quantity: number) {
-    const response = await apiClient.put<CartItemAPI>(`/v1/cart/${itemId}`, {
+    const response = await apiClient.put<CartResponse>(`/v1/cart/${itemId}`, {
       quantity,
     });
     return response.data;
@@ -37,5 +46,10 @@ export const cartService = {
 
   async clearCart() {
     await apiClient.delete('/v1/cart');
+  },
+
+  async syncCart(items: Array<{ productId: string; quantity: number; price: number; variantSku?: string }>) {
+    const response = await apiClient.post<CartResponse>('/v1/cart/sync', { items });
+    return response.data;
   },
 };

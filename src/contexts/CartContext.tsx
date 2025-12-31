@@ -1,5 +1,7 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 import { toast } from '@/utils/toast';
+import { useAuth } from './AuthContext';
+import { cartService } from '@/services/cartService';
 
 export interface CartItem {
   id: string;
@@ -10,6 +12,7 @@ export interface CartItem {
   image: string;
   quantity: number;
   variant?: string;
+  variantSku?: string;
 }
 
 interface CartContextType {
@@ -23,46 +26,16 @@ interface CartContextType {
   closeDrawer: () => void;
   totalItems: number;
   subtotal: number;
+  syncCart: () => Promise<void>;
+  reloadCartFromBackend: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-// Mock cart data for demonstration
-const MOCK_CART_ITEMS: CartItem[] = [
-  {
-    id: 'cart-1',
-    productId: '1',
-    slug: 'holographic-butterfly-presson-nails-set',
-    name: 'Holographic Butterfly Presson Nails Set',
-    price: 600,
-    image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=200&h=200&fit=crop',
-    quantity: 1,
-    variant: 'Both Hands',
-  },
-  {
-    id: 'cart-2',
-    productId: '2',
-    slug: 'shimmering-sunrise-elegance-lightweight-and-long-lasting-press-on-nails',
-    name: 'Shimmering Sunrise Elegance Lightweight and Long Lasting Press On Nails',
-    price: 700,
-    image: 'https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=200&h=200&fit=crop',
-    quantity: 1,
-    variant: 'Both Hands',
-  },
-  {
-    id: 'cart-3',
-    productId: '3',
-    slug: 'french-french-french-nails-set',
-    name: 'French French French Nails Set',
-    price: 600,
-    image: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=200&h=200&fit=crop',
-    quantity: 1,
-    variant: 'Both Hands',
-  },
-];
-
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  // Initialize state - load from localStorage or use mock data for demo
+  const { isAuthenticated, user } = useAuth();
+  
+  // Initialize state - load from localStorage for guests
   const getInitialCart = (): CartItem[] => {
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
@@ -75,46 +48,172 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         console.error('Error parsing cart from localStorage:', error);
       }
     }
-    // If no saved cart or empty, initialize with mock data for demo
-    // Remove this in production when API is connected
-    const hasSeenMockData = localStorage.getItem('hasSeenMockCartData');
-    if (!hasSeenMockData) {
-      localStorage.setItem('hasSeenMockCartData', 'true');
-      return MOCK_CART_ITEMS;
-    }
+    // Start with empty cart
     return [];
   };
 
   const [items, setItems] = useState<CartItem[]>(getInitialCart);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isLoadingCart, setIsLoadingCart] = useState(false);
+  const cartLoadedRef = useRef(false);
+  const userIdRef = useRef<string | null>(null);
 
-  // Save cart to localStorage whenever it changes
+  // Load cart from backend when user is authenticated
+  useEffect(() => {
+    const loadCartFromBackend = async () => {
+      if (!isAuthenticated || !user) {
+        // For guests, keep using localStorage
+        cartLoadedRef.current = false;
+        userIdRef.current = null;
+        return;
+      }
+
+      // Prevent multiple loads for the same user
+      if (cartLoadedRef.current && userIdRef.current === user.id) {
+        return;
+      }
+
+      // Prevent concurrent loads
+      if (isLoadingCart) {
+        return;
+      }
+
+      setIsLoadingCart(true);
+      cartLoadedRef.current = true;
+      userIdRef.current = user.id;
+
+      try {
+        console.log('🔄 [CART LOAD] Loading cart from backend...');
+        const response = await cartService.getCart();
+        if (response.success && response.data.items) {
+          // Convert backend format to frontend format
+          const backendItems: CartItem[] = response.data.items.map((item) => ({
+            id: item.id, // Use backend item ID
+            productId: item.productId,
+            slug: '', // Will be populated if needed
+            name: item.name,
+            price: item.price,
+            image: item.image,
+            quantity: item.quantity,
+            variantSku: item.variantSku,
+          }));
+          console.log('✅ [CART LOAD] Loaded', backendItems.length, 'items from backend');
+          setItems(backendItems);
+          // Also save to localStorage for consistency
+          localStorage.setItem('cart', JSON.stringify(backendItems));
+        } else {
+          setItems([]);
+          localStorage.removeItem('cart');
+        }
+      } catch (error) {
+        console.error('❌ [CART LOAD] Failed to load cart from backend:', error);
+        // Keep using localStorage cart if backend fails
+        cartLoadedRef.current = false;
+      } finally {
+        setIsLoadingCart(false);
+      }
+    };
+
+    loadCartFromBackend();
+  }, [isAuthenticated, user?.id]);
+
+  // Save cart to localStorage whenever it changes (for guests)
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(items));
   }, [items]);
 
-  const addItem = (newItem: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
-    setItems((prev) => {
-      const existingItem = prev.find((item) => item.productId === newItem.productId);
-      
-      if (existingItem) {
-        toast.success('Item quantity updated in bag');
-        return prev.map((item) =>
-          item.productId === newItem.productId
-            ? { ...item, quantity: item.quantity + (newItem.quantity || 1) }
-            : item
-        );
+  // Helper to reload cart from backend
+  const reloadCartFromBackend = async () => {
+    if (!isAuthenticated) return;
+    
+    // Prevent concurrent reloads
+    if (isLoadingCart) {
+      return;
+    }
+
+    setIsLoadingCart(true);
+    try {
+      const response = await cartService.getCart();
+      if (response.success && response.data.items) {
+        const backendItems: CartItem[] = response.data.items.map((item) => ({
+          id: item.id,
+          productId: item.productId,
+          slug: '',
+          name: item.name,
+          price: item.price,
+          image: item.image,
+          quantity: item.quantity,
+          variantSku: item.variantSku,
+        }));
+        setItems(backendItems);
+        localStorage.setItem('cart', JSON.stringify(backendItems));
       } else {
-        toast.success('Item added to bag');
-        return [...prev, { ...newItem, quantity: newItem.quantity || 1 }];
+        setItems([]);
+        localStorage.removeItem('cart');
       }
+    } catch (error) {
+      console.error('Failed to reload cart from backend:', error);
+    } finally {
+      setIsLoadingCart(false);
+    }
+  };
+
+  const addItem = (newItem: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
+    // Optimistic update for guests
+    if (!isAuthenticated) {
+      setItems((prev) => {
+        const existingItem = prev.find((item) => item.productId === newItem.productId);
+        
+        if (existingItem) {
+          toast.success('Item quantity updated in bag');
+          return prev.map((item) =>
+            item.productId === newItem.productId
+              ? { ...item, quantity: item.quantity + (newItem.quantity || 1) }
+              : item
+          );
+        } else {
+          toast.success('Item added to bag');
+          return [...prev, { ...newItem, quantity: newItem.quantity || 1 }];
+        }
+      });
+      setIsDrawerOpen(true);
+      return;
+    }
+
+    // For authenticated users, sync to backend first, then reload
+    cartService.addToCart(
+      newItem.productId,
+      newItem.quantity || 1,
+      newItem.variantSku,
+      newItem.price
+    ).then(() => {
+      toast.success('Item added to bag');
+      reloadCartFromBackend();
+      setIsDrawerOpen(true);
+    }).catch(err => {
+      console.error('Failed to add to backend cart:', err);
+      toast.error('Failed to add item. Please try again.');
     });
-    setIsDrawerOpen(true);
   };
 
   const removeItem = (id: string) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
-    toast.success('Item removed from bag');
+    // Optimistic update for guests
+    if (!isAuthenticated) {
+      setItems((prev) => prev.filter((item) => item.id !== id));
+      toast.success('Item removed from bag');
+      return;
+    }
+
+    // For authenticated users, remove from backend, then reload
+    cartService.removeCartItem(id).then(() => {
+      toast.success('Item removed from bag');
+      reloadCartFromBackend();
+    }).catch(err => {
+      console.error('Failed to remove from backend:', err);
+      // Remove from local state anyway
+      setItems((prev) => prev.filter((item) => item.id !== id));
+      toast.success('Item removed from bag');
+    });
   };
 
   const updateQuantity = (id: string, quantity: number) => {
@@ -122,14 +221,79 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       removeItem(id);
       return;
     }
-    setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, quantity } : item))
-    );
+    
+    // Optimistic update for guests
+    if (!isAuthenticated) {
+      setItems((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, quantity } : item))
+      );
+      return;
+    }
+
+    // For authenticated users, update backend, then reload
+    cartService.updateCartItem(id, quantity).then(() => {
+      reloadCartFromBackend();
+    }).catch(err => {
+      console.error('Failed to update in backend:', err);
+      // Update local state anyway
+      setItems((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, quantity } : item))
+      );
+    });
   };
 
   const clearCart = () => {
     setItems([]);
-    toast.success('Cart cleared');
+    localStorage.removeItem('cart');
+    
+    // Clear backend cart if authenticated
+    if (isAuthenticated) {
+      cartService.clearCart().catch(err => {
+        console.error('Failed to clear backend cart:', err);
+      });
+    }
+  };
+
+  // Sync guest cart with backend when user logs in
+  // This is called after checkout completes, not immediately after login
+  const syncCart = async () => {
+    if (!isAuthenticated) return;
+
+    const guestCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    if (guestCart.length === 0) {
+      await reloadCartFromBackend();
+      return;
+    }
+
+    try {
+      const syncItems = guestCart.map((item: CartItem) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.price,
+        variantSku: item.variantSku,
+      }));
+
+      const response = await cartService.syncCart(syncItems);
+      if (response.success) {
+        const mergedItems: CartItem[] = response.data.items.map((item) => ({
+          id: item.id,
+          productId: item.productId,
+          slug: '',
+          name: item.name,
+          price: item.price,
+          image: item.image,
+          quantity: item.quantity,
+          variantSku: item.variantSku,
+        }));
+        setItems(mergedItems);
+        localStorage.setItem('cart', JSON.stringify(mergedItems));
+      } else {
+        await reloadCartFromBackend();
+      }
+    } catch (error) {
+      console.error('Failed to sync cart:', error);
+      await reloadCartFromBackend();
+    }
   };
 
   const openDrawer = () => setIsDrawerOpen(true);
@@ -151,6 +315,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         closeDrawer,
         totalItems,
         subtotal,
+        syncCart,
+        reloadCartFromBackend,
       }}
     >
       {children}

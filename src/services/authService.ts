@@ -98,4 +98,22 @@ export const authService = {
     const response = await apiClient.delete('/v1/auth/account', { data: { password } });
     return response.data;
   },
+
+  // Send OTP
+  async sendOTP(identifier: string): Promise<{ success: boolean; message: string }> {
+    const response = await apiClient.post('/v1/auth/send-otp', { identifier });
+    return response.data;
+  },
+
+  // Verify OTP and login
+  async verifyOTP(identifier: string, otp: string): Promise<AuthResponse> {
+    const response = await apiClient.post<AuthResponse>('/v1/auth/verify-otp', { identifier, otp });
+    return response.data;
+  },
+
+  // Link guest orders to user after login
+  async linkGuestOrders(email?: string, phone?: string): Promise<{ success: boolean; message: string; data: { linkedCount: number } }> {
+    const response = await apiClient.post('/v1/orders/link-guest-orders', { email, phone });
+    return response.data;
+  },
 };

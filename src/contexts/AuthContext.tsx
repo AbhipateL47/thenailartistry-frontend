@@ -20,17 +20,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   // Check for existing session on mount (cookie-based auth)
+  // This is the ONLY way to check auth - cookies are httpOnly and not accessible via JS
   useEffect(() => {
     const initAuth = async () => {
+      console.log('🔐 AuthContext: Initializing auth check...');
       try {
-        // Try to get user - if cookie exists and is valid, this will work
+        // Call GET /v1/auth/me - if cookie exists, it will work
+        // Browser automatically sends httpOnly cookie with request
         const response = await authService.getMe();
-        setUser(response.data.user);
-      } catch (error) {
-        // No valid session - user is not logged in
+        if (response.success && response.data?.user) {
+          console.log('✅ AuthContext: User authenticated', response.data.user.email || response.data.user.phone);
+          setUser(response.data.user);
+        } else {
+          console.log('❌ AuthContext: No user found in response');
+          setUser(null);
+        }
+      } catch (error: any) {
+        // 401 = no valid cookie = user is logged out
+        // This is expected and fine
+        console.log('❌ AuthContext: Auth check failed (401 - no valid cookie)');
         setUser(null);
+      } finally {
+        console.log('✅ AuthContext: Auth check complete');
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     initAuth();
@@ -39,8 +52,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (credentials: LoginCredentials): Promise<boolean> => {
     try {
       const response = await authService.login(credentials);
-      if (response.success) {
-        setUser(response.data.user);
+      if (response.success && response.data?.user) {
+        // Cookie is set by server automatically
+        // Refresh user state from server to ensure consistency
+        await refreshUser();
         toast.success('Welcome back!');
         return true;
       }
@@ -55,8 +70,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = async (credentials: RegisterCredentials): Promise<boolean> => {
     try {
       const response = await authService.register(credentials);
-      if (response.success) {
-        setUser(response.data.user);
+      if (response.success && response.data?.user) {
+        // Cookie is set by server automatically
+        // Refresh user state from server to ensure consistency
+        await refreshUser();
         toast.success('Account created successfully!');
         return true;
       }
@@ -70,19 +87,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     try {
+      // Call logout endpoint - server will clear accessToken cookie
       await authService.logout();
     } catch (error) {
-      // Ignore error - clear user anyway
+      // Ignore error - clear user state anyway
     }
+    // Clear user state immediately
     setUser(null);
     toast.success('Logged out successfully');
   };
 
   const refreshUser = async () => {
     try {
+      // Call GET /v1/auth/me - browser automatically sends httpOnly cookie
       const response = await authService.getMe();
-      setUser(response.data.user);
-    } catch (error) {
+      if (response.success && response.data?.user) {
+        setUser(response.data.user);
+      } else {
+        setUser(null);
+      }
+    } catch (error: any) {
+      // 401 = no valid cookie = user is logged out
       setUser(null);
     }
   };
