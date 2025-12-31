@@ -11,8 +11,13 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  // Log page load
+  useEffect(() => {
+    console.log('📄 Products Page Loaded');
+  }, []);
 
   // Products state
   const [products, setProducts] = useState<Product[]>([]);

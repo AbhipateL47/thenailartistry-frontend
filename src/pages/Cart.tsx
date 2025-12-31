@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, Minus, Plus, Trash2 } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
@@ -10,6 +11,11 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 export default function Cart() {
   usePageTitle('Shopping Cart - Review Your Items');
   const { items, updateQuantity, removeItem, subtotal } = useCart();
+
+  // Log page load
+  useEffect(() => {
+    console.log('📄 Cart Page Loaded');
+  }, []);
 
   if (items.length === 0) {
     return (
@@ -29,16 +35,16 @@ export default function Cart() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-4 md:py-8">
       <Breadcrumbs items={[{ label: 'Cart' }]} />
 
       {/* Page Title */}
-      <h1 className="text-3xl font-bold mb-8">Your Cart</h1>
+      <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-8">Your Cart</h1>
 
       {/* Cart Layout */}
-      <div className="grid md:grid-cols-3 gap-8">
+      <div className="grid md:grid-cols-3 gap-4 md:gap-8">
         {/* Cart Items */}
-        <div className="md:col-span-2 space-y-6">
+        <div className="md:col-span-2 space-y-4 md:space-y-6">
           {/* Table Header - Desktop Only */}
           <div className="hidden md:grid grid-cols-12 gap-4 pb-4 border-b text-sm font-medium">
             <div className="col-span-6">Product</div>
@@ -61,7 +67,7 @@ export default function Cart() {
                   className="w-20 h-20 md:w-24 md:h-24 rounded-md object-cover"
                 />
                 <div className="flex-1">
-                  <h3 className="font-semibold mb-1">{item.name}</h3>
+                  <h6 className="font-semibold mb-1">{item.name}</h6>
                   {item.variant && (
                     <p className="text-sm text-muted-foreground mb-2">
                       {item.variant}

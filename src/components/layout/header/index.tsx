@@ -85,7 +85,7 @@ export const Header = () => {
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200">
       {/* Top banner - Marquee */}
-      <div
+      {/* <div
         className={`transition-all duration-300 overflow-hidden ${
           showMarquee() ? 'max-h-12 opacity-100' : 'max-h-0 opacity-0'
         }`}
@@ -94,7 +94,7 @@ export const Header = () => {
           isDismissed={isMarqueeDismissed} 
           onDismiss={handleMarqueeDismiss} 
         />
-      </div>
+      </div> */}
 
       {/* Main header - Desktop & Tablet */}
       <div className="hidden md:block">

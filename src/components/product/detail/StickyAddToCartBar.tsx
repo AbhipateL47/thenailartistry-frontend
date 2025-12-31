@@ -43,7 +43,7 @@ export const StickyAddToCartBar = ({ product }: StickyAddToCartBarProps) => {
       quantity,
       variant: 'Both Hands',
     });
-    toast.success('Item added to bag');
+    // Toast is handled in CartContext.addItem
     openDrawer();
   };
 

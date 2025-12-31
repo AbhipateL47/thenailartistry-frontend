@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { HeroSection } from '@/components/home/HeroSection_1.5';
 import { FeaturesSection } from '@/components/home/FeaturesSection';
 import { FeaturedProductsSection } from '@/components/home/FeaturedProductsSection';
@@ -11,6 +12,11 @@ import { productService } from '@/services/productService';
 
 export default function Home() {
   usePageTitle('The Nail Artistry - Premium Press-On Nails | Reusable & Salon Quality');
+  
+  // Log page load
+  useEffect(() => {
+    console.log('📄 Home Page Loaded');
+  }, []);
   
   // Fetch featured products from API
   const { data: featuredProducts = [], isLoading: isLoadingFeatured } = useQuery({

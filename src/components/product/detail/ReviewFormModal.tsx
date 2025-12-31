@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Star, X, Upload, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { reviewService, CreateReviewRequest } from '@/services/reviewService';
+import { reviewService, CreateReviewRequest, UpdateReviewRequest, Review } from '@/services/reviewService';
 import { uploadService } from '@/services/uploadService';
 import { toast } from '@/utils/toast';
 
@@ -14,6 +14,7 @@ interface ReviewFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  existingReview?: Review | null;
 }
 
 export const ReviewFormModal = ({
@@ -21,14 +22,30 @@ export const ReviewFormModal = ({
   isOpen,
   onClose,
   onSuccess,
+  existingReview,
 }: ReviewFormModalProps) => {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(existingReview?.rating || 0);
   const [hoveredRating, setHoveredRating] = useState(0);
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
-  const [images, setImages] = useState<string[]>([]);
+  const [title, setTitle] = useState(existingReview?.title || '');
+  const [body, setBody] = useState(existingReview?.body || '');
+  const [images, setImages] = useState<string[]>(existingReview?.images || []);
   const [uploadingImages, setUploadingImages] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Update form when existingReview changes
+  useEffect(() => {
+    if (existingReview) {
+      setRating(existingReview.rating);
+      setTitle(existingReview.title || '');
+      setBody(existingReview.body || '');
+      setImages(existingReview.images || []);
+    } else {
+      setRating(0);
+      setTitle('');
+      setBody('');
+      setImages([]);
+    }
+  }, [existingReview]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -82,27 +99,41 @@ export const ReviewFormModal = ({
     setIsSubmitting(true);
 
     try {
-      const reviewData: CreateReviewRequest = {
-        productId,
-        rating,
-        title: title.trim() || undefined,
-        body: body.trim() || undefined,
-        images: images.length > 0 ? images : undefined,
-      };
-
-      await reviewService.createReview(reviewData);
-      toast.success('Review submitted successfully! It will be visible after approval.');
+      if (existingReview) {
+        // Update existing review
+        const updateData: UpdateReviewRequest = {
+          rating,
+          title: title.trim() || undefined,
+          body: body.trim() || undefined,
+          images: images.length > 0 ? images : undefined,
+        };
+        await reviewService.updateReview(existingReview._id, updateData);
+        toast.success('Review updated successfully!');
+      } else {
+        // Create new review
+        const reviewData: CreateReviewRequest = {
+          productId,
+          rating,
+          title: title.trim() || undefined,
+          body: body.trim() || undefined,
+          images: images.length > 0 ? images : undefined,
+        };
+        await reviewService.createReview(reviewData);
+        toast.success('Review submitted successfully! It will be visible after approval.');
+      }
       
       // Reset form
-      setRating(0);
-      setTitle('');
-      setBody('');
-      setImages([]);
+      if (!existingReview) {
+        setRating(0);
+        setTitle('');
+        setBody('');
+        setImages([]);
+      }
       
       onSuccess();
     } catch (error: any) {
       console.error('Error submitting review:', error);
-      toast.error(error?.response?.data?.message || 'Failed to submit review');
+      toast.error(error?.response?.data?.message || `Failed to ${existingReview ? 'update' : 'submit'} review`);
     } finally {
       setIsSubmitting(false);
     }
@@ -270,10 +301,10 @@ export const ReviewFormModal = ({
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Submitting...
+                  {existingReview ? 'Updating...' : 'Submitting...'}
                 </>
               ) : (
-                'Submit Review'
+                existingReview ? 'Update Review' : 'Submit Review'
               )}
             </Button>
           </div>

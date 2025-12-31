@@ -44,7 +44,7 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
       quantity: 1,
       variant: selectedVariant,
     });
-    toast.success('Item added to bag');
+    // Toast is handled in CartContext.addItem
     openDrawer();
   };
 

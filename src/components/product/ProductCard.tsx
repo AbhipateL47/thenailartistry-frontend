@@ -44,7 +44,7 @@ export const ProductCard = ({ product, viewMode = 'grid', hideStockStatus = fals
       image: product.primaryImage,
       quantity: 1,
     });
-    toast.success('Item added to bag');
+    // Toast is handled in CartContext.addItem
     openDrawer();
   };
 

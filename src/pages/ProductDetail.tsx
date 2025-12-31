@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { productService } from '@/services/productService';
@@ -17,6 +17,11 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>(); // This can be either slug or ID, backend handles both
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+
+  // Log page load
+  useEffect(() => {
+    console.log(`📄 Product Detail Page Loaded - Product ID: ${id || 'N/A'}`);
+  }, [id]);
 
   const { data: product, isLoading } = useQuery({
     queryKey: ['product', id],
