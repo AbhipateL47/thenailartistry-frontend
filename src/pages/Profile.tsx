@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link, useLocation } from 'react-router-dom';
 import { 
   User, Package, MapPin, Bell, Settings as SettingsIcon, LogOut, 
   ChevronRight, Shield, Camera, Loader2, Trash2
@@ -27,11 +27,35 @@ const validTabs: TabType[] = ['overview', 'orders', 'addresses', 'notifications'
 
 const Profile = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { tab } = useParams<{ tab?: string }>();
   const { user, isLoading, isAuthenticated, logout, refreshUser } = useAuth();
   
   // Get active tab from URL or default to 'overview'
   const activeTab: TabType = tab && validTabs.includes(tab as TabType) ? (tab as TabType) : 'overview';
+  
+  // Calculate page title early (before any early returns)
+  const menuItems = [
+    { id: 'overview', label: 'Overview', icon: User, href: '/profile' },
+    { id: 'orders', label: 'My Orders', icon: Package, href: '/profile/orders' },
+    { id: 'addresses', label: 'Addresses', icon: MapPin, href: '/profile/addresses' },
+    { id: 'notifications', label: 'Notifications', icon: Bell, href: '/profile/notifications' },
+    { id: 'settings', label: 'Settings', icon: SettingsIcon, href: '/profile/settings' },
+  ];
+  const currentMenuItem = menuItems.find(m => m.id === activeTab);
+  const pageTitle = activeTab === 'overview' 
+    ? 'My Account - Manage Your Profile' 
+    : `${currentMenuItem?.label || 'My Account'} - Account Settings`;
+  
+  // CRITICAL: usePageTitle must be called BEFORE any conditional returns
+  // This ensures hooks are called in the same order on every render
+  usePageTitle(pageTitle);
+  
+  // Log page load
+  useEffect(() => {
+    console.log(`📄 Profile Page Loaded - Tab: ${tab || 'overview'}, Path: ${location.pathname}`);
+  }, [tab, location.pathname]);
+  
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -92,13 +116,26 @@ const Profile = () => {
     }
   };
 
+  // Redirect to login only after auth check is complete
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      navigate('/login', { state: { from: { pathname: '/profile' } } });
+    // Wait for auth to finish loading
+    if (isLoading) {
+      console.log('⏳ Profile: Waiting for auth check...');
+      return;
     }
-  }, [isLoading, isAuthenticated, navigate]);
+    
+    // Only redirect if we're sure user is not authenticated
+    if (!isAuthenticated) {
+      console.log('🔒 Profile: User not authenticated, redirecting to login');
+      navigate('/login', { state: { from: { pathname: location.pathname } } });
+    } else {
+      console.log('✅ Profile: User authenticated, rendering profile page');
+    }
+  }, [isLoading, isAuthenticated, navigate, location.pathname]);
 
+  // Show loading state while checking auth
   if (isLoading) {
+    console.log('⏳ Profile: Loading auth state...');
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#fdf2f8] to-white">
         <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -113,8 +150,21 @@ const Profile = () => {
     );
   }
 
+  // Show loading skeleton while redirecting (prevents white screen)
   if (!isAuthenticated || !user) {
-    return null;
+    console.log('🚫 Profile: Not authenticated, showing loading state...');
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-[#fdf2f8] to-white">
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          <div className="grid md:grid-cols-4 gap-8">
+            <Skeleton className="h-[400px] rounded-2xl" />
+            <div className="md:col-span-3">
+              <Skeleton className="h-[600px] rounded-2xl" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const handleLogout = () => {
@@ -122,36 +172,21 @@ const Profile = () => {
     navigate('/');
   };
 
-  const menuItems = [
-    { id: 'overview', label: 'Overview', icon: User, href: '/profile' },
-    { id: 'orders', label: 'My Orders', icon: Package, href: '/profile/orders' },
-    { id: 'addresses', label: 'Addresses', icon: MapPin, href: '/profile/addresses' },
-    { id: 'notifications', label: 'Notifications', icon: Bell, href: '/profile/notifications' },
-    { id: 'settings', label: 'Settings', icon: SettingsIcon, href: '/profile/settings' },
-  ];
-
-  const currentMenuItem = menuItems.find(m => m.id === activeTab);
   const breadcrumbItems = activeTab === 'overview' 
     ? [{ label: 'My Account' }]
     : [{ label: 'My Account', href: '/profile' }, { label: currentMenuItem?.label || '' }];
 
-  // Update page title based on active tab
-  const pageTitle = activeTab === 'overview' 
-    ? 'My Account - Manage Your Profile' 
-    : `${currentMenuItem?.label || 'My Account'} - Account Settings`;
-  usePageTitle(pageTitle);
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#fdf2f8] to-white">
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <div className="container mx-auto px-4 py-4 md:py-8 max-w-6xl">
         <Breadcrumbs items={breadcrumbItems} />
-        <div className="grid md:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-4 gap-4 md:gap-8">
           {/* Sidebar */}
           <div className="md:col-span-1">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden sticky top-24">
               {/* Profile Header */}
-              <div className="bg-gradient-to-r from-[#DD2C6C] to-[#e85a8a] p-6 text-white">
-                <div className="relative w-20 h-20 mx-auto mb-4 group">
+              <div className="bg-gradient-to-r from-[#DD2C6C] to-[#e85a8a] p-4 md:p-6 text-white">
+                <div className="relative w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 md:mb-4 group">
                   {/* Profile Image or Default User Icon */}
                   {previewImage || user.profileImage ? (
                     <img
@@ -222,8 +257,8 @@ const Profile = () => {
                     </button>
                   )}
                 </div>
-                <h2 className="text-xl font-bold text-center">{user.name || 'User'}</h2>
-                <p className="text-white/80 text-sm text-center mt-1">{user.email}</p>
+                <h2 className="text-lg md:text-xl font-bold text-center break-words">{user.name || 'User'}</h2>
+                <p className="text-white/80 text-xs md:text-sm text-center mt-1 break-words px-2">{user.email}</p>
                 <div className="flex justify-center mt-3">
                   <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30">
                     <Shield className="w-3 h-3 mr-1" />
