@@ -13,23 +13,45 @@ export interface ShippingAddress {
   country: string;
 }
 
-export interface OrderRequest {
+export interface OrderIntentRequest {
   items: CartItem[];
   shippingAddress: ShippingAddress;
   billingAddress?: ShippingAddress;
-  paymentMethod: 'cod' | 'card' | 'upi' | 'netbanking';
-  paymentDetails?: object;
+  paymentMethod: 'card' | 'upi' | 'netbanking';
   guestEmail?: string;
   guestPhone?: string;
 }
 
-export interface OrderResponse {
+export interface OrderIntentResponse {
   success: boolean;
   data: {
-    orderNumber: string;
-    orderId: string;
-    grandTotal: number;
+    orderIntentId: string;
+    amount: number;
+    currency: string;
     status: string;
+    expiresAt: string;
+    cartSnapshot: {
+      items: Array<{
+        productId: string;
+        variantSku?: string;
+        title: string;
+        qty: number;
+        unitPrice: number;
+        totalPrice: number;
+        image: string;
+      }>;
+      subtotal: number;
+      shippingFee: number;
+      tax: number;
+      discount: number;
+      grandTotal: number;
+    };
+    shippingAddress: ShippingAddress;
+    billingAddress: ShippingAddress;
+    paymentMethod: string;
+    createdAt: string;
+    guestEmail?: string;
+    guestPhone?: string;
   };
 }
 
@@ -66,8 +88,8 @@ export interface Order {
 }
 
 export const orderService = {
-  async createOrder(orderData: OrderRequest): Promise<OrderResponse> {
-    const response = await apiClient.post<OrderResponse>('/v1/orders', orderData);
+  async createOrderIntent(orderData: OrderIntentRequest): Promise<OrderIntentResponse> {
+    const response = await apiClient.post<OrderIntentResponse>('/v1/orders/intent', orderData);
     return response.data;
   },
 
@@ -80,22 +102,10 @@ export const orderService = {
     return response.data.data;
   },
 
-  async trackOrder(orderNumber: string): Promise<{
-    orderNumber: string;
-    status: string;
-    createdAt: string;
-    grandTotal: number;
-    itemCount: number;
-  }> {
+  async trackOrder(orderNumber: string): Promise<Order> {
     const response = await apiClient.get<{
       success: boolean;
-      data: {
-        orderNumber: string;
-        status: string;
-        createdAt: string;
-        grandTotal: number;
-        itemCount: number;
-      };
+      data: Order;
     }>(`/v1/orders/track/${orderNumber}`);
     return response.data.data;
   },

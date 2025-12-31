@@ -17,6 +17,9 @@ import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
+import TrackOrder from "./pages/TrackOrder";
+import MyOrders from "./pages/MyOrders";
+import ProfileOrderDetail from "./pages/ProfileOrderDetail";
 import Contact from "./pages/Contact";
 import Tutorial from "./pages/Tutorial";
 import Profile from "./pages/Profile";
@@ -58,15 +61,20 @@ const App = () => (
                 <AppLayout>
                   <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/products" element={<Products />} />
                     <Route path="/products/:id" element={<ProductDetail />} />
+                    <Route path="/products" element={<Products />} />
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/checkout" element={<Checkout />} />
                     <Route path="/order-confirmation/:orderNumber" element={<OrderConfirmation />} />
+                    <Route path="/orders/track/:orderNumber" element={<TrackOrder />} />
+                    <Route path="/orders/track" element={<TrackOrder />} />
+                    <Route path="/orders/my" element={<MyOrders />} />
+                    <Route path="/orders" element={<MyOrders />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/tutorial" element={<Tutorial />} />
-                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/profile/orders/:orderNumber" element={<ProfileOrderDetail />} />
                     <Route path="/profile/:tab" element={<Profile />} />
+                    <Route path="/profile" element={<Profile />} />
                     <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />

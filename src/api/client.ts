@@ -8,8 +8,11 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, // Important: This sends cookies with requests
+  withCredentials: true, // CRITICAL: This sends cookies with ALL requests
 });
+
+// Ensure credentials are sent with ALL requests (double-check)
+apiClient.defaults.withCredentials = true;
 
 // Response interceptor - handle common errors
 apiClient.interceptors.response.use(

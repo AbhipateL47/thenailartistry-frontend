@@ -54,8 +54,8 @@ const defaultSettings = {
   shadowOpacity: 0.05,
   showProgress: false,
   showClose: true,
-  entranceAnimation: 'slideDown',
-  exitAnimation: 'slideUpOut',
+  entranceAnimation: 'slideUp',
+  exitAnimation: 'slideDownOut',
   mobileEntranceAnimation: 'slideUp',
   mobileExitAnimation: 'slideDownOut',
   animationDuration: 250,
@@ -66,7 +66,7 @@ const defaultSettings = {
 class CustomToast {
   private container: HTMLElement | null = null;
   private toastIdCounter = 0;
-  private defaultPosition: ToastPosition = 'top-end';
+  private defaultPosition: ToastPosition = 'bottom-center';
   private toasts = new Map<string, ToastData>();
   private toastQueue: Array<{ options: ToastOptions; id: string }> = [];
   private stylesInjected = false;

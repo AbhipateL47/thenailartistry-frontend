@@ -27,18 +27,26 @@ export interface OrderItem {
 }
 
 export interface Order {
-  _id: string;
+  _id?: string;
   orderNumber: string;
-  items: OrderItem[];
-  totalAmount: number;
-  status: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-  shippingAddress: Address;
-  paymentMethod: string;
-  paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
+  items?: OrderItem[];
+  itemsPreview?: Array<{
+    title: string;
+    image: string;
+    qty: number;
+    unitPrice: number;
+  }>;
+  itemCount?: number;
+  totalAmount?: number;
+  grandTotal?: number;
+  status: 'PLACED' | 'PAID' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' | 'REFUNDED';
+  shippingAddress?: Address;
+  paymentMethod?: string;
+  paymentStatus?: 'pending' | 'paid' | 'failed' | 'refunded';
   trackingNumber?: string;
   estimatedDelivery?: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface NotificationPreferences {
@@ -68,7 +76,7 @@ export const userService = {
     return response.data.data;
   },
 
-  async updateProfile(data: { name?: string; phone?: string }): Promise<UserProfile> {
+  async updateProfile(data: { name?: string; phone?: string; email?: string }): Promise<UserProfile> {
     const response = await apiClient.put('/v1/user/profile', data);
     return response.data.data;
   },
