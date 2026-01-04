@@ -83,6 +83,14 @@ export interface Order {
     status: string;
     amount: number;
   };
+  tracking?: {
+    courier: string;
+    trackingId: string;
+    trackingUrl?: string;
+  };
+  shippedAt?: string;
+  deliveredAt?: string;
+  refundStatus?: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
   createdAt: string;
   updatedAt: string;
 }
@@ -108,6 +116,35 @@ export const orderService = {
       data: Order;
     }>(`/v1/orders/track/${orderNumber}`);
     return response.data.data;
+  },
+
+  async cancelOrder(orderId: string): Promise<{ success: boolean; message: string; data: any }> {
+    const response = await apiClient.put<{
+      success: boolean;
+      message: string;
+      data: {
+        orderId: string;
+        orderNumber: string;
+        status: string;
+        cancelledAt: string;
+        refundStatus?: string;
+      };
+    }>(`/v1/user/orders/${orderId}/cancel`);
+    return response.data;
+  },
+
+  // Get order ID by orderNumber from user's orders
+  async getOrderIdByOrderNumber(orderNumber: string): Promise<string | null> {
+    try {
+      // Import userService here to avoid circular dependency
+      const { userService } = await import('@/services/userService');
+      const response = await userService.getOrders(1, 100); // Get first 100 orders to find the one we need
+      const foundOrder = response.data.find(o => o.orderNumber === orderNumber);
+      return (foundOrder as any)?._id || foundOrder?._id || null;
+    } catch (error) {
+      console.error('Error getting order ID:', error);
+      return null;
+    }
   },
 };
 

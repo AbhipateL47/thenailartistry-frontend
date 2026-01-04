@@ -1,12 +1,13 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { userService } from '@/services/userService';
+import { userService, Order } from '@/services/userService';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency } from '@/utils/formatCurrency';
-import { Package, Calendar, Clock, CheckCircle2, XCircle, ChevronRight, Truck } from 'lucide-react';
+import { Package, Calendar, Clock, CheckCircle2, XCircle, ChevronRight, Truck, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
+import { toast } from '@/utils/toast';
 
 const statusConfig = {
   pending: { color: 'bg-amber-100 text-amber-700 border-amber-200', icon: Clock, label: 'Pending' },
@@ -19,11 +20,53 @@ const statusConfig = {
 
 export const ProfileOrders = () => {
   const navigate = useNavigate();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [totalOrders, setTotalOrders] = useState(0);
 
-  const { data: orders, isLoading, error } = useQuery({
-    queryKey: ['user-orders'],
-    queryFn: userService.getOrders,
-  });
+  const loadOrders = async (page: number = 1, append: boolean = false) => {
+    if (append) {
+      setIsLoadingMore(true);
+    } else {
+      setIsLoading(true);
+    }
+
+    try {
+      const response = await userService.getOrders(page, 5);
+      
+      if (append) {
+        setOrders(prev => [...prev, ...response.data]);
+      } else {
+        setOrders(response.data);
+      }
+      
+      setCurrentPage(response.pagination.page);
+      setHasMore(response.pagination.hasMore);
+      setTotalOrders(response.pagination.total);
+    } catch (error: any) {
+      console.error('Error loading orders:', error);
+      toast.error(error.response?.data?.message || 'Failed to load orders');
+      if (!append) {
+        setOrders([]);
+      }
+    } finally {
+      setIsLoading(false);
+      setIsLoadingMore(false);
+    }
+  };
+
+  const loadMore = () => {
+    if (!isLoadingMore && hasMore) {
+      loadOrders(currentPage + 1, true);
+    }
+  };
+
+  useEffect(() => {
+    loadOrders(1, false);
+  }, []);
 
   if (isLoading) {
     return (
@@ -36,15 +79,6 @@ export const ProfileOrders = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="text-center py-12">
-        <XCircle className="w-16 h-16 mx-auto text-red-300 mb-4" />
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to load orders</h3>
-        <p className="text-gray-500">Please try again later</p>
-      </div>
-    );
-  }
 
   if (!orders?.length) {
     return (
@@ -66,7 +100,7 @@ export const ProfileOrders = () => {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-900">My Orders</h2>
         <Badge variant="secondary" className="text-sm">
-          {orders.length} {orders.length === 1 ? 'order' : 'orders'}
+          {totalOrders || orders.length} {(totalOrders || orders.length) === 1 ? 'order' : 'orders'}
         </Badge>
       </div>
 
@@ -144,6 +178,27 @@ export const ProfileOrders = () => {
           );
         })}
       </div>
+
+      {/* Load More Button */}
+      {hasMore && (
+        <div className="flex justify-center pt-6 pb-4">
+          <Button
+            onClick={loadMore}
+            disabled={isLoadingMore}
+            variant="outline"
+            className="min-w-[120px]"
+          >
+            {isLoadingMore ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Loading...
+              </>
+            ) : (
+              'Load More'
+            )}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

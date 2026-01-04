@@ -102,9 +102,14 @@ export const userService = {
   },
 
   // Orders
-  async getOrders(): Promise<Order[]> {
-    const response = await apiClient.get('/v1/user/orders');
-    return response.data.data;
+  async getOrders(page: number = 1, limit: number = 5): Promise<{ data: Order[]; pagination: { page: number; limit: number; total: number; pages: number; hasMore: boolean } }> {
+    const response = await apiClient.get('/v1/user/orders', {
+      params: { page, limit },
+    });
+    return {
+      data: response.data.data,
+      pagination: response.data.pagination,
+    };
   },
 
   async getOrder(orderId: string): Promise<Order> {
