@@ -14,6 +14,7 @@ export interface Review {
     email: string;
     profileImage?: string;
   };
+  orderId?: string;
   rating: number;
   title?: string;
   body?: string;
@@ -25,11 +26,10 @@ export interface Review {
 }
 
 export interface CreateReviewRequest {
+  orderId: string;
   productId: string;
   rating: number;
-  title?: string;
-  body?: string;
-  images?: string[];
+  comment?: string;
 }
 
 export interface UpdateReviewRequest {
@@ -74,9 +74,9 @@ export const reviewService = {
     return response.data;
   },
 
-  // Create a new review
-  async createReview(data: CreateReviewRequest): Promise<{ success: boolean; message: string; data: Review }> {
-    const response = await apiClient.post<{ success: boolean; message: string; data: Review }>(
+  // Create a new review (verified purchase)
+  async createReview(data: CreateReviewRequest): Promise<{ success: boolean; message: string }> {
+    const response = await apiClient.post<{ success: boolean; message: string }>(
       '/v1/reviews',
       data
     );

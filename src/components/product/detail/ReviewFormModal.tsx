@@ -11,23 +11,28 @@ import { toast } from '@/utils/toast';
 
 interface ReviewFormModalProps {
   productId: string;
+  orderId?: string; // Required for order-based reviews
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
   existingReview?: Review | null;
+  isOrderReview?: boolean; // If true, use simplified order-based review form
 }
 
 export const ReviewFormModal = ({
   productId,
+  orderId,
   isOpen,
   onClose,
   onSuccess,
   existingReview,
+  isOrderReview = false,
 }: ReviewFormModalProps) => {
   const [rating, setRating] = useState(existingReview?.rating || 0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [title, setTitle] = useState(existingReview?.title || '');
   const [body, setBody] = useState(existingReview?.body || '');
+  const [comment, setComment] = useState(existingReview?.body || '');
   const [images, setImages] = useState<string[]>(existingReview?.images || []);
   const [uploadingImages, setUploadingImages] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,11 +43,13 @@ export const ReviewFormModal = ({
       setRating(existingReview.rating);
       setTitle(existingReview.title || '');
       setBody(existingReview.body || '');
+      setComment(existingReview.body || '');
       setImages(existingReview.images || []);
     } else {
       setRating(0);
       setTitle('');
       setBody('');
+      setComment('');
       setImages([]);
     }
   }, [existingReview]);
@@ -99,27 +106,44 @@ export const ReviewFormModal = ({
     setIsSubmitting(true);
 
     try {
-      if (existingReview) {
-        // Update existing review
-        const updateData: UpdateReviewRequest = {
-          rating,
-          title: title.trim() || undefined,
-          body: body.trim() || undefined,
-          images: images.length > 0 ? images : undefined,
-        };
-        await reviewService.updateReview(existingReview._id, updateData);
-        toast.success('Review updated successfully!');
+      if (isOrderReview && orderId) {
+        // Order-based review (verified purchase)
+        if (existingReview) {
+          // Update existing review - for now, we'll use the update endpoint
+          // Note: Update endpoint may need to be adjusted for order-based reviews
+          const updateData: UpdateReviewRequest = {
+            rating,
+            body: comment.trim() || undefined,
+          };
+          await reviewService.updateReview(existingReview._id, updateData);
+          toast.success('Review updated successfully!');
+        } else {
+          // Create new order-based review
+          const reviewData: CreateReviewRequest = {
+            orderId,
+            productId,
+            rating,
+            comment: comment.trim() || undefined,
+          };
+          await reviewService.createReview(reviewData);
+          toast.success('Review submitted successfully!');
+        }
       } else {
-        // Create new review
-        const reviewData: CreateReviewRequest = {
-          productId,
-          rating,
-          title: title.trim() || undefined,
-          body: body.trim() || undefined,
-          images: images.length > 0 ? images : undefined,
-        };
-        await reviewService.createReview(reviewData);
-        toast.success('Review submitted successfully! It will be visible after approval.');
+        // Product page review (legacy - not used in order details)
+        if (existingReview) {
+          const updateData: UpdateReviewRequest = {
+            rating,
+            title: title.trim() || undefined,
+            body: body.trim() || undefined,
+            images: images.length > 0 ? images : undefined,
+          };
+          await reviewService.updateReview(existingReview._id, updateData);
+          toast.success('Review updated successfully!');
+        } else {
+          // This path should not be used for order reviews
+          toast.error('Order ID is required for reviews');
+          return;
+        }
       }
       
       // Reset form
@@ -127,13 +151,23 @@ export const ReviewFormModal = ({
         setRating(0);
         setTitle('');
         setBody('');
+        setComment('');
         setImages([]);
       }
       
       onSuccess();
     } catch (error: any) {
       console.error('Error submitting review:', error);
-      toast.error(error?.response?.data?.message || `Failed to ${existingReview ? 'update' : 'submit'} review`);
+      const errorMessage = error?.response?.data?.message || `Failed to ${existingReview ? 'update' : 'submit'} review`;
+      
+      // Handle specific error codes
+      if (error?.response?.status === 403) {
+        toast.error('You can review only delivered orders');
+      } else if (error?.response?.status === 409) {
+        toast.error('You have already reviewed this product');
+      } else {
+        toast.error(errorMessage);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -144,6 +178,7 @@ export const ReviewFormModal = ({
       setRating(0);
       setTitle('');
       setBody('');
+      setComment('');
       setImages([]);
       setUploadingImages([]);
       onClose();
@@ -190,39 +225,62 @@ export const ReviewFormModal = ({
             </div>
           </div>
 
-          {/* Title */}
-          <div>
-            <Label htmlFor="review-title" className="text-base font-medium mb-2 block">
-              Review Title (Optional)
-            </Label>
-            <Input
-              id="review-title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Give your review a title"
-              maxLength={100}
-            />
-          </div>
+          {/* Order-based review: Comment only */}
+          {isOrderReview ? (
+            <div>
+              <Label htmlFor="review-comment" className="text-base font-medium mb-2 block">
+                Comment (Optional)
+              </Label>
+              <Textarea
+                id="review-comment"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Share your experience with this product..."
+                rows={5}
+                maxLength={1000}
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                {comment.length}/1000 characters
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Title */}
+              <div>
+                <Label htmlFor="review-title" className="text-base font-medium mb-2 block">
+                  Review Title (Optional)
+                </Label>
+                <Input
+                  id="review-title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Give your review a title"
+                  maxLength={100}
+                />
+              </div>
 
-          {/* Body */}
-          <div>
-            <Label htmlFor="review-body" className="text-base font-medium mb-2 block">
-              Your Review (Optional)
-            </Label>
-            <Textarea
-              id="review-body"
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              placeholder="Share your experience with this product..."
-              rows={5}
-              maxLength={1000}
-            />
-            <p className="text-xs text-muted-foreground mt-1">
-              {body.length}/1000 characters
-            </p>
-          </div>
+              {/* Body */}
+              <div>
+                <Label htmlFor="review-body" className="text-base font-medium mb-2 block">
+                  Your Review (Optional)
+                </Label>
+                <Textarea
+                  id="review-body"
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                  placeholder="Share your experience with this product..."
+                  rows={5}
+                  maxLength={1000}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {body.length}/1000 characters
+                </p>
+              </div>
+            </>
+          )}
 
-          {/* Images */}
+          {/* Images - Only for product page reviews, not order reviews */}
+          {!isOrderReview && (
           <div>
             <Label className="text-base font-medium mb-2 block">
               Photos (Optional)
@@ -286,6 +344,7 @@ export const ReviewFormModal = ({
               You can upload up to 5 photos. Max size: 5MB per image.
             </p>
           </div>
+          )}
 
           {/* Submit Buttons */}
           <div className="flex justify-end gap-3 pt-4 border-t">
