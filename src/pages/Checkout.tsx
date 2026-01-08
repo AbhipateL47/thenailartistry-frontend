@@ -76,7 +76,7 @@ export default function Checkout() {
   const formRef = useRef<HTMLFormElement>(null);
   // Generate dummy address on component mount
   const [dummyAddress] = useState(() => generateDummyAddress());
-  
+
   const { register, handleSubmit, watch, control, reset, formState: { errors } } = useForm<CheckoutFormData>({
     defaultValues: {
       sameAsShipping: true,
@@ -132,6 +132,7 @@ export default function Checkout() {
   const [currentIdempotencyKey, setCurrentIdempotencyKey] = useState<string | null>(null);
   const [razorpayKeyId, setRazorpayKeyId] = useState<string | null>(null);
   const [razorpayOrderId, setRazorpayOrderId] = useState<string | null>(null);
+  const [backendCalculatedAmount, setBackendCalculatedAmount] = useState<number | null>(null);
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const isSubmittingRef = useRef(false); // Prevent double submission
@@ -144,12 +145,54 @@ export default function Checkout() {
   });
 
   // Calculate totals
-  const effectiveSubtotal = subtotal;
-  const shippingFee = effectiveSubtotal > 1000 ? 0 : 50;
-  const tax = Math.round(effectiveSubtotal * 0.18);
-  const [discount, setDiscount] = useState(0);
+  // Subtotal is always raw cart total (pre-discount, pre-tax)
+  const rawSubtotal = subtotal;
+  const shippingFee = rawSubtotal > 1000 ? 0 : 70;
+  
+  // Multiple coupons support
+  interface AppliedCoupon {
+    id: string;
+    code: string;
+    type: 'flat' | 'percentage';
+    discountAmount: number;
+    originalValue: number;
+    stackable: boolean;
+  }
+  const [appliedCoupons, setAppliedCoupons] = useState<AppliedCoupon[]>([]);
   const [couponCode, setCouponCode] = useState('');
-  const grandTotal = effectiveSubtotal + shippingFee + tax - discount;
+  const [couponMessage, setCouponMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  
+  // Calculate total discount from all applied coupons
+  const totalDiscount = appliedCoupons.reduce((sum, coupon) => sum + coupon.discountAmount, 0);
+  
+  // Apply discounts BEFORE tax calculation
+  // Tax is calculated on (subtotal - totalDiscount)
+  const taxableAmount = Math.max(0, rawSubtotal - totalDiscount);
+  const tax = Math.round(taxableAmount * 0.18);
+  
+  // Grand total: subtotal + shipping + tax - discount
+  // Note: Backend will recalculate and validate, so this is just for display
+  const grandTotal = rawSubtotal + shippingFee + tax - totalDiscount;
+
+  // Clear coupons when cart items change
+  useEffect(() => {
+    if (items.length === 0) {
+      setAppliedCoupons([]);
+      setCouponCode('');
+      setCouponMessage(null);
+    }
+  }, [items.length]);
+
+  // Auto-dismiss coupon message after 3 seconds
+  useEffect(() => {
+    if (couponMessage) {
+      const timer = setTimeout(() => {
+        setCouponMessage(null);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [couponMessage]);
 
   // Load default address if available
   useEffect(() => {
@@ -171,22 +214,89 @@ export default function Checkout() {
   // Handle coupon code
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) {
+      setCouponMessage({ type: 'error', text: 'Please enter a coupon code' });
       toast.error('Please enter a coupon code');
       return;
     }
+
+    // Check if coupon is already applied
+    const codeUpper = couponCode.trim().toUpperCase();
+    if (appliedCoupons.some(c => c.code === codeUpper)) {
+      setCouponMessage({ type: 'error', text: 'This coupon is already applied' });
+      toast.error('This coupon is already applied');
+      return;
+    }
+
     setIsApplyingCoupon(true);
-    // TODO: Implement coupon validation API
-    // For now, mock validation
-    setTimeout(() => {
-      if (couponCode.toUpperCase() === 'WELCOME10') {
-        const discountAmount = Math.round(subtotal * 0.1);
-        setDiscount(discountAmount);
-        toast.success('Coupon applied! 10% discount');
-      } else {
-        toast.error('Invalid coupon code');
+    setCouponMessage(null);
+
+    try {
+      // Always send original subtotal (never discounted) for minCartValue validation
+      // Backend will calculate discount on original subtotal
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://api.thenailartistry.store'}/v1/coupons/validate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          code: couponCode.trim(),
+          cartItems: items.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity,
+          })),
+          subtotal: rawSubtotal, // Always original subtotal for validation
+          userId: user?.id || null,
+          existingCoupons: appliedCoupons.map(c => ({ id: c.id, code: c.code, stackable: c.stackable })),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        const errorMessage = data.message || 'Invalid coupon code';
+        setCouponMessage({ type: 'error', text: errorMessage });
+        toast.error(errorMessage);
+        return;
       }
+
+      // Success - add coupon to applied list
+      const newCoupon: AppliedCoupon = {
+        id: data.data.couponId,
+        code: data.data.code,
+        type: data.data.type,
+        discountAmount: data.data.discountAmount || 0,
+        originalValue: data.data.originalValue,
+        stackable: data.data.stackable || false,
+      };
+
+      setAppliedCoupons(prev => [...prev, newCoupon]);
+      
+      const successMessage = `Coupon "${newCoupon.code}" applied! ${newCoupon.type === 'percentage' 
+        ? `${newCoupon.originalValue}% off` 
+        : `${formatCurrency(newCoupon.originalValue)} off`}`;
+      
+      setCouponMessage({ type: 'success', text: successMessage });
+      toast.success(successMessage);
+      
+      // Clear input after successful application
+      setCouponCode('');
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || 'Failed to validate coupon. Please try again.';
+      setCouponMessage({ type: 'error', text: errorMessage });
+      toast.error(errorMessage);
+    } finally {
       setIsApplyingCoupon(false);
-    }, 500);
+    }
+  };
+
+  // Handle remove coupon
+  const handleRemoveCoupon = (couponId: string) => {
+    const coupon = appliedCoupons.find(c => c.id === couponId);
+    if (coupon) {
+      setAppliedCoupons(prev => prev.filter(c => c.id !== couponId));
+      toast.success(`Coupon "${coupon.code}" removed`);
+    }
   };
 
   const onSubmit = async (data: CheckoutFormData) => {
@@ -229,10 +339,10 @@ export default function Checkout() {
       );
       // Use saved address if selected, otherwise use form data
       let shippingAddress: ShippingAddress;
-      
+
       // Combine firstName and lastName
       const fullName = `${data.firstName} ${data.lastName}`.trim();
-      
+
       if (useSavedAddress && selectedAddressId && savedAddresses) {
         const selectedAddress = savedAddresses.find(addr => addr._id === selectedAddressId);
         if (selectedAddress) {
@@ -277,16 +387,16 @@ export default function Checkout() {
       const billingAddress: ShippingAddress = sameAsShipping
         ? shippingAddress
         : {
-            fullName: data.billingFullName,
-            phone: data.billingPhone,
-            email: data.billingEmail,
-            addressLine1: data.billingAddressLine1,
-            addressLine2: data.billingAddressLine2 || undefined,
-            city: data.billingCity,
-            state: data.billingState,
-            postalCode: data.billingPostalCode,
-            country: data.billingCountry,
-          };
+          fullName: data.billingFullName,
+          phone: data.billingPhone,
+          email: data.billingEmail,
+          addressLine1: data.billingAddressLine1,
+          addressLine2: data.billingAddressLine2 || undefined,
+          city: data.billingCity,
+          state: data.billingState,
+          postalCode: data.billingPostalCode,
+          country: data.billingCountry,
+        };
 
       // Filter out items with invalid productIds (mock data has string IDs like "1")
       // Valid MongoDB ObjectId is 24 hex characters
@@ -321,6 +431,14 @@ export default function Checkout() {
         shippingAddress,
         billingAddress,
         paymentMethod,
+        // Include applied coupons
+        ...(appliedCoupons.length > 0 && {
+          coupons: appliedCoupons.map(c => ({
+            couponId: c.id,
+            code: c.code,
+            discountAmount: c.discountAmount,
+          })),
+        }),
         ...(!isAuthenticated && {
           guestEmail: data.email,
           guestPhone: data.phone,
@@ -328,28 +446,35 @@ export default function Checkout() {
       };
 
       // Create OrderIntent (temporary state before payment)
+      // Backend recalculates and validates all totals - use backend's calculated amount
       const orderIntentResponse = await orderService.createOrderIntent(orderIntentData);
       const orderIntentId = orderIntentResponse.data.orderIntentId;
+      
+      // Use backend-calculated grandTotal (source of truth)
+      const backendGrandTotal = orderIntentResponse.data.cartSnapshot.grandTotal;
 
       // Initiate Razorpay payment for all payment methods
       try {
         const paymentResponse = await paymentService.createOrder({
           orderIntentId,
-          amount: grandTotal,
+          amount: backendGrandTotal, // Use backend-calculated amount
           paymentMethod: paymentMethod,
           idempotencyKey,
         });
 
         // Store payment details
+        // Use backend-calculated amount from payment response (source of truth)
+        const finalAmount = paymentResponse.data.amount || backendGrandTotal;
         setCurrentOrderIntentId(orderIntentId);
         setCurrentIdempotencyKey(idempotencyKey);
         setRazorpayKeyId(paymentResponse.data.razorpayKeyId);
         setRazorpayOrderId(paymentResponse.data.razorpayOrderId);
+        setBackendCalculatedAmount(finalAmount);
         setCurrentPaymentMethod(data.paymentMethod);
 
         // Open Razorpay checkout
         setShowRazorpayCheckout(true);
-        
+
         // Keep button disabled and loading until payment completes
         // Don't clear cart or navigate yet - wait for payment confirmation
         return;
@@ -373,18 +498,18 @@ export default function Checkout() {
     setShowRazorpayCheckout(false);
     setIsSubmitting(false);
     isSubmittingRef.current = false;
-    
+
     // Clear cart (both frontend and backend)
     clearCart();
-    
+
     navigate(`/order-confirmation/${orderNumber}`, {
-      state: { 
+      state: {
         orderData: {
           orderNumber,
-          payment: { 
-            status: 'paid', 
-            method: currentPaymentMethod || 'upi', 
-            provider: 'razorpay' 
+          payment: {
+            status: 'paid',
+            method: currentPaymentMethod || 'upi',
+            provider: 'razorpay'
           },
         },
       },
@@ -449,18 +574,18 @@ export default function Checkout() {
             <div>
               <Link to="/" className="text-2xl font-bold text-primary">The Nail Artistry</Link>
               <p className="text-sm text-gray-500">Get Press-on Nails at Home</p>
-      </div>
+            </div>
             <Link to="/cart" className="text-gray-600 hover:text-gray-900">
               <ShoppingBag className="h-6 w-6" />
             </Link>
-        </div>
+          </div>
         </div>
       </div>
 
       <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
         <div className="container mx-auto px-4 py-8">
           <div className="grid lg:grid-cols-[1fr,400px] gap-8 max-w-7xl mx-auto">
-          {/* Left Column - Forms */}
+            {/* Left Column - Forms */}
             <div className="space-y-6 order-2 lg:order-1">
               {/* Contact Section */}
               <section className="bg-white border border-gray-200 rounded-lg p-6">
@@ -470,27 +595,27 @@ export default function Checkout() {
                     <Link to="/login" className="text-sm text-primary hover:underline">
                       Sign in
                     </Link>
-                              )}
-                            </div>
-                <div className="space-y-4">
-                <div>
-                    <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    {...register('email', {
-                      required: 'Email is required',
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: 'Invalid email address',
-                      },
-                    })}
-                    className="mt-1"
-                  />
-                  {errors.email && (
-                    <p className="text-sm text-destructive mt-1">{errors.email.message}</p>
                   )}
                 </div>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      {...register('email', {
+                        required: 'Email is required',
+                        pattern: {
+                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                          message: 'Invalid email address',
+                        },
+                      })}
+                      className="mt-1"
+                    />
+                    {errors.email && (
+                      <p className="text-sm text-destructive mt-1">{errors.email.message}</p>
+                    )}
+                  </div>
                   <div className="flex items-center space-x-2">
                     <Controller
                       name="newsletter"
@@ -514,7 +639,7 @@ export default function Checkout() {
               <section className="bg-white border border-gray-200 rounded-lg p-6">
                 <h2 className="text-lg font-semibold mb-4">Delivery</h2>
                 <div className="space-y-4">
-                <div>
+                  <div>
                     <Label htmlFor="country">Country/Region</Label>
                     <Controller
                       name="country"
@@ -534,15 +659,15 @@ export default function Checkout() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="firstName">First name</Label>
-                  <Input
+                      <Input
                         id="firstName"
                         {...register('firstName', { required: 'First name is required' })}
-                    className="mt-1"
-                  />
+                        className="mt-1"
+                      />
                       {errors.firstName && (
                         <p className="text-sm text-destructive mt-1">{errors.firstName.message}</p>
-                  )}
-                </div>
+                      )}
+                    </div>
                     <div>
                       <Label htmlFor="lastName">Last name</Label>
                       <Input
@@ -558,17 +683,17 @@ export default function Checkout() {
                   <div>
                     <Label htmlFor="addressLine1">Address</Label>
                     <div className="relative mt-1">
-                  <Input
-                    id="addressLine1"
-                    {...register('addressLine1', { required: 'Address is required' })}
+                      <Input
+                        id="addressLine1"
+                        {...register('addressLine1', { required: 'Address is required' })}
                         className="pr-10"
-                  />
+                      />
                       <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     </div>
-                  {errors.addressLine1 && (
-                    <p className="text-sm text-destructive mt-1">{errors.addressLine1.message}</p>
-                  )}
-                </div>
+                    {errors.addressLine1 && (
+                      <p className="text-sm text-destructive mt-1">{errors.addressLine1.message}</p>
+                    )}
+                  </div>
                   <div>
                     <Label htmlFor="addressLine2">Apartment, suite, etc.</Label>
                     <Input
@@ -576,20 +701,20 @@ export default function Checkout() {
                       {...register('addressLine2')}
                       className="mt-1"
                     />
-                </div>
+                  </div>
                   <div className="grid grid-cols-3 gap-4">
-                <div>
+                    <div>
                       <Label htmlFor="city">City</Label>
-                  <Input
-                    id="city"
-                    {...register('city', { required: 'City is required' })}
-                    className="mt-1"
-                  />
-                  {errors.city && (
-                    <p className="text-sm text-destructive mt-1">{errors.city.message}</p>
-                  )}
-                </div>
-                <div>
+                      <Input
+                        id="city"
+                        {...register('city', { required: 'City is required' })}
+                        className="mt-1"
+                      />
+                      {errors.city && (
+                        <p className="text-sm text-destructive mt-1">{errors.city.message}</p>
+                      )}
+                    </div>
+                    <div>
                       <Label htmlFor="state">State</Label>
                       <Controller
                         name="state"
@@ -608,29 +733,29 @@ export default function Checkout() {
                             </SelectContent>
                           </Select>
                         )}
-                  />
-                  {errors.state && (
-                    <p className="text-sm text-destructive mt-1">{errors.state.message}</p>
-                  )}
-                </div>
-                <div>
+                      />
+                      {errors.state && (
+                        <p className="text-sm text-destructive mt-1">{errors.state.message}</p>
+                      )}
+                    </div>
+                    <div>
                       <Label htmlFor="postalCode">PIN code</Label>
-                  <Input
-                    id="postalCode"
+                      <Input
+                        id="postalCode"
                         {...register('postalCode', { required: 'PIN code is required' })}
-                    className="mt-1"
-                  />
-                  {errors.postalCode && (
-                    <p className="text-sm text-destructive mt-1">{errors.postalCode.message}</p>
-                  )}
-                </div>
+                        className="mt-1"
+                      />
+                      {errors.postalCode && (
+                        <p className="text-sm text-destructive mt-1">{errors.postalCode.message}</p>
+                      )}
+                    </div>
                   </div>
-                <div>
+                  <div>
                     <Label htmlFor="phone" className="flex items-center gap-2">
                       Phone
                       <HelpCircle className="h-4 w-4 text-gray-400" />
                     </Label>
-                  <Input
+                    <Input
                       id="phone"
                       type="tel"
                       {...register('phone', {
@@ -640,37 +765,37 @@ export default function Checkout() {
                           message: 'Phone must be 10 digits',
                         },
                       })}
-                    className="mt-1"
-                  />
+                      className="mt-1"
+                    />
                     {errors.phone && (
                       <p className="text-sm text-destructive mt-1">{errors.phone.message}</p>
-                  )}
-                </div>
+                    )}
+                  </div>
                   {isAuthenticated && (
                     <div className="flex items-center space-x-2">
-                <Controller
+                      <Controller
                         name="saveAddress"
-                  control={control}
-                  render={({ field }) => (
-                    <Checkbox
+                        control={control}
+                        render={({ field }) => (
+                          <Checkbox
                             id="saveAddress"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  )}
-                />
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        )}
+                      />
                       <Label htmlFor="saveAddress" className="text-sm font-normal cursor-pointer">
                         Save this information for next time
-                </Label>
-              </div>
+                      </Label>
+                    </div>
                   )}
-                  </div>
+                </div>
               </section>
 
               {/* Shipping Method Section */}
               <section className="bg-white border border-gray-200 rounded-lg p-6">
                 <h2 className="text-lg font-semibold mb-4">Shipping method</h2>
-                    <Input
+                <Input
                   placeholder="Enter your shipping address to view available shipping methods"
                   disabled
                   className="bg-gray-50"
@@ -698,17 +823,17 @@ export default function Checkout() {
                                 <span>UPI</span>
                                 <CreditCard className="h-4 w-4" />
                                 <span>+17</span>
-                  </div>
-                  </div>
+                              </div>
+                            </div>
                             <p className="text-xs text-gray-500 mt-2">
                               Clicking "Pay now" will redirect you to Razorpay to complete your purchase securely.
                             </p>
                             <div className="mt-3 p-2 bg-gray-50 rounded border border-gray-200 text-xs text-gray-400">
                               [Browser window preview]
-                  </div>
-                  </div>
-                  </div>
-                  </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </RadioGroup>
                   )}
                 />
@@ -725,15 +850,15 @@ export default function Checkout() {
                       <div className="flex items-center space-x-3">
                         <RadioGroupItem value="same" id="same" />
                         <Label htmlFor="same" className="cursor-pointer">Same as shipping address</Label>
-                  </div>
+                      </div>
                       <div className="flex items-center space-x-3">
                         <RadioGroupItem value="different" id="different" />
                         <Label htmlFor="different" className="cursor-pointer">Use a different billing address</Label>
-                </div>
+                      </div>
                     </RadioGroup>
-              )}
+                  )}
                 />
-            </section>
+              </section>
 
               {/* Pay Now Button */}
               <Button
@@ -760,32 +885,32 @@ export default function Checkout() {
                 <Link to="/terms" className="hover:text-gray-900">Terms of service</Link>
                 <Link to="/contact" className="hover:text-gray-900">Contact</Link>
               </div>
-          </div>
+            </div>
 
-          {/* Right Column - Order Summary */}
+            {/* Right Column - Order Summary */}
             <div className="lg:sticky lg:top-4 h-fit order-1 lg:order-2">
               <div className="bg-white border border-gray-200 rounded-lg p-6">
                 <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
-                
+
                 {/* Scrollable Product List */}
                 <div className="max-h-[400px] overflow-y-auto space-y-4 mb-6 pr-2">
                   {items.map((item) => (
-                  <div key={item.id} className="flex gap-3">
-                    <img
-                      src={item.image}
-                      alt={item.name}
+                    <div key={item.id} className="flex gap-3">
+                      <img
+                        src={item.image}
+                        alt={item.name}
                         className="w-20 h-20 rounded-md object-cover flex-shrink-0"
                       />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900">{item.name}</p>
                         <p className="text-xs text-gray-500 mt-1">Both Hands</p>
                         <p className="text-sm font-semibold text-gray-900 mt-2">
-                      {formatCurrency(item.price * item.quantity)}
-                    </p>
+                          {formatCurrency(item.price * item.quantity)}
+                        </p>
                       </div>
                       <div className="text-sm text-gray-600">{item.quantity}</div>
-                  </div>
-                ))}
+                    </div>
+                  ))}
                   {items.length > 3 && (
                     <div className="text-center pt-2">
                       <Button variant="ghost" size="sm" className="text-gray-500">
@@ -793,48 +918,124 @@ export default function Checkout() {
                       </Button>
                     </div>
                   )}
-              </div>
+                </div>
 
                 <Separator className="my-6" />
 
                 {/* Discount Code */}
                 <div className="space-y-2 mb-6">
                   <Label className="text-sm font-medium">Discount code</Label>
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Enter code"
-                    value={couponCode}
-                    onChange={(e) => setCouponCode(e.target.value)}
-                    className="flex-1"
-                    disabled={discount > 0}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={handleApplyCoupon}
-                    disabled={isApplyingCoupon || discount > 0 || !couponCode.trim()}
-                    className="shrink-0"
-                  >
-                    {isApplyingCoupon ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : discount > 0 ? (
-                      'Applied'
-                    ) : (
-                      'Apply'
-                    )}
-                  </Button>
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Enter code"
+                      value={couponCode}
+                      onChange={(e) => {
+                        setCouponCode(e.target.value);
+                        // Clear message when user types
+                        if (couponMessage) {
+                          setCouponMessage(null);
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !isApplyingCoupon && couponCode.trim()) {
+                          e.preventDefault();
+                          handleApplyCoupon();
+                        }
+                      }}
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleApplyCoupon}
+                      disabled={isApplyingCoupon || !couponCode.trim()}
+                      className="shrink-0"
+                    >
+                      {isApplyingCoupon ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        'Apply'
+                      )}
+                    </Button>
+                  </div>
+                  
+                  {/* Applied Coupons List */}
+                  {appliedCoupons.length > 0 && (
+                    <div className="space-y-2 mt-3">
+                      {appliedCoupons.map((coupon) => (
+                        <div
+                          key={coupon.id}
+                          className="flex items-center justify-between bg-green-50 border border-green-200 rounded-md px-3 py-2 animate-in slide-in-from-top-1 fade-in"
+                        >
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
+                            <svg className="h-4 w-4 text-green-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                            <div className="flex-1 min-w-0">
+                              <span className="text-sm font-medium text-green-800">{coupon.code}</span>
+                              <span className="text-xs text-green-600 ml-2">
+                                {coupon.type === 'percentage' 
+                                  ? `${coupon.originalValue}% off` 
+                                  : `${formatCurrency(coupon.originalValue)} off`}
+                              </span>
+                              {coupon.stackable && (
+                                <span className="text-xs text-green-500 ml-2">(Stackable)</span>
+                              )}
+                            </div>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleRemoveCoupon(coupon.id)}
+                            className="h-6 w-6 text-green-600 hover:text-green-800 hover:bg-green-100 flex-shrink-0"
+                          >
+                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Coupon Message */}
+                  {couponMessage && (
+                    <div
+                      className={`text-sm transition-all duration-300 ease-in-out ${couponMessage.type === 'success'
+                          ? 'text-green-600 animate-in slide-in-from-top-1 fade-in'
+                          : 'text-red-600 animate-in slide-in-from-top-1 fade-in'
+                        }`}
+                    >
+                      {couponMessage.type === 'success' && (
+                        <span className="inline-flex items-center gap-1">
+                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          {couponMessage.text}
+                        </span>
+                      )}
+                      {couponMessage.type === 'error' && (
+                        <span className="inline-flex items-center gap-1">
+                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                          {couponMessage.text}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
-              </div>
 
                 <Separator className="my-6" />
 
                 {/* Price Breakdown */}
                 <div className="space-y-3">
-                <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Subtotal · {items.length} item{items.length !== 1 ? 's' : ''}</span>
-                    <span className="font-medium">{formatCurrency(subtotal)}</span>
-                </div>
-                <div className="flex justify-between text-sm">
+                    <span className="font-medium">{formatCurrency(rawSubtotal)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
                     <span className="text-gray-600 flex items-center gap-1">
                       Shipping
                       <HelpCircle className="h-3 w-3 text-gray-400" />
@@ -842,21 +1043,35 @@ export default function Checkout() {
                     <span className="font-medium">
                       {shippingFee === 0 ? 'Free' : formatCurrency(shippingFee)}
                     </span>
-                </div>
-                {discount > 0 && (
-                  <div className="flex justify-between text-sm text-green-600">
-                    <span>Discount</span>
-                      <span className="font-medium">-{formatCurrency(discount)}</span>
                   </div>
-                )}
-              </div>
+                  {totalDiscount > 0 && (
+                    <div className="space-y-1">
+                      {appliedCoupons.map((coupon) => (
+                        <div key={coupon.id} className="flex justify-between text-sm text-green-600">
+                          <span>Discount ({coupon.code})</span>
+                          <span className="font-medium">-{formatCurrency(coupon.discountAmount)}</span>
+                        </div>
+                      ))}
+                      {appliedCoupons.length > 1 && (
+                        <div className="flex justify-between text-sm font-semibold text-green-700 pt-1 border-t border-green-200">
+                          <span>Total Discount</span>
+                          <span>-{formatCurrency(totalDiscount)}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Tax (GST)</span>
+                    <span className="font-medium">{formatCurrency(tax)}</span>
+                  </div>
+                </div>
 
                 <Separator className="my-6" />
 
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-semibold">Total</span>
                   <span className="text-lg font-bold">INR {formatCurrency(grandTotal)}</span>
-              </div>
+                </div>
               </div>
             </div>
           </div>
@@ -864,21 +1079,22 @@ export default function Checkout() {
       </form>
 
       {/* Razorpay Checkout */}
-      {showRazorpayCheckout && 
-       currentOrderIntentId && 
-       currentIdempotencyKey && 
-       razorpayKeyId && 
-       razorpayOrderId && (
-        <RazorpayCheckout
-          orderIntentId={currentOrderIntentId}
-          amount={grandTotal}
-          idempotencyKey={currentIdempotencyKey}
-          razorpayKeyId={razorpayKeyId}
-          razorpayOrderId={razorpayOrderId}
-          onSuccess={handlePaymentSuccess}
-          onError={handlePaymentError}
-        />
-      )}
+      {showRazorpayCheckout &&
+        currentOrderIntentId &&
+        currentIdempotencyKey &&
+        razorpayKeyId &&
+        razorpayOrderId &&
+        backendCalculatedAmount !== null && (
+          <RazorpayCheckout
+            orderIntentId={currentOrderIntentId}
+            amount={backendCalculatedAmount} // Use backend-calculated amount (source of truth)
+            idempotencyKey={currentIdempotencyKey}
+            razorpayKeyId={razorpayKeyId}
+            razorpayOrderId={razorpayOrderId}
+            onSuccess={handlePaymentSuccess}
+            onError={handlePaymentError}
+          />
+        )}
 
       {/* OTP Login Modal - Show when user clicks Place Order without login */}
       <OTPLoginModal
