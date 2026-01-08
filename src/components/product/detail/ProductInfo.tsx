@@ -22,9 +22,13 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
   const { addItem, openDrawer } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   
-  const price = productService.getLowestPrice(product);
-  const mrp = productService.getLowestMrp(product);
-  const discountPercent = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
+  const basePrice = productService.getLowestPrice(product);
+  const isOnSale = product.isOnSale === true && typeof product.salePercent === 'number' && product.salePercent > 0;
+  
+  // Calculate final price: if on sale, apply discount to base price
+  const finalPrice = isOnSale
+    ? Math.round(basePrice - (basePrice * product.salePercent) / 100)
+    : basePrice;
   const isWishlisted = isInWishlist(product._id);
   const inStock = productService.isInStock(product);
   
@@ -39,7 +43,7 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
       productId: product._id,
       slug: product.slug,
       name: product.name,
-      price: price,
+      price: finalPrice,
       image: product.primaryImage,
       quantity: 1,
       variant: selectedVariant,
@@ -59,9 +63,8 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
       slug: product.slug,
       name: product.name,
       primaryImage: product.primaryImage,
-      price: price,
-      mrp: mrp,
-    });
+      price: finalPrice,
+    } as any);
     // Toast is handled in WishlistContext
   };
 
@@ -87,20 +90,19 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
 
       {/* Price */}
       <div className="flex items-baseline gap-3">
-        <span className="text-3xl font-bold">
-          {formatCurrency(price)}
-        </span>
-        {mrp > price && (
+        {isOnSale ? (
           <>
             <span className="text-xl text-muted-foreground line-through">
-              {formatCurrency(mrp)}
+              {formatCurrency(basePrice)}
             </span>
-            {discountPercent > 0 && (
-              <Badge variant="destructive" className="text-xs">
-                -{discountPercent}%
-              </Badge>
-            )}
+            <span className="text-3xl font-bold">
+              {formatCurrency(finalPrice)}
+            </span>
           </>
+        ) : (
+          <span className="text-3xl font-bold">
+            {formatCurrency(basePrice)}
+          </span>
         )}
       </div>
 

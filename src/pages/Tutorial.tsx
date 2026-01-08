@@ -315,8 +315,13 @@ export default function Tutorial() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {featuredProducts.map((product) => {
-                  const price = productService.getLowestPrice(product);
-                  const mrp = productService.getLowestMrp(product);
+                  const basePrice = productService.getLowestPrice(product);
+                  const isOnSale = product.isOnSale === true && typeof product.salePercent === 'number' && product.salePercent > 0;
+                  
+                  // Calculate final price: if on sale, apply discount to base price
+                  const finalPrice = isOnSale
+                    ? Math.round(basePrice - (basePrice * product.salePercent) / 100)
+                    : basePrice;
                   
                   return (
                     <div key={product._id} className="group bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all">
@@ -333,11 +338,15 @@ export default function Tutorial() {
                         </h3>
                         <p className="text-sm text-[#1a1a1a]/60 mb-3">As seen in the tutorial</p>
                         <div className="flex items-center gap-2 mb-3">
-                          <span className="text-2xl font-bold">{formatCurrency(price)}</span>
-                          {mrp > price && (
-                            <span className="text-sm text-muted-foreground line-through">
-                              {formatCurrency(mrp)}
-                            </span>
+                          {isOnSale ? (
+                            <>
+                              <span className="text-sm text-muted-foreground line-through">
+                                {formatCurrency(basePrice)}
+                              </span>
+                              <span className="text-2xl font-bold">{formatCurrency(finalPrice)}</span>
+                            </>
+                          ) : (
+                            <span className="text-2xl font-bold">{formatCurrency(basePrice)}</span>
                           )}
                         </div>
                         {product.ratingAvg > 0 && (

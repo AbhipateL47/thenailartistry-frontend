@@ -15,9 +15,9 @@ export const ProductGallery = ({ product, onFullscreenClick }: ProductGalleryPro
   const thumbnailScrollRef = useRef<HTMLDivElement>(null);
   const images = [product.primaryImage, ...product.gallery];
   
-  const price = productService.getLowestPrice(product);
-  const mrp = productService.getLowestMrp(product);
-  const discountPercent = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
+  // Only show discount badge if product is on sale AND has valid salePercent
+  const isOnSale = product.isOnSale === true && typeof product.salePercent === 'number' && product.salePercent > 0;
+  const discountPercent = isOnSale ? product.salePercent : 0;
 
   const handlePrevious = () => {
     if (selectedImage > 0) {

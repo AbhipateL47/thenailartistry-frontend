@@ -3,7 +3,7 @@ import { Star, Heart, Eye, ShoppingBag } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Product, productService } from '@/services/productService';
-import { formatCurrency, calculateDiscount } from '@/utils/formatCurrency';
+import { formatCurrency } from '@/utils/formatCurrency';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useCart } from '@/contexts/CartContext';
 import { toast } from '@/utils/toast';
@@ -16,10 +16,14 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, viewMode = 'grid', hideStockStatus = false }: ProductCardProps) => {
-  const price = productService.getLowestPrice(product);
-  const mrp = productService.getLowestMrp(product);
-  const hasDiscount = product.isOnSale && product.salePercent && product.salePercent > 0;
-  const discount = hasDiscount ? product.salePercent : (mrp > price ? calculateDiscount(mrp, price) : 0);
+  const basePrice = productService.getLowestPrice(product);
+  const isOnSale = product.isOnSale === true && typeof product.salePercent === 'number' && product.salePercent > 0;
+  
+  // Calculate final price: if on sale, apply discount to base price
+  const finalPrice = isOnSale
+    ? Math.round(basePrice - (basePrice * product.salePercent) / 100)
+    : basePrice;
+  
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { addItem, openDrawer } = useCart();
   const isWishlisted = isInWishlist(product._id);
@@ -40,7 +44,7 @@ export const ProductCard = ({ product, viewMode = 'grid', hideStockStatus = fals
       productId: product._id,
       slug: product.slug,
       name: product.name,
-      price: price,
+      price: finalPrice,
       image: product.primaryImage,
       quantity: 1,
     });
@@ -100,12 +104,18 @@ export const ProductCard = ({ product, viewMode = 'grid', hideStockStatus = fals
 
             {/* Price */}
             <div className="flex items-center gap-2 mb-2">
-              <span className="font-bold text-lg">
-                {formatCurrency(price)}
-              </span>
-              {mrp > price && (
-                <span className="text-sm text-muted-foreground line-through">
-                  {formatCurrency(mrp)}
+              {isOnSale ? (
+                <>
+                  <span className="text-sm text-muted-foreground line-through">
+                    {formatCurrency(basePrice)}
+                  </span>
+                  <span className="font-bold text-lg">
+                    {formatCurrency(finalPrice)}
+                  </span>
+                </>
+              ) : (
+                <span className="font-bold text-lg">
+                  {formatCurrency(basePrice)}
                 </span>
               )}
             </div>
@@ -193,12 +203,18 @@ export const ProductCard = ({ product, viewMode = 'grid', hideStockStatus = fals
           <div className="flex items-center justify-between mt-1">
             {/* Price */}
             <div className="flex items-center gap-1.5">
-              <span className="font-semibold text-sm">
-                {formatCurrency(price)}
-              </span>
-              {mrp > price && (
-                <span className="text-xs text-muted-foreground line-through">
-                  {formatCurrency(mrp)}
+              {isOnSale ? (
+                <>
+                  <span className="text-xs text-muted-foreground line-through">
+                    {formatCurrency(basePrice)}
+                  </span>
+                  <span className="font-semibold text-sm">
+                    {formatCurrency(finalPrice)}
+                  </span>
+                </>
+              ) : (
+                <span className="font-semibold text-sm">
+                  {formatCurrency(basePrice)}
                 </span>
               )}
             </div>

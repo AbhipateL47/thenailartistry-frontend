@@ -16,8 +16,14 @@ export const StickyAddToCartBar = ({ product }: StickyAddToCartBarProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const { addItem, openDrawer } = useCart();
   
-  const price = productService.getLowestPrice(product);
-  const mrp = productService.getLowestMrp(product);
+  const basePrice = productService.getLowestPrice(product);
+  const isOnSale = product.isOnSale === true && typeof product.salePercent === 'number' && product.salePercent > 0;
+  
+  // Calculate final price: if on sale, apply discount to base price
+  const finalPrice = isOnSale
+    ? Math.round(basePrice - (basePrice * product.salePercent) / 100)
+    : basePrice;
+  
   const inStock = productService.isInStock(product);
 
   useEffect(() => {
@@ -38,7 +44,7 @@ export const StickyAddToCartBar = ({ product }: StickyAddToCartBarProps) => {
       productId: product._id,
       slug: product.slug,
       name: product.name,
-      price: price,
+      price: finalPrice,
       image: product.primaryImage,
       quantity,
       variant: 'Both Hands',
@@ -73,11 +79,15 @@ export const StickyAddToCartBar = ({ product }: StickyAddToCartBarProps) => {
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium truncate">{product.name}</p>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-sm font-bold">{formatCurrency(price)}</span>
-              {mrp > price && (
-                <span className="text-xs text-muted-foreground line-through">
-                  {formatCurrency(mrp)}
-                </span>
+              {isOnSale ? (
+                <>
+                  <span className="text-xs text-muted-foreground line-through">
+                    {formatCurrency(basePrice)}
+                  </span>
+                  <span className="text-sm font-bold">{formatCurrency(finalPrice)}</span>
+                </>
+              ) : (
+                <span className="text-sm font-bold">{formatCurrency(basePrice)}</span>
               )}
             </div>
           </div>
