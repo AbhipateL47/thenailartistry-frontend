@@ -34,7 +34,7 @@ export default function TrackOrder() {
   // Fetch order details
   const { data: order, isLoading: isLoadingOrder, error: orderError } = useQuery({
     queryKey: ['order', trackingOrderNumber, email],
-    queryFn: () => orderService.getOrderByNumber(trackingOrderNumber, email || undefined),
+    queryFn: ({ signal }) => orderService.getOrderByNumber(trackingOrderNumber, email || undefined, signal),
     enabled: !!trackingOrderNumber && (!!email || !paramOrderNumber),
     retry: false,
   });
@@ -42,7 +42,7 @@ export default function TrackOrder() {
   // Fetch tracking info
   const { data: trackInfo, isLoading: isLoadingTrack } = useQuery({
     queryKey: ['track-order', trackingOrderNumber],
-    queryFn: () => orderService.trackOrder(trackingOrderNumber),
+    queryFn: ({ signal }) => orderService.trackOrder(trackingOrderNumber, signal),
     enabled: !!trackingOrderNumber,
     retry: false,
   });

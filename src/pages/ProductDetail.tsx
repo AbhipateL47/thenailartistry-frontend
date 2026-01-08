@@ -25,15 +25,14 @@ export default function ProductDetail() {
 
   const { data: product, isLoading } = useQuery({
     queryKey: ['product', id],
-    queryFn: () => productService.getProduct(id!),
+    queryFn: ({ signal }) => productService.getProduct(id!, signal),
     enabled: !!id,
   });
 
   // Fetch related products (People Also Bought)
   const { data: relatedProducts } = useQuery({
     queryKey: ['related-products', product?._id],
-    queryFn: () =>
-      productService.getProducts({ limit: 4 }),
+    queryFn: ({ signal }) => productService.getProducts({ limit: 4 }, signal),
     enabled: !!product,
   });
 

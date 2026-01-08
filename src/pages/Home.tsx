@@ -21,7 +21,7 @@ export default function Home() {
   // Fetch featured products from API
   const { data: featuredProducts = [], isLoading: isLoadingFeatured } = useQuery({
     queryKey: ['featuredProducts'],
-    queryFn: () => productService.getFeaturedProducts(12), // Get 12 featured products
+    queryFn: ({ signal }) => productService.getFeaturedProducts(12), // Get 12 featured products
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
