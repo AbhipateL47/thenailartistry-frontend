@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState, FormEvent } from 'react';
 import { Search, ShoppingCart, User, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +16,8 @@ export const HeaderActions = ({ variant = 'desktop', onCartClick }: HeaderAction
   const { totalItems, openDrawer } = useCart();
   const { wishlist } = useWishlist();
   const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const [searchValue, setSearchValue] = useState('');
   
   // Use wishlistCount from user object (lightweight) for header badge
   // Fallback to wishlist.length for guest users or if count is not available
@@ -27,6 +30,15 @@ export const HeaderActions = ({ variant = 'desktop', onCartClick }: HeaderAction
       onCartClick();
     } else {
       openDrawer();
+    }
+  };
+
+  const handleSearchSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const trimmedValue = searchValue.trim();
+    if (trimmedValue) {
+      navigate(`/products?search=${encodeURIComponent(trimmedValue)}`);
+      setSearchValue(''); // Clear search after navigation
     }
   };
 
@@ -55,14 +67,16 @@ export const HeaderActions = ({ variant = 'desktop', onCartClick }: HeaderAction
   return (
     <div className="flex items-center gap-1">
       {/* Search bar */}
-      <div className="relative hidden md:flex items-center">
-        <Search className="absolute left-3 h-4 w-4 text-gray-400" />
+      <form onSubmit={handleSearchSubmit} className="relative hidden md:flex items-center">
+        <Search className="absolute left-3 h-4 w-4 text-gray-400 pointer-events-none" />
         <Input
           type="search"
           placeholder="I'm looking for..."
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
           className="w-48 xl:w-64 pl-9 pr-4 h-9 rounded-full border-gray-300 text-sm focus:border-[#DD2C6C] focus:ring-1 focus:ring-[#DD2C6C]"
         />
-      </div>
+      </form>
 
       {/* User icon / Avatar */}
       <Button
