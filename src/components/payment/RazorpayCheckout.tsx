@@ -165,8 +165,9 @@ export const RazorpayCheckout = ({
       }
     }
     
-    // If polling fails, still show success but user needs to check order
-    toast.warning('Payment successful! Order is being processed. Please check your orders.');
+    // If polling fails or times out, do NOT show hard success
+    // Show appropriate message that payment was received but order confirmation is pending
+    toast.warning('Payment received, order confirmation pending. Please check Orders.');
     onError('Order creation delayed');
   };
 
