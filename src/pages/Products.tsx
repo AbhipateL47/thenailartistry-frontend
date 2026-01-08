@@ -26,16 +26,31 @@ export default function Products() {
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [attributes, setAttributes] = useState<Array<{ _id: string; name: string; slug: string; values: string[] }>>([]);
+  const [selectedAttributeFilters, setSelectedAttributeFilters] = useState<Record<string, string[]>>({});
 
-  // Read filters from URL
+  // Read ALL filters from URL - this ensures we react to ANY URL param change
   const minPrice = Number(searchParams.get('minPrice')) || 0;
   const maxPrice = Number(searchParams.get('maxPrice')) || 2000;
   const priceRange = [minPrice, maxPrice];
   
-  const selectedCategories = searchParams.get('type')?.split(',').filter(Boolean) || [];
-  const selectedLengths = searchParams.get('length')?.split(',').filter(Boolean) || [];
-  const selectedShapes = searchParams.get('shape')?.split(',').filter(Boolean) || [];
   const sortBy = searchParams.get('sort') || 'popular';
+  const searchQuery = searchParams.get('search') || '';
+  const isFeatured = searchParams.get('isFeatured') === 'true';
+  const isOnSale = searchParams.get('isOnSale') === 'true';
+
+  // Read ALL dynamic attribute filters from URL (including length, shape, category, etc.)
+  useEffect(() => {
+    const attributeFilters: Record<string, string[]> = {};
+    searchParams.forEach((value, key) => {
+      // Skip system params only
+      const systemParams = ['sort', 'minPrice', 'maxPrice', 'page', 'limit', 'search', 'isFeatured', 'isOnSale'];
+      if (!systemParams.includes(key) && value) {
+        attributeFilters[key] = value.split(',').filter(Boolean);
+      }
+    });
+    setSelectedAttributeFilters(attributeFilters);
+  }, [searchParams]);
 
   // Debounced price range for API calls
   const [debouncedPriceRange, setDebouncedPriceRange] = useState(priceRange);
@@ -48,8 +63,13 @@ export default function Products() {
     return () => clearTimeout(timer);
   }, [minPrice, maxPrice]);
 
-  // Create a filter key to detect filter changes
-  const filterKey = `${debouncedPriceRange[0]}-${debouncedPriceRange[1]}-${selectedCategories.join(',')}-${selectedLengths.join(',')}-${selectedShapes.join(',')}-${sortBy}`;
+  // Create a comprehensive filter key that includes ALL URL params
+  // This ensures ANY URL change triggers a refetch
+  const attributeFilterKey = Object.entries(selectedAttributeFilters)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, values]) => `${key}:${values.join(',')}`)
+    .join('|');
+  const filterKey = `${debouncedPriceRange[0]}-${debouncedPriceRange[1]}-${sortBy}-${searchQuery}-${isFeatured}-${isOnSale}-${attributeFilterKey}`;
 
   // Fetch products
   const fetchProducts = useCallback(async (page: number, append: boolean = false) => {
@@ -60,21 +80,36 @@ export default function Products() {
     }
 
     try {
-      const response = await productService.getProducts({
+      // Build complete filter params from ALL URL params
+      const filterParams: any = {
         page,
         limit: 12,
         minPrice: debouncedPriceRange[0],
         maxPrice: debouncedPriceRange[1],
-        category: selectedCategories.length > 0 ? selectedCategories.join(',') : undefined,
-        length: selectedLengths.length > 0 ? selectedLengths.join(',') : undefined,
-        shape: selectedShapes.length > 0 ? selectedShapes.join(',') : undefined,
         sort: sortBy as any,
+        search: searchQuery || undefined,
+        isFeatured: isFeatured || undefined,
+        isOnSale: isOnSale || undefined,
+      };
+
+      // Add ALL dynamic attribute filters (including length, shape, category, etc.)
+      Object.entries(selectedAttributeFilters).forEach(([key, values]) => {
+        if (values.length > 0) {
+          filterParams[key] = values.join(',');
+        }
       });
+
+      const response = await productService.getProducts(filterParams);
 
       if (append) {
         setProducts((prev) => [...prev, ...response.data]);
       } else {
         setProducts(response.data);
+      }
+
+      // Store attributes from response
+      if (response.filters?.attributes) {
+        setAttributes(response.filters.attributes);
       }
 
       setTotalProducts(response.pagination?.total || 0);
@@ -86,7 +121,7 @@ export default function Products() {
       setIsLoading(false);
       setIsLoadingMore(false);
     }
-  }, [debouncedPriceRange, selectedCategories, selectedLengths, selectedShapes, sortBy]);
+  }, [debouncedPriceRange, sortBy, selectedAttributeFilters, searchQuery, isFeatured, isOnSale]);
 
   // Initial fetch and filter change
   useEffect(() => {
@@ -155,31 +190,13 @@ export default function Products() {
     }, { replace: true });
   }, [setSearchParams]);
 
-  // Handle category toggle
-  const handleCategoryToggle = useCallback((category: string) => {
-    const current = searchParams.get('type')?.split(',').filter(Boolean) || [];
-    const updated = current.includes(category)
-      ? current.filter((c) => c !== category)
-      : [...current, category];
-    updateFilters('type', updated.length > 0 ? updated.join(',') : null);
-  }, [searchParams, updateFilters]);
-
-  // Handle length toggle
-  const handleLengthToggle = useCallback((length: string) => {
-    const current = searchParams.get('length')?.split(',').filter(Boolean) || [];
-    const updated = current.includes(length)
-      ? current.filter((l) => l !== length)
-      : [...current, length];
-    updateFilters('length', updated.length > 0 ? updated.join(',') : null);
-  }, [searchParams, updateFilters]);
-
-  // Handle shape toggle
-  const handleShapeToggle = useCallback((shape: string) => {
-    const current = searchParams.get('shape')?.split(',').filter(Boolean) || [];
-    const updated = current.includes(shape)
-      ? current.filter((s) => s !== shape)
-      : [...current, shape];
-    updateFilters('shape', updated.length > 0 ? updated.join(',') : null);
+  // Handle dynamic attribute filter toggle (includes length, shape, category, etc.)
+  const handleAttributeToggle = useCallback((attributeSlug: string, value: string) => {
+    const current = searchParams.get(attributeSlug)?.split(',').filter(Boolean) || [];
+    const updated = current.includes(value)
+      ? current.filter((v) => v !== value)
+      : [...current, value];
+    updateFilters(attributeSlug, updated.length > 0 ? updated.join(',') : null);
   }, [searchParams, updateFilters]);
 
   // Handle sort change
@@ -200,9 +217,15 @@ export default function Products() {
 
   // Build breadcrumb based on active filters
   const getPageTitle = () => {
-    if (selectedCategories.length === 1) return `${selectedCategories[0]} Nails`;
-    if (selectedShapes.length === 1) return `${selectedShapes[0]} Nails`;
-    if (selectedLengths.length === 1) return `${selectedLengths[0]} Nails`;
+    // Check if any single attribute filter is active
+    const activeFilters = Object.entries(selectedAttributeFilters).filter(([_, values]) => values.length === 1);
+    if (activeFilters.length === 1) {
+      const [attributeSlug, values] = activeFilters[0];
+      const attribute = attributes.find(attr => attr.slug === attributeSlug);
+      if (attribute) {
+        return `${values[0]} ${attribute.name}`;
+      }
+    }
     return 'All Products';
   };
 
@@ -224,12 +247,13 @@ export default function Products() {
               <ProductFilters
                 priceRange={priceRange}
                 onPriceRangeChange={handlePriceRangeChange}
-                selectedCategories={selectedCategories}
-                onCategoryToggle={handleCategoryToggle}
-                selectedLengths={selectedLengths}
-                onLengthToggle={handleLengthToggle}
-                selectedShapes={selectedShapes}
-                onShapeToggle={handleShapeToggle}
+                attributes={attributes}
+                selectedAttributeFilters={selectedAttributeFilters}
+                onAttributeToggle={handleAttributeToggle}
+                isFeatured={isFeatured}
+                onFeaturedToggle={(checked) => updateFilters('isFeatured', checked ? 'true' : null)}
+                isOnSale={isOnSale}
+                onSaleToggle={(checked) => updateFilters('isOnSale', checked ? 'true' : null)}
               />
             </div>
           </aside>
@@ -299,12 +323,13 @@ export default function Products() {
         onClose={() => setMobileFiltersOpen(false)}
         priceRange={priceRange}
         onPriceRangeChange={handlePriceRangeChange}
-        selectedCategories={selectedCategories}
-        onCategoryToggle={handleCategoryToggle}
-        selectedLengths={selectedLengths}
-        onLengthToggle={handleLengthToggle}
-        selectedShapes={selectedShapes}
-        onShapeToggle={handleShapeToggle}
+        attributes={attributes}
+        selectedAttributeFilters={selectedAttributeFilters}
+        onAttributeToggle={handleAttributeToggle}
+        isFeatured={isFeatured}
+        onFeaturedToggle={(checked) => updateFilters('isFeatured', checked ? 'true' : null)}
+        isOnSale={isOnSale}
+        onSaleToggle={(checked) => updateFilters('isOnSale', checked ? 'true' : null)}
         onApply={applyFilters}
       />
     </div>

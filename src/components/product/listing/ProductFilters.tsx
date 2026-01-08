@@ -3,48 +3,52 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { formatCurrency } from '@/utils/formatCurrency';
 import {
-  filterCategories,
-  filterLengths,
-  filterShapes,
-  filterOccasions,
-  filterTextures,
-  filterColors,
-} from '@/constants/filters';
-import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
 
+interface ProductAttribute {
+  _id: string;
+  name: string;
+  slug: string;
+  values: string[];
+}
+
 interface ProductFiltersProps {
   priceRange: number[];
   onPriceRangeChange: (range: number[]) => void;
-  selectedCategories: string[];
-  onCategoryToggle: (category: string) => void;
-  selectedLengths?: string[];
-  onLengthToggle?: (length: string) => void;
-  selectedShapes?: string[];
-  onShapeToggle?: (shape: string) => void;
+  attributes?: ProductAttribute[];
+  selectedAttributeFilters?: Record<string, string[]>;
+  onAttributeToggle?: (attributeSlug: string, value: string) => void;
+  isFeatured?: boolean;
+  onFeaturedToggle?: (checked: boolean) => void;
+  isOnSale?: boolean;
+  onSaleToggle?: (checked: boolean) => void;
   variant?: 'desktop' | 'mobile';
 }
 
 export const ProductFilters = ({
   priceRange,
   onPriceRangeChange,
-  selectedCategories,
-  onCategoryToggle,
-  selectedLengths = [],
-  onLengthToggle,
-  selectedShapes = [],
-  onShapeToggle,
+  attributes = [],
+  selectedAttributeFilters = {},
+  onAttributeToggle,
+  isFeatured = false,
+  onFeaturedToggle,
+  isOnSale = false,
+  onSaleToggle,
   variant = 'desktop',
 }: ProductFiltersProps) => {
   const prefix = variant === 'mobile' ? 'mobile-' : '';
 
+  // Get default accordion values - include price and any attributes
+  const defaultAccordionValues = ['price', ...attributes.map(attr => attr.slug)];
+
   return (
     <div className="space-y-1">
-      <Accordion type="multiple" defaultValue={['price', 'type']} className="w-full">
+      <Accordion type="multiple" defaultValue={defaultAccordionValues} className="w-full">
         {/* Price */}
         <AccordionItem value="price" className="border-b border-gray-200">
           <AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
@@ -67,161 +71,90 @@ export const ProductFilters = ({
           </AccordionContent>
         </AccordionItem>
 
-        {/* Type / Style */}
-        <AccordionItem value="type" className="border-b border-gray-200">
-          <AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
-            Type
-          </AccordionTrigger>
-          <AccordionContent className="pb-4">
-            <div className="max-h-44 overflow-y-auto pr-2 space-y-2.5 scrollbar-thin">
-              {filterCategories.map((category) => (
-                <div key={category} className="flex items-center gap-2">
-                  <Checkbox
-                    id={`${prefix}cat-${category}`}
-                    checked={selectedCategories.includes(category.toLowerCase())}
-                    onCheckedChange={() => onCategoryToggle(category.toLowerCase())}
-                    className="h-4 w-4 rounded border-gray-300"
-                  />
-                  <Label
-                    htmlFor={`${prefix}cat-${category}`}
-                    className="cursor-pointer text-sm font-normal text-gray-700"
-                  >
-                    {category} Nails
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+        {/* Featured / On Sale */}
+        {(onFeaturedToggle || onSaleToggle) && (
+          <>
+            {onFeaturedToggle && (
+              <AccordionItem value="featured" className="border-b border-gray-200">
+                <AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
+                  Featured
+                </AccordionTrigger>
+                <AccordionContent className="pb-4">
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id={`${prefix}featured`}
+                      checked={isFeatured}
+                      onCheckedChange={(checked) => onFeaturedToggle(checked === true)}
+                      className="h-4 w-4 rounded border-gray-300"
+                    />
+                    <Label
+                      htmlFor={`${prefix}featured`}
+                      className="cursor-pointer text-sm font-normal text-gray-700"
+                    >
+                      Featured Products
+                    </Label>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            )}
 
-        {/* Length */}
-        <AccordionItem value="length" className="border-b border-gray-200">
-          <AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
-            Length
-          </AccordionTrigger>
-          <AccordionContent className="pb-4">
-            <div className="space-y-2.5">
-              {filterLengths.map((length) => (
-                <div key={length} className="flex items-center gap-2">
-                  <Checkbox
-                    id={`${prefix}len-${length}`}
-                    checked={selectedLengths.map(l => l.toLowerCase()).includes(length.toLowerCase())}
-                    onCheckedChange={() => onLengthToggle?.(length)}
-                    className="h-4 w-4 rounded border-gray-300"
-                  />
-                  <Label
-                    htmlFor={`${prefix}len-${length}`}
-                    className="cursor-pointer text-sm font-normal text-gray-700"
-                  >
-                    {length}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+            {onSaleToggle && (
+              <AccordionItem value="sale" className="border-b border-gray-200">
+                <AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
+                  On Sale
+                </AccordionTrigger>
+                <AccordionContent className="pb-4">
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id={`${prefix}sale`}
+                      checked={isOnSale}
+                      onCheckedChange={(checked) => onSaleToggle(checked === true)}
+                      className="h-4 w-4 rounded border-gray-300"
+                    />
+                    <Label
+                      htmlFor={`${prefix}sale`}
+                      className="cursor-pointer text-sm font-normal text-gray-700"
+                    >
+                      On Sale Products
+                    </Label>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            )}
+          </>
+        )}
 
-        {/* Shape */}
-        <AccordionItem value="shape" className="border-b border-gray-200">
-          <AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
-            Shape
-          </AccordionTrigger>
-          <AccordionContent className="pb-4">
-            <div className="space-y-2.5">
-              {filterShapes.map((shape) => (
-                <div key={shape} className="flex items-center gap-2">
-                  <Checkbox
-                    id={`${prefix}shape-${shape}`}
-                    checked={selectedShapes.map(s => s.toLowerCase()).includes(shape.toLowerCase())}
-                    onCheckedChange={() => onShapeToggle?.(shape)}
-                    className="h-4 w-4 rounded border-gray-300"
-                  />
-                  <Label
-                    htmlFor={`${prefix}shape-${shape}`}
-                    className="cursor-pointer text-sm font-normal text-gray-700"
-                  >
-                    {shape}
-                  </Label>
+        {/* Dynamic Attributes */}
+        {attributes.map((attribute) => {
+          const selectedValues = selectedAttributeFilters[attribute.slug] || [];
+          return (
+            <AccordionItem key={attribute._id} value={attribute.slug} className="border-b border-gray-200">
+              <AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
+                {attribute.name}
+              </AccordionTrigger>
+              <AccordionContent className="pb-4">
+                <div className={`space-y-2.5 ${attribute.values.length > 5 ? 'max-h-44 overflow-y-auto pr-2 scrollbar-thin' : ''}`}>
+                  {attribute.values.map((value) => (
+                    <div key={value} className="flex items-center gap-2">
+                      <Checkbox
+                        id={`${prefix}attr-${attribute.slug}-${value}`}
+                        checked={selectedValues.includes(value)}
+                        onCheckedChange={() => onAttributeToggle?.(attribute.slug, value)}
+                        className="h-4 w-4 rounded border-gray-300"
+                      />
+                      <Label
+                        htmlFor={`${prefix}attr-${attribute.slug}-${value}`}
+                        className="cursor-pointer text-sm font-normal text-gray-700"
+                      >
+                        {value}
+                      </Label>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        {/* Occasion */}
-        <AccordionItem value="occasion" className="border-b border-gray-200">
-          <AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
-            Occasion
-          </AccordionTrigger>
-          <AccordionContent className="pb-4">
-            <div className="space-y-2.5">
-              {filterOccasions.map((occasion) => (
-                <div key={occasion} className="flex items-center gap-2">
-                  <Checkbox
-                    id={`${prefix}occ-${occasion}`}
-                    className="h-4 w-4 rounded border-gray-300"
-                  />
-                  <Label
-                    htmlFor={`${prefix}occ-${occasion}`}
-                    className="cursor-pointer text-sm font-normal text-gray-700"
-                  >
-                    {occasion} Nails
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        {/* Texture */}
-        <AccordionItem value="texture" className="border-b border-gray-200">
-          <AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
-            Texture
-          </AccordionTrigger>
-          <AccordionContent className="pb-4">
-            <div className="space-y-2.5">
-              {filterTextures.map((texture) => (
-                <div key={texture} className="flex items-center gap-2">
-                  <Checkbox
-                    id={`${prefix}tex-${texture}`}
-                    className="h-4 w-4 rounded border-gray-300"
-                  />
-                  <Label
-                    htmlFor={`${prefix}tex-${texture}`}
-                    className="cursor-pointer text-sm font-normal text-gray-700"
-                  >
-                    {texture} Nails
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        {/* Color */}
-        <AccordionItem value="color" className="border-b border-gray-200">
-          <AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
-            Color
-          </AccordionTrigger>
-          <AccordionContent className="pb-4">
-            <div className="max-h-44 overflow-y-auto pr-2 space-y-2.5 scrollbar-thin">
-              {filterColors.map((color) => (
-                <div key={color} className="flex items-center gap-2">
-                  <Checkbox
-                    id={`${prefix}col-${color}`}
-                    className="h-4 w-4 rounded border-gray-300"
-                  />
-                  <Label
-                    htmlFor={`${prefix}col-${color}`}
-                    className="cursor-pointer text-sm font-normal text-gray-700"
-                  >
-                    {color}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+              </AccordionContent>
+            </AccordionItem>
+          );
+        })}
       </Accordion>
     </div>
   );

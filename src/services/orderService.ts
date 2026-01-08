@@ -101,7 +101,7 @@ export const orderService = {
     return response.data;
   },
 
-  async getOrderByNumber(orderNumber: string, email?: string): Promise<Order> {
+  async getOrderByNumber(orderNumber: string, email?: string, signal?: AbortSignal): Promise<Order> {
     const params = email ? { email } : {};
     const response = await apiClient.get<{ success: boolean; data: Order }>(
       `/v1/orders/${orderNumber}`,
@@ -110,7 +110,7 @@ export const orderService = {
     return response.data.data;
   },
 
-  async trackOrder(orderNumber: string): Promise<Order> {
+  async trackOrder(orderNumber: string, signal: AbortSignal): Promise<Order> {
     const response = await apiClient.get<{
       success: boolean;
       data: Order;

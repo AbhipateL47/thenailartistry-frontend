@@ -38,6 +38,13 @@ export interface Product {
   updatedAt: string;
 }
 
+export interface ProductAttribute {
+  _id: string;
+  name: string;
+  slug: string;
+  values: string[];
+}
+
 export interface ProductsResponse {
   success: boolean;
   data: Product[];
@@ -47,6 +54,9 @@ export interface ProductsResponse {
     total: number;
     pages: number;
   };
+  filters?: {
+    attributes?: ProductAttribute[];
+  };
 }
 
 export interface ProductResponse {
@@ -55,54 +65,69 @@ export interface ProductResponse {
 }
 
 export interface ProductFilters {
-  category?: string;
   search?: string;
+  categoryIds?: string; // Comma-separated category IDs
   minPrice?: number;
   maxPrice?: number;
-  length?: string;
-  shape?: string;
   sort?: 'price_asc' | 'price_desc' | 'newest' | 'rating' | 'popular';
-  featured?: boolean;
-  onSale?: boolean;
+  isOnSale?: boolean;
+  isFeatured?: boolean;
   page?: number;
   limit?: number;
+  // Dynamic attribute filters (e.g., length, shape, occasion, texture, style)
+  [key: string]: string | number | boolean | undefined;
 }
 
 export const productService = {
-  async getProducts(params?: ProductFilters): Promise<ProductsResponse> {
+  async getProducts(params?: ProductFilters, signal?: AbortSignal): Promise<ProductsResponse> {
     const queryParams = new URLSearchParams();
     
-    if (params?.category) queryParams.append('category', params.category);
+    // System filters (matching backend contract)
     if (params?.search) queryParams.append('search', params.search);
+    if (params?.categoryIds) queryParams.append('categoryIds', params.categoryIds);
     if (params?.minPrice !== undefined) queryParams.append('minPrice', params.minPrice.toString());
     if (params?.maxPrice !== undefined) queryParams.append('maxPrice', params.maxPrice.toString());
-    if (params?.length) queryParams.append('length', params.length);
-    if (params?.shape) queryParams.append('shape', params.shape);
     if (params?.sort) queryParams.append('sort', params.sort);
-    if (params?.featured) queryParams.append('featured', 'true');
-    if (params?.onSale) queryParams.append('onSale', 'true');
-    if (params?.page) queryParams.append('page', params.page.toString());
-    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.isOnSale === true) queryParams.append('isOnSale', 'true');
+    if (params?.isFeatured === true) queryParams.append('isFeatured', 'true');
+    if (params?.page !== undefined)
+      queryParams.append('page', params.page.toString());
+    
+    if (params?.limit !== undefined)
+      queryParams.append('limit', params.limit.toString());
 
-    const response = await apiClient.get<ProductsResponse>(`/v1/products?${queryParams.toString()}`);
+    // Dynamic attribute filters (length, shape, occasion, texture, style, etc.)
+    // These are passed directly as query params using their slug
+    const systemParams = ['search', 'categoryIds', 'minPrice', 'maxPrice', 'sort', 'isOnSale', 'isFeatured', 'page', 'limit'];
+    if (params) {
+      for (const [key, value] of Object.entries(params)) {
+        if (!systemParams.includes(key) && value !== undefined && value !== null && value !== '') {
+          queryParams.append(key, String(value));
+        }
+      }
+    }
+
+    const response = await apiClient.get<ProductsResponse>(`/v1/products?${queryParams.toString()}`, { signal });
     return response.data;
   },
 
-  async getProduct(idOrSlug: string): Promise<Product> {
-    const response = await apiClient.get<ProductResponse>(`/v1/products/${idOrSlug}`);
+  async getProduct(idOrSlug: string, signal?: AbortSignal): Promise<Product> {
+    const response = await apiClient.get<ProductResponse>(`/v1/products/${idOrSlug}`, { signal });
     return response.data.data;
   },
 
-  async getFeaturedProducts(limit?: number): Promise<Product[]> {
+  async getFeaturedProducts(limit?: number, signal?: AbortSignal): Promise<Product[]> {
     const response = await apiClient.get<{ success: boolean; data: Product[] }>(
-      `/v1/products/featured${limit ? `?limit=${limit}` : ''}`
+      `/v1/products/featured${limit ? `?limit=${limit}` : ''}`,
+      { signal }
     );
     return response.data.data;
   },
 
-  async getSaleProducts(limit?: number): Promise<Product[]> {
+  async getSaleProducts(limit?: number, signal?: AbortSignal): Promise<Product[]> {
     const response = await apiClient.get<{ success: boolean; data: Product[] }>(
-      `/v1/products/sale${limit ? `?limit=${limit}` : ''}`
+      `/v1/products/sale${limit ? `?limit=${limit}` : ''}`,
+      { signal }
     );
     return response.data.data;
   },

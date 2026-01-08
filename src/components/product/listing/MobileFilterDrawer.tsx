@@ -2,17 +2,25 @@ import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProductFilters } from './ProductFilters';
 
+interface ProductAttribute {
+  _id: string;
+  name: string;
+  slug: string;
+  values: string[];
+}
+
 interface MobileFilterDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   priceRange: number[];
   onPriceRangeChange: (range: number[]) => void;
-  selectedCategories: string[];
-  onCategoryToggle: (category: string) => void;
-  selectedLengths?: string[];
-  onLengthToggle?: (length: string) => void;
-  selectedShapes?: string[];
-  onShapeToggle?: (shape: string) => void;
+  attributes?: ProductAttribute[];
+  selectedAttributeFilters?: Record<string, string[]>;
+  onAttributeToggle?: (attributeSlug: string, value: string) => void;
+  isFeatured?: boolean;
+  onFeaturedToggle?: (checked: boolean) => void;
+  isOnSale?: boolean;
+  onSaleToggle?: (checked: boolean) => void;
   onApply: () => void;
 }
 
@@ -21,12 +29,13 @@ export const MobileFilterDrawer = ({
   onClose,
   priceRange,
   onPriceRangeChange,
-  selectedCategories,
-  onCategoryToggle,
-  selectedLengths = [],
-  onLengthToggle,
-  selectedShapes = [],
-  onShapeToggle,
+  attributes = [],
+  selectedAttributeFilters = {},
+  onAttributeToggle,
+  isFeatured = false,
+  onFeaturedToggle,
+  isOnSale = false,
+  onSaleToggle,
   onApply,
 }: MobileFilterDrawerProps) => {
   if (!isOpen) return null;
@@ -53,12 +62,13 @@ export const MobileFilterDrawer = ({
           <ProductFilters
             priceRange={priceRange}
             onPriceRangeChange={onPriceRangeChange}
-            selectedCategories={selectedCategories}
-            onCategoryToggle={onCategoryToggle}
-            selectedLengths={selectedLengths}
-            onLengthToggle={onLengthToggle}
-            selectedShapes={selectedShapes}
-            onShapeToggle={onShapeToggle}
+            attributes={attributes}
+            selectedAttributeFilters={selectedAttributeFilters}
+            onAttributeToggle={onAttributeToggle}
+            isFeatured={isFeatured}
+            onFeaturedToggle={onFeaturedToggle}
+            isOnSale={isOnSale}
+            onSaleToggle={onSaleToggle}
             variant="mobile"
           />
 
