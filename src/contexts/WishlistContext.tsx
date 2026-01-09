@@ -1,9 +1,9 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { wishlistService } from '@/services/wishlistService';
-import { Product } from '@/services/productService';
+import { wishlistService } from '@/features/wishlist/services/wishlist.service';
+import { Product } from '@/features/products/services/product.service';
 import { useAuth } from './AuthContext';
-import { toast } from '@/utils/toast';
+import { toast } from '@/shared/utils/toast';
 
 interface WishlistContextType {
   wishlist: Product[];

@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
-import { toast } from '@/utils/toast';
+import { toast } from '@/shared/utils/toast';
 import { useAuth } from './AuthContext';
-import { cartService } from '@/services/cartService';
+import { cartService } from '@/features/cart/services/cart.service';
 
 export interface CartItem {
   id: string;
