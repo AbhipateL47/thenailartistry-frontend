@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { authService, User, LoginCredentials, RegisterCredentials } from '@/services/authService';
-import { toast } from '@/utils/toast';
+import { authService, User, LoginCredentials, RegisterCredentials } from '@/features/auth/services/auth.service';
+import { toast } from '@/shared/utils/toast';
 
 interface AuthContextType {
   user: User | null;
@@ -11,6 +11,9 @@ interface AuthContextType {
   logout: () => void;
   refreshUser: () => Promise<void>;
   updateWishlistCount: (delta: number) => void; // Update count locally without API call
+  isLoginModalOpen: boolean;
+  openLoginModal: () => void;
+  closeLoginModal: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -18,6 +21,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // Check for existing session on mount (cookie-based auth)
   // This is the ONLY way to check auth - cookies are httpOnly and not accessible via JS
@@ -123,6 +127,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const openLoginModal = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const closeLoginModal = () => {
+    setIsLoginModalOpen(false);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -134,6 +146,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         logout,
         refreshUser,
         updateWishlistCount,
+        isLoginModalOpen,
+        openLoginModal,
+        closeLoginModal,
       }}
     >
       {children}
