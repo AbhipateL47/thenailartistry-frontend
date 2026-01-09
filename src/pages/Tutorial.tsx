@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ChevronLeft, ChevronRight, CheckCircle2, Lightbulb, ShoppingBag, Play, ArrowDown, Star } from 'lucide-react';
-import { usePageTitle } from '@/hooks/usePageTitle';
-import { productService, Product } from '@/services/productService';
-import { formatCurrency } from '@/utils/formatCurrency';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
+import { productService, Product } from '@/features/products/services/product.service';
+import { formatCurrency } from '@/shared/utils/formatCurrency';
 import { useCart } from '@/contexts/CartContext';
-import { toast } from '@/utils/toast';
-import { cn } from '@/lib/utils';
+import { toast } from '@/shared/utils/toast';
+import { cn } from '@/shared/utils/cn';
 
 export default function Tutorial() {
   usePageTitle('Nail Application Tutorial - Step by Step Guide');

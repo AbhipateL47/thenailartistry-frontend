@@ -5,8 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { usePageTitle } from '@/hooks/usePageTitle';
-import { toast } from '@/utils/toast';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
+import { toast } from '@/shared/utils/toast';
 
 export default function Contact() {
   usePageTitle('Contact Us - Get in Touch');
@@ -49,7 +49,7 @@ export default function Contact() {
     {
       icon: Mail,
       title: 'Email',
-      content: 'info@thenailartistry.com',
+      content: 'info@thenailartistry.store',
       description: 'Send us an email',
       color: 'bg-pink-100 text-pink-600',
     },

@@ -1,14 +1,15 @@
 import { useEffect } from 'react';
-import { HeroSection } from '@/components/home/HeroSection_1.5';
-import { FeaturesSection } from '@/components/home/FeaturesSection';
-import { FeaturedProductsSection } from '@/components/home/FeaturedProductsSection';
-import { CategorySection } from '@/components/home/CategorySection';
-import { WhyChooseUsSection } from '@/components/home/WhyChooseUsSection';
-import { NewsletterSection } from '@/components/home/NewsletterSection';
-import { categories } from '@/constants/homeData';
-import { usePageTitle } from '@/hooks/usePageTitle';
+import { HeroSection } from '@/features/home/components/HeroSectionV5';
+import { SaleBannerSection } from '@/features/home/components/SaleBannerSection';
+import { FeaturesSection } from '@/features/home/components/FeaturesSection';
+import { FeaturedProductsSection } from '@/features/home/components/FeaturedProductsSection';
+import { CategorySection } from '@/features/home/components/CategorySection';
+import { WhyChooseUsSection } from '@/features/home/components/WhyChooseUsSection';
+import { NewsletterSection } from '@/features/home/components/NewsletterSection';
+import { categories } from '@/features/home/constants/homeData';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { useQuery } from '@tanstack/react-query';
-import { productService } from '@/services/productService';
+import { productService } from '@/features/products/services/product.service';
 
 export default function Home() {
   usePageTitle('The Nail Artistry - Premium Press-On Nails | Reusable & Salon Quality');
@@ -28,6 +29,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <HeroSection />
+      <SaleBannerSection />
       <FeaturesSection />
       <FeaturedProductsSection products={featuredProducts} isLoading={isLoadingFeatured} />
       <CategorySection categories={categories} />

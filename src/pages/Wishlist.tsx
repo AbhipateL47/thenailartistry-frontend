@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Heart, ShoppingBag, Loader2 } from 'lucide-react';
 import { useWishlist } from '@/contexts/WishlistContext';
-import { ProductCard } from '@/components/product/ProductCard';
-import { usePageTitle } from '@/hooks/usePageTitle';
+import { ProductCard } from '@/features/products/components/ProductCard';
+import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { Button } from '@/components/ui/button';
 import { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
