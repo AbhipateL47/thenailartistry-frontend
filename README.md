@@ -407,7 +407,7 @@ This project is proprietary and confidential. All rights reserved.
 ## 📞 Contact & Support
 
 - **Website**: [The Nail Artistry](https://thenailartistry.store)
-- **Email**: info@thenailartistry.com
+- **Email**: info@thenailartistry.store
 - **Phone**: +91 7225955292
 
 ---
