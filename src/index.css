@@ -52,7 +52,7 @@ All colors MUST be HSL.
      * Background: Warm off-white cream for elegance
      */
     
-    --background: 30 30% 98%;        /* Warm cream off-white */
+    --background: 330 33% 99%;
     --foreground: 340 20% 15%;       /* Dark warm gray */
     
     --primary: 340 75% 52%;          /* Brand pink #DD2C6C */
