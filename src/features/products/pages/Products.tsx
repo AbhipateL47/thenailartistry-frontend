@@ -257,7 +257,7 @@ export default function Products() {
     (minPrice > 0 || maxPrice < 2000 ? 1 : 0);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#0D0D0D]">
       <div className="container mx-auto px-4 py-8">
         <div className="flex gap-8">
           {/* Sidebar Filters - Tablet & Desktop */}
@@ -284,7 +284,7 @@ export default function Products() {
               <Button
                 variant="outline"
                 onClick={() => setMobileFiltersOpen(true)}
-                className="w-full"
+                className="w-full border-white/20 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
               >
                 <Filter className="h-4 w-4 mr-2" />
                 Filters
@@ -314,7 +314,7 @@ export default function Products() {
             {hasNextPage && !isLoading && (
               <div ref={loadMoreRef} className="mt-10 flex flex-col items-center gap-4">
                 {isLoadingMore ? (
-                  <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="flex items-center gap-2 text-white/50">
                     <Loader2 className="h-5 w-5 animate-spin" />
                     <span>Loading more products...</span>
                   </div>
@@ -323,7 +323,7 @@ export default function Products() {
                     variant="outline"
                     size="lg"
                     onClick={loadMore}
-                    className="px-8"
+                    className="px-8 border-white/20 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
                   >
                     Load More
                   </Button>
@@ -334,7 +334,7 @@ export default function Products() {
             {/* No more products message */}
             {!hasNextPage && products.length > 0 && !isLoading && (
               <div className="mt-10 text-center">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-white/40">
                   You've seen all {totalProducts} products
                 </p>
               </div>

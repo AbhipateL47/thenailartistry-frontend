@@ -1,122 +1,101 @@
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Send, MessageCircle, Clock } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, MessageCircle, Clock, Instagram, Youtube } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { toast } from '@/shared/utils/toast';
 
+const contactInfo = [
+  {
+    icon: Phone,
+    title: 'Phone',
+    content: '+91 72259 55292',
+    description: 'Call or WhatsApp us',
+  },
+  {
+    icon: Mail,
+    title: 'Email',
+    content: 'info@thenailartistry.store',
+    description: 'We reply within 24 hours',
+  },
+  {
+    icon: MapPin,
+    title: 'Location',
+    content: 'India',
+    description: 'Shipping nationwide',
+  },
+];
+
+const faqItems = [
+  {
+    question: 'How long does shipping take?',
+    answer: 'We ship within 24 hours. Standard delivery takes 3–5 business days; express shipping 1–2 business days.',
+  },
+  {
+    question: 'What is your return policy?',
+    answer: 'We offer a 7-day return policy for unopened products. Contact us for return instructions.',
+  },
+  {
+    question: 'Do you offer international shipping?',
+    answer: 'Currently we ship within India. International shipping is coming soon!',
+  },
+];
+
 export default function Contact() {
   usePageTitle('Contact Us - Get in Touch');
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // TODO: Implement contact form API
     setTimeout(() => {
       setIsSubmitting(false);
       setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-      toast.success('Message sent successfully! We\'ll get back to you soon.');
+      toast.success("Message sent! We'll get back to you soon.");
     }, 1500);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const contactInfo = [
-    {
-      icon: Phone,
-      title: 'Phone',
-      content: '+91 7225955292',
-      description: 'Call us anytime',
-      color: 'bg-blue-100 text-blue-600',
-    },
-    {
-      icon: Mail,
-      title: 'Email',
-      content: 'info@thenailartistry.store',
-      description: 'Send us an email',
-      color: 'bg-pink-100 text-pink-600',
-    },
-    {
-      icon: MapPin,
-      title: 'Location',
-      content: 'India',
-      description: 'We ship nationwide',
-      color: 'bg-purple-100 text-purple-600',
-    },
-  ];
-
-  const faqItems = [
-    {
-      question: 'How long does shipping take?',
-      answer: 'We typically ship within 24 hours. Standard delivery takes 3-5 business days, while express shipping takes 1-2 business days.',
-    },
-    {
-      question: 'What is your return policy?',
-      answer: 'We offer a 7-day return policy for unopened products. Please contact us for return instructions.',
-    },
-    {
-      question: 'Do you offer international shipping?',
-      answer: 'Currently, we ship within India. International shipping options are coming soon!',
-    },
-  ];
-
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative py-8 md:py-12 bg-gradient-to-br from-[#FDF8F8] via-pink-50/50 to-purple-50/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge className="bg-[#DD2C6C]/10 text-[#DD2C6C] border-[#DD2C6C]/20 mb-3">
-              <MessageCircle className="w-3 h-3 mr-1" />
-              WE'RE HERE TO HELP
-            </Badge>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4">
-              Get in <span className="text-[#DD2C6C]">Touch</span>
-            </h1>
-            <p className="text-base text-[#1a1a1a]/70 max-w-2xl mx-auto mb-2">
-              Have a question? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
-            </p>
-            <p className="text-sm text-[#1a1a1a]/60">
-              You may also find answers in our <a href="/faq" className="text-[#DD2C6C] hover:underline font-medium">FAQs</a>
-            </p>
-          </div>
+    <div className="min-h-screen bg-[#0D0D0D] text-white">
+
+      {/* Hero */}
+      <section className="relative pt-20 pb-16 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#DD2C6C]/8 rounded-full blur-[120px] pointer-events-none" />
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <p className="text-[#DD2C6C] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+            <MessageCircle className="inline w-3 h-3 mr-1" />
+            WE'RE HERE TO HELP
+          </p>
+          <h1 className="text-4xl md:text-5xl font-black mb-4">
+            Get in <span className="text-[#DD2C6C]">Touch</span>
+          </h1>
+          <p className="text-white/50 max-w-xl mx-auto">
+            Have a question or just want to say hi? Send us a message and we'll respond as soon as possible.
+          </p>
         </div>
       </section>
 
       {/* Contact Info Cards */}
-      <section className="py-12 bg-white border-b border-gray-100">
+      <section className="pb-12">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {contactInfo.map((info, index) => {
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+            {contactInfo.map((info) => {
               const Icon = info.icon;
               return (
-                <div
-                  key={index}
-                  className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all text-center group"
-                >
-                  <div className={`${info.color} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
-                    <Icon className="h-8 w-8" />
+                <div key={info.title} className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center hover:border-[#DD2C6C]/40 hover:bg-[#DD2C6C]/5 transition-all group">
+                  <div className="w-12 h-12 rounded-xl bg-[#DD2C6C]/15 border border-[#DD2C6C]/30 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <Icon className="h-5 w-5 text-[#DD2C6C]" />
                   </div>
-                  <h3 className="font-bold text-lg mb-2">{info.title}</h3>
-                  <p className="text-[#1a1a1a] font-semibold mb-1">{info.content}</p>
-                  <p className="text-sm text-[#1a1a1a]/60">{info.description}</p>
+                  <h3 className="font-bold text-white mb-1">{info.title}</h3>
+                  <p className="text-white/80 text-sm font-medium mb-0.5">{info.content}</p>
+                  <p className="text-white/40 text-xs">{info.description}</p>
                 </div>
               );
             })}
@@ -124,140 +103,87 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* Contact Form Section */}
-      <section className="py-16 bg-[#FDF8F8]">
+      {/* Form + Sidebar */}
+      <section className="py-12 bg-[#111111]">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-            {/* Left - Form */}
-            <div>
-              <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-                <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name" className="text-sm font-semibold">
-                        Name <span className="text-[#DD2C6C]">*</span>
-                      </Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Your full name"
-                        required
-                        className="h-12 border-gray-200 focus:border-[#DD2C6C] focus:ring-[#DD2C6C]/20"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-sm font-semibold">
-                        Email <span className="text-[#DD2C6C]">*</span>
-                      </Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="your.email@example.com"
-                        required
-                        className="h-12 border-gray-200 focus:border-[#DD2C6C] focus:ring-[#DD2C6C]/20"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-sm font-semibold">
-                        Phone
-                      </Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        placeholder="+91 1234567890"
-                        className="h-12 border-gray-200 focus:border-[#DD2C6C] focus:ring-[#DD2C6C]/20"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="subject" className="text-sm font-semibold">
-                        Subject <span className="text-[#DD2C6C]">*</span>
-                      </Label>
-                      <Input
-                        id="subject"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleChange}
-                        placeholder="What's this about?"
-                        required
-                        className="h-12 border-gray-200 focus:border-[#DD2C6C] focus:ring-[#DD2C6C]/20"
-                      />
-                    </div>
-                  </div>
-
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-5xl mx-auto">
+            {/* Form */}
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
+              <h2 className="text-xl font-black text-white mb-6">Send us a Message</h2>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="message" className="text-sm font-semibold">
-                      Message <span className="text-[#DD2C6C]">*</span>
+                    <Label className="text-white/70 text-xs font-semibold uppercase tracking-wider">
+                      Name <span className="text-[#DD2C6C]">*</span>
                     </Label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      placeholder="Tell us more about your inquiry..."
-                      className="min-h-[150px] border-gray-200 focus:border-[#DD2C6C] focus:ring-[#DD2C6C]/20 resize-none"
-                      required
-                    />
+                    <Input name="name" value={formData.name} onChange={handleChange} placeholder="Your name" required
+                      className="h-11 bg-white/5 border-white/15 text-white placeholder:text-white/25 focus:border-[#DD2C6C]" />
                   </div>
+                  <div className="space-y-2">
+                    <Label className="text-white/70 text-xs font-semibold uppercase tracking-wider">
+                      Email <span className="text-[#DD2C6C]">*</span>
+                    </Label>
+                    <Input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="you@example.com" required
+                      className="h-11 bg-white/5 border-white/15 text-white placeholder:text-white/25 focus:border-[#DD2C6C]" />
+                  </div>
+                </div>
 
-                  <Button
-                    type="submit"
-                    size="lg"
-                    disabled={isSubmitting}
-                    className="w-full bg-[#DD2C6C] hover:bg-[#DD2C6C]/90 text-white h-12 font-semibold"
-                  >
-                    {isSubmitting ? (
-                      <>Sending...</>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4 mr-2" />
-                        Send Message
-                      </>
-                    )}
-                  </Button>
-                </form>
-              </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-white/70 text-xs font-semibold uppercase tracking-wider">Phone</Label>
+                    <Input name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="+91 9876543210"
+                      className="h-11 bg-white/5 border-white/15 text-white placeholder:text-white/25 focus:border-[#DD2C6C]" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-white/70 text-xs font-semibold uppercase tracking-wider">
+                      Subject <span className="text-[#DD2C6C]">*</span>
+                    </Label>
+                    <Input name="subject" value={formData.subject} onChange={handleChange} placeholder="What's this about?" required
+                      className="h-11 bg-white/5 border-white/15 text-white placeholder:text-white/25 focus:border-[#DD2C6C]" />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-white/70 text-xs font-semibold uppercase tracking-wider">
+                    Message <span className="text-[#DD2C6C]">*</span>
+                  </Label>
+                  <Textarea name="message" value={formData.message} onChange={handleChange} placeholder="Tell us more..." required
+                    className="min-h-[130px] bg-white/5 border-white/15 text-white placeholder:text-white/25 focus:border-[#DD2C6C] resize-none" />
+                </div>
+
+                <Button type="submit" size="lg" disabled={isSubmitting}
+                  className="w-full bg-[#DD2C6C] hover:bg-[#c42460] text-white rounded-xl font-bold shadow-lg shadow-[#DD2C6C]/25">
+                  {isSubmitting ? 'Sending...' : <><Send className="w-4 h-4 mr-2" />Send Message</>}
+                </Button>
+              </form>
             </div>
 
-            {/* Right - Info & FAQ */}
-            <div className="space-y-8">
-              {/* Response Time */}
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                <div className="flex items-start gap-4">
-                  <div className="bg-[#DD2C6C]/10 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Clock className="w-6 h-6 text-[#DD2C6C]" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg mb-2">Response Time</h3>
-                    <p className="text-[#1a1a1a]/70 text-sm">
-                      We typically respond within 24 hours during business days. For urgent matters, please call us directly.
-                    </p>
-                  </div>
+            {/* Sidebar */}
+            <div className="space-y-6">
+              {/* Response time */}
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-start gap-4">
+                <div className="w-11 h-11 rounded-xl bg-[#DD2C6C]/15 border border-[#DD2C6C]/30 flex items-center justify-center flex-shrink-0">
+                  <Clock className="w-5 h-5 text-[#DD2C6C]" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white mb-1">Response Time</h3>
+                  <p className="text-white/50 text-sm leading-relaxed">
+                    We typically respond within 24 hours on business days. For urgent queries, call us directly.
+                  </p>
                 </div>
               </div>
 
-              {/* Quick FAQ */}
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                <h3 className="font-bold text-lg mb-4">Quick Answers</h3>
-                <div className="space-y-4">
-                  {faqItems.map((faq, index) => (
-                    <details key={index} className="group">
-                      <summary className="font-semibold text-sm cursor-pointer list-none flex items-center justify-between py-2 hover:text-[#DD2C6C] transition-colors">
+              {/* FAQ */}
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <h3 className="font-bold text-white mb-4">Quick Answers</h3>
+                <div className="space-y-3">
+                  {faqItems.map((faq) => (
+                    <details key={faq.question} className="group">
+                      <summary className="font-medium text-sm text-white/80 cursor-pointer list-none flex items-center justify-between py-2 hover:text-white transition-colors">
                         <span>{faq.question}</span>
-                        <span className="text-[#DD2C6C] group-open:rotate-180 transition-transform">▼</span>
+                        <span className="text-[#DD2C6C] text-xs group-open:rotate-180 transition-transform">▼</span>
                       </summary>
-                      <p className="text-sm text-[#1a1a1a]/70 mt-2 pl-4 border-l-2 border-[#DD2C6C]/20">
+                      <p className="text-sm text-white/50 mt-1.5 pb-2 pl-3 border-l-2 border-[#DD2C6C]/30">
                         {faq.answer}
                       </p>
                     </details>
@@ -265,23 +191,19 @@ export default function Contact() {
                 </div>
               </div>
 
-              {/* Social Media */}
-              <div className="bg-gradient-to-br from-[#DD2C6C]/10 to-pink-50/50 rounded-2xl p-6 border border-[#DD2C6C]/20">
-                <h3 className="font-bold text-lg mb-3">Follow Us</h3>
-                <p className="text-sm text-[#1a1a1a]/70 mb-4">
-                  Stay connected with us on social media for the latest updates, new designs, and exclusive offers.
-                </p>
+              {/* Socials */}
+              <div className="bg-[#DD2C6C]/10 border border-[#DD2C6C]/20 rounded-2xl p-6">
+                <h3 className="font-bold text-white mb-2">Follow Us</h3>
+                <p className="text-white/50 text-sm mb-4">Stay updated with new drops and exclusive offers.</p>
                 <div className="flex gap-3">
-                  <Button variant="outline" size="sm" asChild>
-                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-                      Instagram
-                    </a>
-                  </Button>
-                  <Button variant="outline" size="sm" asChild>
-                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-                      Facebook
-                    </a>
-                  </Button>
+                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 bg-white/10 border border-white/15 rounded-full text-white/70 hover:bg-[#DD2C6C] hover:border-[#DD2C6C] hover:text-white text-sm transition-all">
+                    <Instagram className="h-4 w-4" /> Instagram
+                  </a>
+                  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 bg-white/10 border border-white/15 rounded-full text-white/70 hover:bg-[#DD2C6C] hover:border-[#DD2C6C] hover:text-white text-sm transition-all">
+                    <Youtube className="h-4 w-4" /> YouTube
+                  </a>
                 </div>
               </div>
             </div>

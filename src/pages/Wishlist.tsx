@@ -12,17 +12,16 @@ export default function Wishlist() {
   const { wishlist, isLoading, fetchWishlist } = useWishlist();
   const { isAuthenticated } = useAuth();
 
-  // Fetch wishlist data when user navigates to this page or on reload
   useEffect(() => {
     if (isAuthenticated) {
       fetchWishlist().catch(console.error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated]); // Run when authenticated state changes or on mount
+  }, [isAuthenticated]);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-[#DD2C6C]" />
       </div>
     );
@@ -30,21 +29,17 @@ export default function Wishlist() {
 
   if (wishlist.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FDF8F8] via-pink-50/50 to-purple-50/30">
-        <div className="container mx-auto px-4 py-16">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="relative mb-8">
-              <div className="w-32 h-32 mx-auto bg-[#DD2C6C]/10 rounded-full flex items-center justify-center">
-                <Heart className="h-16 w-16 text-[#DD2C6C]/40" />
-              </div>
+      <div className="min-h-screen bg-[#0D0D0D]">
+        <div className="container mx-auto px-4 py-20">
+          <div className="max-w-md mx-auto text-center">
+            <div className="w-24 h-24 mx-auto bg-[#DD2C6C]/10 border border-[#DD2C6C]/20 rounded-full flex items-center justify-center mb-6">
+              <Heart className="h-12 w-12 text-[#DD2C6C]/50" />
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-4 text-[#1a1a1a]">
-              Your Wishlist is Empty
-            </h1>
-            <p className="text-lg text-[#1a1a1a]/70 mb-8 max-w-md mx-auto">
-              Save your favorite products to keep track of items you love. Start exploring our collection!
+            <h1 className="text-3xl font-black text-white mb-3">Your Wishlist is Empty</h1>
+            <p className="text-white/50 mb-8">
+              Save your favourite designs here and come back to them whenever you're ready.
             </p>
-            <Button size="lg" asChild className="bg-[#DD2C6C] hover:bg-[#DD2C6C]/90 text-white">
+            <Button size="lg" asChild className="bg-[#DD2C6C] hover:bg-[#c42460] text-white rounded-full px-8 shadow-lg shadow-[#DD2C6C]/25">
               <Link to="/products">
                 <ShoppingBag className="w-5 h-5 mr-2" />
                 Start Shopping
@@ -57,24 +52,20 @@ export default function Wishlist() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDF8F8]">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header Section */}
-        <div className="mb-8">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-2">
-              My Wishlist
-            </h1>
-            <p className="text-[#1a1a1a]/70">
-              {wishlist.length} {wishlist.length === 1 ? 'item' : 'items'} saved
-            </p>
-          </div>
+    <div className="min-h-screen bg-[#0D0D0D]">
+      <div className="container mx-auto px-4 py-10">
+        {/* Header */}
+        <div className="mb-8 border-b border-white/10 pb-6">
+          <h1 className="text-3xl md:text-4xl font-black text-white mb-1">My Wishlist</h1>
+          <p className="text-white/40 text-sm">
+            {wishlist.length} {wishlist.length === 1 ? 'item' : 'items'} saved
+          </p>
         </div>
 
-        {/* Products Grid */}
+        {/* Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           {wishlist.map((product) => (
-            <ProductCard key={product._id} product={product} hideStockStatus={true} />
+            <ProductCard key={product._id} product={product} hideStockStatus />
           ))}
         </div>
       </div>

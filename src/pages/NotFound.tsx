@@ -1,93 +1,56 @@
 import { useNavigate } from "react-router-dom";
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { Button } from '@/components/ui/button';
-import { Home, Sparkles } from 'lucide-react';
+import { ArrowRight, Home } from 'lucide-react';
 
 const NotFound = () => {
   usePageTitle('Page Not Found - 404');
   const navigate = useNavigate();
 
-  const popularCategories = [
-    { name: 'Gel Polish', href: '/products?category=gel-polish' },
-    { name: 'Nail Art', href: '/products?category=nail-art' },
-    { name: 'Tools', href: '/products?category=tools' },
-    { name: 'Kits', href: '/products?category=kits' },
-  ];
-
-  const handleCategoryClick = (href: string) => {
-    navigate(href);
-  };
-
   return (
-    <div className="flex items-center justify-center bg-white">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
-          {/* Right Section - Image (appears first on mobile) */}
-          <div className="relative w-full order-1 lg:order-2">
-            <div className="relative w-full h-[400px] md:h-[450px] lg:h-[500px] rounded-2xl overflow-hidden bg-black shadow-2xl">
-              {/* Image of hand holding flowers */}
-              <img 
+    <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.02) 1px, transparent 1px)', backgroundSize: '28px 28px' }}>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#DD2C6C]/8 rounded-full blur-[120px] pointer-events-none" />
+      <div className="container mx-auto px-4 py-16 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
+          {/* Image */}
+          <div className="relative order-1 lg:order-2">
+            <div className="absolute inset-0 bg-[#DD2C6C]/10 rounded-3xl blur-3xl" />
+            <div className="relative w-full h-[380px] rounded-3xl overflow-hidden border border-white/10">
+              <img
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaZAX79MxaBTPPqDH24ZcVET6Nk9J9vRAvTzgbGpyTQkJ86AhhxszIwlWQPUykAAnHgoeT6w7n5BmZnuheKA9GL2teQ6lr4835gq2STcVc2YtVD7o0yeSCkCooJR90Z7yL_YlkOPg-otwWQ-rm5FqJMQo2qFQ8FXAgNmzbQjHLxPFuILnx1NpS3lE0ToGFC43cXUC8GAK9YEeUEwbg07YAuRO33gAJR9oGTPlfcw21oaAMnkCZyyYRv75iME09z4MgxKPZwxjQ6zX2"
-                alt="Hand holding white daisy flowers with beautifully manicured nails"
-                className="w-full h-full object-cover rounded-2xl"
-                loading="lazy"
+                alt="Beautiful nail art"
+                className="w-full h-full object-cover"
               />
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#0D0D0D]/60 to-transparent" />
             </div>
           </div>
 
-          {/* Left Section - Error Message & Actions (appears second on mobile) */}
-          <div className="space-y-8 order-2 lg:order-1">
-            {/* ERROR 404 Badge */}
-            <div>
-              <span className="text-[#DD2C6C] text-sm font-medium tracking-wide opacity-80">
-                ERROR 404
-              </span>
-            </div>
+          {/* Text */}
+          <div className="order-2 lg:order-1 space-y-6">
+            <p className="text-[#DD2C6C] text-xs font-semibold tracking-[0.2em] uppercase">Error 404</p>
+            <h1 className="text-5xl md:text-6xl font-black text-white leading-tight">
+              Page Not<br />Found
+            </h1>
+            <p className="text-white/50 text-lg leading-relaxed">
+              We can't seem to find the page you're looking for. The link might be broken, or the page may have moved.
+            </p>
 
-            {/* Page Not Found Heading */}
-            <div>
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                Page Not Found
-              </h1>
-              <p className="text-lg text-gray-600 leading-relaxed max-w-lg">
-                We can't seem to find the page you are looking for. It looks like the specific shade is out of stock or the link is broken.
-              </p>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <Button
                 onClick={() => navigate('/')}
-                className="bg-[#DD2C6C] hover:bg-[#DD2C6C]/90 text-white px-4 sm:px-8 py-4 sm:py-6 text-sm sm:text-base font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all flex-1"
+                className="bg-[#DD2C6C] hover:bg-[#c42460] text-white px-8 py-6 font-bold rounded-full shadow-lg shadow-[#DD2C6C]/25 group"
               >
+                <Home className="mr-2 h-4 w-4" />
                 Back to Home
               </Button>
               <Button
                 onClick={() => navigate('/products')}
                 variant="outline"
-                className="border-1 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-4 sm:px-8 py-4 sm:py-6 text-sm sm:text-base font-semibold rounded-lg transition-all flex-1"
+                className="border-white/20 text-white/70 hover:bg-white/10 hover:text-white bg-transparent rounded-full px-8 py-6 group"
               >
-                Shop New Arrivals
+                Shop Collection
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
-            </div>
-
-            {/* Popular Categories */}
-            <div className="pt-6 border-t border-gray-200">
-              <h3 className="text-base font-semibold text-gray-900 mb-3">
-                Popular Categories
-              </h3>
-              <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1">
-                {popularCategories.map((category, index) => (
-                  <Button
-                    key={index}
-                    onClick={() => handleCategoryClick(category.href)}
-                    variant="outline"
-                    className="rounded-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-[#DD2C6C] hover:text-[#DD2C6C] px-3 py-1.5 text-xs font-medium transition-all whitespace-nowrap flex-shrink-0"
-                  >
-                    {category.name}
-                  </Button>
-                ))}
-              </div>
             </div>
           </div>
         </div>

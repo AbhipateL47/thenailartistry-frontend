@@ -87,7 +87,7 @@ export const ProductCard = ({
         {/* Content */}
         <div className="flex-1 flex flex-col justify-between">
           <div>
-            <h3 className="font-semibold text-base mb-1 line-clamp-2 group-hover:text-primary transition-colors">
+            <h3 className="font-semibold text-base mb-1 line-clamp-2 text-white group-hover:text-[#DD2C6C] transition-colors">
               {product.name}
             </h3>
 
@@ -100,12 +100,12 @@ export const ProductCard = ({
                       className={`h-3 w-3 ${
                         i < Math.floor(product.ratingAvg)
                           ? 'fill-yellow-400 text-yellow-400'
-                          : 'text-muted-foreground'
+                          : 'text-white/20'
                       }`}
                     />
                   ))}
                 </div>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs text-white/40">
                   ({product.ratingCount || 0})
                 </span>
               </div>
@@ -114,15 +114,15 @@ export const ProductCard = ({
             <div className="flex items-center gap-2 mb-2">
               {isOnSale ? (
                 <>
-                  <span className="text-sm text-muted-foreground line-through">
+                  <span className="text-sm text-white/40 line-through">
                     {formatCurrency(basePrice)}
                   </span>
-                  <span className="font-bold text-lg">
+                  <span className="font-bold text-lg text-white">
                     {formatCurrency(finalPrice)}
                   </span>
                 </>
               ) : (
-                <span className="font-bold text-lg">
+                <span className="font-bold text-lg text-white">
                   {formatCurrency(basePrice)}
                 </span>
               )}
@@ -233,7 +233,7 @@ export const ProductCard = ({
 
         {/* Content */}
         <div className="pt-2 px-1">
-          <h3 className="font-medium text-sm truncate group-hover:text-primary transition-colors">
+          <h3 className="font-medium text-sm truncate text-white group-hover:text-[#DD2C6C] transition-colors">
             {product.name}
           </h3>
 
@@ -242,15 +242,15 @@ export const ProductCard = ({
             <div className="flex items-center gap-1.5">
               {isOnSale ? (
                 <>
-                  <span className="text-xs text-muted-foreground line-through">
+                  <span className="text-xs text-white/40 line-through">
                     {formatCurrency(basePrice)}
                   </span>
-                  <span className="font-semibold text-sm">
+                  <span className="font-semibold text-sm text-white">
                     {formatCurrency(finalPrice)}
                   </span>
                 </>
               ) : (
-                <span className="font-semibold text-sm">
+                <span className="font-semibold text-sm text-white">
                   {formatCurrency(basePrice)}
                 </span>
               )}
@@ -259,7 +259,7 @@ export const ProductCard = ({
             {product.ratingAvg > 0 && (
               <div className="flex items-center gap-0.5">
                 <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs text-white/40">
                   {product.ratingAvg.toFixed(1)}
                 </span>
               </div>
