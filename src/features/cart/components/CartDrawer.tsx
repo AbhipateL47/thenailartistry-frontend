@@ -18,36 +18,38 @@ export const CartDrawer = () => {
 
   return (
     <Sheet open={isDrawerOpen} onOpenChange={closeDrawer}>
-      <SheetContent side="right" className="w-full sm:max-w-lg flex flex-col p-0 bg-gray-100 [&>button]:hidden">
+      <SheetContent side="right" className="w-full sm:max-w-lg flex flex-col p-0 bg-[#0D0D0D] border-l border-white/10 [&>button]:hidden">
         {/* Header */}
-        <div className="bg-white px-6 py-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
-          <h2 className="text-lg font-bold text-gray-900">Shopping Cart</h2>
+        <div className="bg-[#111111] px-6 py-4 border-b border-white/10 flex items-center justify-between flex-shrink-0">
+          <h2 className="text-lg font-bold text-white">Shopping Cart</h2>
           <SheetClose asChild>
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 hover:bg-gray-100"
+              className="h-8 w-8 text-white/50 hover:text-white hover:bg-white/10"
             >
-              <X className="h-5 w-5 text-gray-700" />
+              <X className="h-5 w-5" />
             </Button>
           </SheetClose>
         </div>
 
         {items.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center text-center py-12 bg-white m-4 rounded-lg">
-            <ShoppingBag className="h-16 w-16 text-gray-400 mb-4" />
-            <h3 className="text-lg font-semibold mb-2 text-gray-900">Your cart is empty</h3>
-            <p className="text-sm text-gray-600 mb-6">
+          <div className="flex-1 flex flex-col items-center justify-center text-center py-12 mx-4 my-4 bg-white/5 border border-white/10 rounded-2xl">
+            <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-4">
+              <ShoppingBag className="h-8 w-8 text-white/30" />
+            </div>
+            <h3 className="text-lg font-semibold mb-2 text-white">Your cart is empty</h3>
+            <p className="text-sm text-white/45 mb-6">
               Add some beautiful nail sets to get started!
             </p>
-            <Button onClick={closeDrawer} asChild className="bg-[#DD2C6C] hover:bg-[#DD2C6C]/90">
+            <Button onClick={closeDrawer} asChild className="bg-[#DD2C6C] hover:bg-[#c02560] text-white">
               <Link to="/products">Continue Shopping</Link>
             </Button>
           </div>
         ) : (
           <>
             {/* Cart Items - Scrollable */}
-            <div className="flex-1 overflow-y-auto bg-white m-4 rounded-lg">
+            <div className="flex-1 overflow-y-auto mx-4 my-4 bg-white/5 border border-white/10 rounded-2xl">
               <div className="p-4 space-y-4">
                 {items.map((item) => (
                   <CartItem key={item.id} item={item} />
@@ -55,28 +57,28 @@ export const CartDrawer = () => {
               </div>
             </div>
 
-            {/* Footer - Fixed at bottom */}
-            <div className="bg-white border-t border-gray-200 p-6 space-y-4 flex-shrink-0">
+            {/* Footer */}
+            <div className="bg-[#111111] border-t border-white/10 p-6 space-y-4 flex-shrink-0">
               {/* Free Shipping Progress */}
               {subtotal < FREE_SHIPPING_THRESHOLD ? (
                 <div className="space-y-1.5">
-                  <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                  <div className="flex items-center gap-1.5 text-xs text-white/55">
                     <Truck className="h-3.5 w-3.5 text-[#DD2C6C]" />
                     <span>
                       Add{' '}
                       <span className="font-semibold text-[#DD2C6C]">
                         {formatCurrency(FREE_SHIPPING_THRESHOLD - subtotal)}
                       </span>{' '}
-                      more for <span className="font-semibold">FREE shipping</span>
+                      more for <span className="font-semibold text-white/80">FREE shipping</span>
                     </span>
                   </div>
                   <Progress
                     value={Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100)}
-                    className="h-1.5 bg-gray-100 [&>div]:bg-[#DD2C6C]"
+                    className="h-1.5 bg-white/10 [&>div]:bg-[#DD2C6C]"
                   />
                 </div>
               ) : (
-                <div className="flex items-center gap-1.5 text-xs text-green-700 bg-green-50 border border-green-100 rounded-md px-3 py-2">
+                <div className="flex items-center gap-1.5 text-xs text-green-400 bg-green-500/10 border border-green-500/25 rounded-lg px-3 py-2">
                   <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
                   <span className="font-medium">You've unlocked free shipping!</span>
                 </div>
@@ -84,8 +86,8 @@ export const CartDrawer = () => {
 
               {/* Subtotal */}
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-900">Subtotal</span>
-                <span className="text-sm font-semibold text-gray-900">
+                <span className="text-sm font-medium text-white/70">Subtotal</span>
+                <span className="text-sm font-semibold text-white">
                   {new Intl.NumberFormat('en-IN', {
                     style: 'currency',
                     currency: 'INR',
@@ -99,14 +101,14 @@ export const CartDrawer = () => {
               <div className="space-y-3">
                 <Button
                   variant="outline"
-                  className="w-full h-11 border-gray-300 text-gray-900 hover:bg-gray-50 rounded-md"
+                  className="w-full h-11 border-white/20 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white rounded-lg"
                   asChild
                   onClick={closeDrawer}
                 >
                   <Link to="/cart">VIEW CART</Link>
                 </Button>
                 <Button
-                  className="w-full h-11 bg-gray-900 text-white hover:bg-gray-800 rounded-md"
+                  className="w-full h-11 bg-[#DD2C6C] hover:bg-[#c02560] text-white font-semibold rounded-lg shadow-lg shadow-[#DD2C6C]/20"
                   asChild
                   onClick={closeDrawer}
                 >

@@ -12,21 +12,21 @@ export const CartItem = ({ item }: CartItemProps) => {
   const { updateQuantity, removeItem } = useCart();
 
   return (
-    <div className="flex gap-4 pb-4 border-b border-gray-200 last:border-0 last:pb-0">
-      {/* Square Thumbnail */}
+    <div className="flex gap-4 pb-4 border-b border-white/10 last:border-0 last:pb-0">
+      {/* Thumbnail */}
       <img
         src={item.image}
         alt={item.name}
-        className="w-20 h-20 rounded-md object-cover flex-shrink-0"
+        className="w-20 h-20 rounded-lg object-cover flex-shrink-0 border border-white/10"
       />
-      
+
       {/* Product Details */}
       <div className="flex-1 min-w-0">
-        <h4 className="font-medium text-sm text-gray-900 mb-1 line-clamp-2">{item.name}</h4>
+        <h4 className="font-medium text-sm text-white mb-1 line-clamp-2">{item.name}</h4>
         {item.variant && (
-          <p className="text-xs text-gray-600 mb-2">{item.variant}</p>
+          <p className="text-xs text-white/45 mb-2">{item.variant}</p>
         )}
-        <p className="font-semibold text-sm text-gray-900 mb-3">
+        <p className="font-semibold text-sm text-white mb-3">
           {new Intl.NumberFormat('en-IN', {
             style: 'currency',
             currency: 'INR',
@@ -34,25 +34,25 @@ export const CartItem = ({ item }: CartItemProps) => {
             maximumFractionDigits: 2,
           }).format(item.price)}
         </p>
-        
+
         {/* Quantity Selector */}
-        <div className="flex items-center border border-gray-300 rounded-md w-fit">
+        <div className="flex items-center border border-white/15 bg-white/5 rounded-lg w-fit">
           <Button
             size="icon"
             variant="ghost"
-            className="h-8 w-8 hover:bg-gray-100 rounded-none rounded-l-md"
+            className="h-8 w-8 text-white/60 hover:text-white hover:bg-white/10 rounded-none rounded-l-lg"
             onClick={() => updateQuantity(item.id, item.quantity - 1)}
           >
-            <Minus className="h-3 w-3 text-gray-700" />
+            <Minus className="h-3 w-3" />
           </Button>
-          <span className="text-sm font-medium text-gray-900 w-8 text-center">{item.quantity}</span>
+          <span className="text-sm font-medium text-white w-8 text-center">{item.quantity}</span>
           <Button
             size="icon"
             variant="ghost"
-            className="h-8 w-8 hover:bg-gray-100 rounded-none rounded-r-md"
+            className="h-8 w-8 text-white/60 hover:text-white hover:bg-white/10 rounded-none rounded-r-lg"
             onClick={() => updateQuantity(item.id, item.quantity + 1)}
           >
-            <Plus className="h-3 w-3 text-gray-700" />
+            <Plus className="h-3 w-3" />
           </Button>
         </div>
       </div>
@@ -62,7 +62,7 @@ export const CartItem = ({ item }: CartItemProps) => {
         <Button
           size="icon"
           variant="ghost"
-          className="h-8 w-8 text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+          className="h-8 w-8 text-white/40 hover:text-red-400 hover:bg-red-500/10"
           onClick={() => removeItem(item.id)}
         >
           <Trash2 className="h-4 w-4" />
@@ -70,7 +70,7 @@ export const CartItem = ({ item }: CartItemProps) => {
         <Button
           size="icon"
           variant="ghost"
-          className="h-8 w-8 text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+          className="h-8 w-8 text-white/40 hover:text-white hover:bg-white/10"
           asChild
         >
           <Link to={`/products/${item.slug}`}>
