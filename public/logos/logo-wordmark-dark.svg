@@ -1,0 +1,39 @@
+<svg width="520" height="140" viewBox="0 0 520 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="520" height="140" fill="#120810" rx="12"/>
+
+  <!-- 4-petal flower ornament — rose-gold on dark -->
+  <g transform="translate(56,70)">
+    <path d="M0,-32 C6,-16 16,-6 32,0 C16,6 6,16 0,32 C-6,16 -16,6 -32,0 C-16,-6 -6,-16 0,-32Z" fill="#F06292"/>
+    <path d="M0,-20 C4,-10 10,-4 20,0 C10,4 4,10 0,20 C-4,10 -10,4 -20,0 C-10,-4 -4,-10 0,-20Z" fill="#120810" opacity="0.55"/>
+    <circle cx="0" cy="0" r="4.5" fill="#F06292"/>
+    <path d="M18,-18 L21,-14 L18,-10 L15,-14Z" fill="#D4A853" opacity="0.7"/>
+    <path d="M18,10 L21,14 L18,18 L15,14Z" fill="#D4A853" opacity="0.7"/>
+    <path d="M-18,-18 L-15,-14 L-18,-10 L-21,-14Z" fill="#D4A853" opacity="0.7"/>
+    <path d="M-18,10 L-15,14 L-18,18 L-21,14Z" fill="#D4A853" opacity="0.7"/>
+  </g>
+
+  <!-- Vertical hairline divider -->
+  <line x1="104" y1="28" x2="104" y2="112" stroke="#F06292" stroke-width="0.7" opacity="0.4"/>
+
+  <!-- "the" italic label -->
+  <text x="122" y="58"
+    font-family="'Jost', 'Georgia', Georgia, serif"
+    font-size="13"
+    font-weight="300"
+    font-style="italic"
+    letter-spacing="6"
+    fill="#F06292">the</text>
+
+  <!-- Main wordmark -->
+  <text x="120" y="90"
+    font-family="'Jost', 'Helvetica Neue', Arial, sans-serif"
+    font-size="29"
+    font-weight="600"
+    letter-spacing="7"
+    fill="#F8EEF3">NAIL ARTISTRY</text>
+
+  <!-- Thin bottom rule -->
+  <line x1="120" y1="101" x2="488" y2="101" stroke="#D4A853" stroke-width="0.8" opacity="0.6"/>
+  <!-- Diamond endpoint -->
+  <polygon points="494,101 488,98 482,101 488,104" fill="#D4A853" opacity="0.6"/>
+</svg>

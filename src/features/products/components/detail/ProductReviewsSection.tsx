@@ -180,7 +180,7 @@ export const ProductReviewsSection = ({
           {/* Left Panel - Customer Reviews Summary (col-4) */}
           <div className="lg:col-span-4">
             {isLoading ? (
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 lg:p-8 space-y-6 sticky top-[88px]">
+              <div className="bg-white/5 rounded-xl border border-white/10 p-6 lg:p-8 space-y-6 sticky top-[88px]">
                 {/* Title Skeleton */}
                 <Skeleton className="h-8 w-48 mb-2" />
 
@@ -220,13 +220,13 @@ export const ProductReviewsSection = ({
                 )}
               </div>
             ) : (
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 lg:p-8 space-y-6 sticky top-[88px]">
+              <div className="bg-white/5 rounded-xl border border-white/10 p-6 lg:p-8 space-y-6 sticky top-[88px]">
                 {/* Title */}
-                <h2 className="text-2xl font-bold text-gray-900">Customer Reviews</h2>
+                <h2 className="text-2xl font-bold text-white">Customer Reviews</h2>
 
                 {/* Overall Rating */}
                 <div className="flex items-center gap-4">
-                  <div className="text-5xl font-bold text-gray-900">{rating.toFixed(1)}</div>
+                  <div className="text-5xl font-bold text-white">{rating.toFixed(1)}</div>
                   <div>
                     <div className="flex items-center gap-1 mb-2">
                       {[...Array(5)].map((_, i) => (
@@ -239,21 +239,21 @@ export const ProductReviewsSection = ({
                         />
                       ))}
                     </div>
-                    <p className="text-sm text-gray-600">Based on {reviewCount} reviews</p>
+                    <p className="text-sm text-white/50">Based on {reviewCount} reviews</p>
                   </div>
                 </div>
 
                 {/* Featured Quote */}
                 {topReview && (
-                  <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-xl p-5 border border-pink-100 relative">
+                  <div className="bg-[#DD2C6C]/8 rounded-xl p-5 border border-[#DD2C6C]/20 relative">
                     <div className="absolute top-3 right-3 text-3xl font-bold text-[#DD2C6C]/20">
                       {topReview.helpfulCount > 0 ? topReview.helpfulCount : '99'}
                     </div>
-                    <p className="text-sm text-gray-800 leading-relaxed pr-10 mb-2">
+                    <p className="text-sm text-white/75 leading-relaxed pr-10 mb-2">
                       "{topReview.body || topReview.title || 'Great product!'}"
                     </p>
                     {topReview.orderId && (
-                      <p className="text-xs text-gray-600 font-medium">– Verified Buyer</p>
+                      <p className="text-xs text-white/45 font-medium">– Verified Buyer</p>
                     )}
                   </div>
                 )}
@@ -270,14 +270,14 @@ export const ProductReviewsSection = ({
                             navigate(`/reviews/${productId}?rating=${star}`)
                           }
                           className="flex items-center gap-2.5 cursor-pointer">
-                          <span className="text-xs font-medium text-gray-700 w-3">{star}★</span>
-                          <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <span className="text-xs font-medium text-white/55 w-3">{star}★</span>
+                          <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                             <div
                               className="h-full bg-[#DD2C6C] rounded-full transition-all"
                               style={{ width: `${percentage}%` }}
                             />
                           </div>
-                          <span className="text-xs text-gray-600 w-10 text-right">{percentage}%</span>
+                          <span className="text-xs text-white/45 w-10 text-right">{percentage}%</span>
                         </div>
                       );
                     })}
@@ -304,7 +304,7 @@ export const ProductReviewsSection = ({
               {isLoading ? (
                 <Skeleton className="h-5 w-48" />
               ) : (
-                <h3 className="text-base font-semibold text-gray-900">
+                <h3 className="text-base font-semibold text-white">
                   Showing {reviews.length} of {reviewCount} Reviews
                 </h3>
               )}
@@ -359,7 +359,7 @@ export const ProductReviewsSection = ({
                 ))}
               </div>
             ) : reviews.length === 0 ? (
-              <div className="text-center py-12 text-gray-600 bg-white rounded-xl border border-gray-200 p-8">
+              <div className="text-center py-12 text-white/50 bg-white/5 rounded-xl border border-white/10 p-8">
                 <p>No reviews yet. Be the first to review this product!</p>
               </div>
             ) : (
@@ -368,7 +368,7 @@ export const ProductReviewsSection = ({
                   {reviews.map((review) => (
                     <div
                       key={review._id}
-                      className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition-shadow"
+                      className="bg-white/5 rounded-xl border border-white/10 p-5 hover:border-white/20 transition-colors"
                     >
                       <div className="flex items-start gap-3 mb-3">
                         {/* User Avatar */}
@@ -379,7 +379,7 @@ export const ProductReviewsSection = ({
                             className="w-10 h-10 rounded-full object-cover flex-shrink-0"
                           />
                         ) : (
-                          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
+                          <div className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center flex-shrink-0">
                             <span className="text-xs font-semibold text-white">
                               {getUserInitials(getUserName(review))}
                             </span>
@@ -390,7 +390,7 @@ export const ProductReviewsSection = ({
                           {/* User Name and Rating Row */}
                           <div className="flex items-center justify-between gap-2 mb-2">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <p className="font-semibold text-sm text-gray-900">{getUserName(review)}</p>
+                              <p className="font-semibold text-sm text-white">{getUserName(review)}</p>
                               <div className="flex items-center gap-0.5 flex-shrink-0">
                                 {[...Array(5)].map((_, i) => (
                                   <Star
@@ -404,14 +404,14 @@ export const ProductReviewsSection = ({
                               </div>
                             </div>
                             {/* Time - positioned at top right */}
-                            <span className="text-xs text-gray-500 whitespace-nowrap flex-shrink-0">
+                            <span className="text-xs text-white/35 whitespace-nowrap flex-shrink-0">
                               {formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}
                             </span>
                           </div>
                           {/* Verified Buyer Badge */}
                           {review.orderId && (
                             <div className="flex items-center gap-2 mb-2">
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-medium rounded">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-500/15 text-green-400 text-[10px] font-medium rounded border border-green-500/25">
                                 <CheckCircle2 className="h-2.5 w-2.5" />
                                 VERIFIED BUYER
                               </span>
@@ -422,12 +422,12 @@ export const ProductReviewsSection = ({
 
                       {/* Review Title */}
                       {review.title && (
-                        <h4 className="font-semibold text-sm text-gray-900 mb-2">{review.title}</h4>
+                        <h4 className="font-semibold text-sm text-white mb-2">{review.title}</h4>
                       )}
 
                       {/* Review Body */}
                       {review.body && (
-                        <p className="text-sm text-gray-700 leading-relaxed mb-3">{review.body}</p>
+                        <p className="text-sm text-white/65 leading-relaxed mb-3">{review.body}</p>
                       )}
 
                       {/* Review Images */}
@@ -436,7 +436,7 @@ export const ProductReviewsSection = ({
                           {review.images.slice(0, 3).map((image, index) => (
                             <button
                               key={index}
-                              className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200 hover:border-[#DD2C6C] transition-colors flex-shrink-0"
+                              className="relative w-16 h-16 rounded-lg overflow-hidden border border-white/15 hover:border-[#DD2C6C] transition-colors flex-shrink-0"
                               onClick={() => window.open(image, '_blank')}
                               aria-label={`View review image ${index + 1} in new tab`}
                             >
@@ -451,7 +451,7 @@ export const ProductReviewsSection = ({
                       )}
 
                       {/* Helpfulness */}
-                      <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                      <div className="flex items-center justify-between pt-3 border-t border-white/8">
                         <Button
                           variant="ghost"
                           size="sm"
@@ -460,7 +460,7 @@ export const ProductReviewsSection = ({
                             "h-8 px-3 text-sm transition-colors",
                             review.isHelpful
                               ? "text-[#DD2C6C] hover:text-[#DD2C6C] hover:bg-[#DD2C6C]/10 bg-[#DD2C6C]/5"
-                              : "text-muted-foreground hover:text-foreground hover:bg-gray-50"
+                              : "text-white/40 hover:text-white hover:bg-white/10"
                           )}
                           aria-label={review.isHelpful ? "Remove helpful vote" : "Mark review as helpful"}
                           aria-pressed={review.isHelpful}
@@ -490,7 +490,7 @@ export const ProductReviewsSection = ({
                     <Button
                       variant="ghost"
                       onClick={handleLoadMoreReviews}
-                      className="text-[#DD2C6C] hover:text-[#DD2C6C]/90 hover:bg-pink-50 py-4 text-sm font-semibold transition-all mt-4"
+                      className="text-[#DD2C6C] hover:text-[#DD2C6C]/90 hover:bg-[#DD2C6C]/10 py-4 text-sm font-semibold transition-all mt-4"
                     >
                       Load More Reviews
                       <ArrowRight className="ml-2 h-4 w-4" />

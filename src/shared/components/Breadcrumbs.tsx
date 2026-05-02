@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ChevronRight, Home } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -27,38 +27,38 @@ export const Breadcrumbs = ({ items, showHome = true }: BreadcrumbsProps) => {
           <>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/" className="flex items-center gap-1 text-gray-500 hover:text-[#DD2C6C] transition-colors">
+                <Link to="/" className="flex items-center gap-1 text-white/40 hover:text-[#DD2C6C] transition-colors">
                   <span>Home</span>
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
-              <ChevronRight className="w-4 h-4 text-gray-400" />
+              <ChevronRight className="w-4 h-4 text-white/25" />
             </BreadcrumbSeparator>
           </>
         )}
-        
+
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
-          
+
           return (
             <BreadcrumbItem key={index}>
               {isLast ? (
-                <BreadcrumbPage className="text-gray-900 font-medium">
+                <BreadcrumbPage className="text-white/80 font-medium">
                   {item.label}
                 </BreadcrumbPage>
               ) : (
                 <>
                   <BreadcrumbLink asChild>
-                    <Link 
-                      to={item.href || '#'} 
-                      className="text-gray-500 hover:text-[#DD2C6C] transition-colors"
+                    <Link
+                      to={item.href || '#'}
+                      className="text-white/40 hover:text-[#DD2C6C] transition-colors"
                     >
                       {item.label}
                     </Link>
                   </BreadcrumbLink>
                   <BreadcrumbSeparator>
-                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                    <ChevronRight className="w-4 h-4 text-white/25" />
                   </BreadcrumbSeparator>
                 </>
               )}
@@ -69,4 +69,3 @@ export const Breadcrumbs = ({ items, showHome = true }: BreadcrumbsProps) => {
     </Breadcrumb>
   );
 };
-

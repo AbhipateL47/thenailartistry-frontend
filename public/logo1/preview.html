@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Nail Artistry — Luxury Logo Suite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #F5F0E8;
+      --surface:   #EDE6D8;
+      --surface2:  #E4DBC8;
+      --text:      #0D0A07;
+      --muted:     #7A6A50;
+      --gold:      #C9A96E;
+      --border:    rgba(201,169,110,0.22);
+      --shadow:    0 6px 32px rgba(201,169,110,0.14);
+    }
+    [data-theme="dark"] {
+      --bg:        #080507;
+      --surface:   #100D0C;
+      --surface2:  #1A1410;
+      --text:      #F8F2E8;
+      --muted:     #A8926A;
+      --gold:      #D4A853;
+      --border:    rgba(212,168,83,0.2);
+      --shadow:    0 6px 32px rgba(212,168,83,0.10);
+    }
+
+    body {
+      font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 56px 32px 100px;
+      transition: background 0.4s, color 0.4s;
+    }
+
+    /* ---- Header ---- */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1040px;
+      margin: 0 auto 72px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 24px;
+    }
+    .brand-label {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 7px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 9px 22px;
+      border-radius: 100px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .toggle-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .toggle-icon { width: 14px; height: 14px; }
+
+    /* ---- Section ---- */
+    .section {
+      max-width: 1040px;
+      margin: 0 auto 80px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 32px;
+    }
+    .section-header::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+    }
+    .section-header::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .section-number {
+      font-size: 9px;
+      font-weight: 300;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+    .section-name {
+      font-size: 9px;
+      font-weight: 300;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ---- Logo Cards ---- */
+    .logo-grid       { display: grid; gap: 24px; }
+    .two-col         { grid-template-columns: 1fr 1fr; }
+    .three-col       { grid-template-columns: 1fr 1fr 1fr; }
+    .portrait-col    { grid-template-columns: 1fr 1fr; }
+
+    .logo-card {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.3s, border-color 0.3s;
+    }
+    .logo-card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 10px 48px rgba(212,168,83,0.18);
+    }
+
+    .card-stage {
+      padding: 52px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-stage.cream  { background: #FAF7F0; }
+    .card-stage.black  { background: #080507; }
+    .card-stage.grad-l { background: linear-gradient(135deg,#FAF7F0 0%,#EEE5D0 100%); }
+    .card-stage.grad-d { background: linear-gradient(135deg,#0D0A07 0%,#1A1208 100%); }
+
+    .card-stage img,
+    .card-stage object {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .card-label {
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      background: var(--surface2);
+    }
+    .card-label-name {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .card-label-tag {
+      font-size: 9px;
+      font-weight: 300;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+    }
+
+    /* ---- Psychology Notes ---- */
+    .psych-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1040px;
+      margin: 0 auto 80px;
+    }
+    .psych-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 28px 24px;
+    }
+    .psych-number {
+      font-size: 28px;
+      font-weight: 200;
+      color: var(--gold);
+      opacity: 0.5;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+    .psych-title {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .psych-text {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
+    /* ---- Color Palette ---- */
+    .palette {
+      display: flex;
+      gap: 16px;
+      max-width: 1040px;
+      margin: 0 auto 80px;
+    }
+    .swatch {
+      flex: 1;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .swatch-color { height: 64px; }
+    .swatch-info {
+      background: var(--surface);
+      padding: 12px 14px;
+    }
+    .swatch-name {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .swatch-hex {
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 1px;
+      color: var(--muted);
+      font-family: monospace;
+    }
+
+    @media (max-width: 700px) {
+      .two-col, .three-col, .portrait-col,
+      .psych-grid, .palette { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+<!-- ===== HEADER ===== -->
+<header>
+  <span class="brand-label">The Nail Artistry — Luxury Logo Suite</span>
+  <button class="toggle-btn" onclick="toggleTheme()" id="theme-btn">
+    <svg class="toggle-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"/>
+    </svg>
+    <span id="theme-label">Light Mode</span>
+  </button>
+</header>
+
+<!-- ===== 01 MAISON / FASHION HOUSE ===== -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-number">01</span>
+    <span class="section-name">Maison — Fashion House Wordmark</span>
+  </div>
+  <div class="logo-grid two-col">
+    <div class="logo-card">
+      <div class="card-stage cream">
+        <img src="logo-maison-light.svg" alt="Maison Light"/>
+      </div>
+      <div class="card-label">
+        <span class="card-label-name">Light — Cream</span>
+        <span class="card-label-tag">For light UI</span>
+      </div>
+    </div>
+    <div class="logo-card">
+      <div class="card-stage black">
+        <img src="logo-maison-dark.svg" alt="Maison Dark"/>
+      </div>
+      <div class="card-label">
+        <span class="card-label-name">Dark — Obsidian</span>
+        <span class="card-label-tag">For dark UI</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 02 CROWN ROYALE ===== -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-number">02</span>
+    <span class="section-name">Crown Royale — Regal Monogram</span>
+  </div>
+  <div class="logo-grid two-col">
+    <div class="logo-card">
+      <div class="card-stage cream" style="padding: 48px;">
+        <img src="logo-crown-light.svg" alt="Crown Light" style="max-width:240px;"/>
+      </div>
+      <div class="card-label">
+        <span class="card-label-name">Light — Crown</span>
+        <span class="card-label-tag">Profile / Avatar</span>
+      </div>
+    </div>
+    <div class="logo-card">
+      <div class="card-stage black" style="padding: 48px;">
+        <img src="logo-crown-dark.svg" alt="Crown Dark" style="max-width:240px;"/>
+      </div>
+      <div class="card-label">
+        <span class="card-label-name">Dark — Crown</span>
+        <span class="card-label-tag">Profile / Avatar</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 03 ART DECO ===== -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-number">03</span>
+    <span class="section-name">Deco Luxe — Art Deco Frame</span>
+  </div>
+  <div class="logo-grid two-col">
+    <div class="logo-card">
+      <div class="card-stage grad-l">
+        <img src="logo-deco-light.svg" alt="Deco Light"/>
+      </div>
+      <div class="card-label">
+        <span class="card-label-name">Light — Deco</span>
+        <span class="card-label-tag">Hero / Print</span>
+      </div>
+    </div>
+    <div class="logo-card">
+      <div class="card-stage grad-d">
+        <img src="logo-deco-dark.svg" alt="Deco Dark"/>
+      </div>
+      <div class="card-label">
+        <span class="card-label-name">Dark — Deco</span>
+        <span class="card-label-tag">Hero / Print</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COMBINATION SHOWCASE ===== -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-number">04</span>
+    <span class="section-name">Brand Pairing Showcase</span>
+  </div>
+  <div class="logo-grid two-col">
+    <div class="logo-card">
+      <div class="card-stage cream" style="flex-direction:column; gap:40px;">
+        <img src="logo-crown-light.svg" style="max-width:130px;" alt=""/>
+        <img src="logo-maison-light.svg" style="max-width:400px;" alt=""/>
+      </div>
+      <div class="card-label">
+        <span class="card-label-name">Full Brand — Light</span>
+        <span class="card-label-tag">Complete identity</span>
+      </div>
+    </div>
+    <div class="logo-card">
+      <div class="card-stage black" style="flex-direction:column; gap:40px;">
+        <img src="logo-crown-dark.svg" style="max-width:130px;" alt=""/>
+        <img src="logo-maison-dark.svg" style="max-width:400px;" alt=""/>
+      </div>
+      <div class="card-label">
+        <span class="card-label-name">Full Brand — Dark</span>
+        <span class="card-label-tag">Complete identity</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COLOR PALETTE ===== -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-number">05</span>
+    <span class="section-name">Luxury Color Palette</span>
+  </div>
+  <div class="palette">
+    <div class="swatch">
+      <div class="swatch-color" style="background:#C9A96E;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Champagne Gold</div>
+        <div class="swatch-hex">#C9A96E</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#D4A853;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Rich Gold</div>
+        <div class="swatch-hex">#D4A853</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#DD2C6C;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Brand Pink</div>
+        <div class="swatch-hex">#DD2C6C</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#F06292;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Rose Pink</div>
+        <div class="swatch-hex">#F06292</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#0D0A07;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Obsidian</div>
+        <div class="swatch-hex">#0D0A07</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#FAF7F0; border:1px solid rgba(0,0,0,0.08);"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Ivory Cream</div>
+        <div class="swatch-hex">#FAF7F0</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PSYCHOLOGY NOTES ===== -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-number">06</span>
+    <span class="section-name">Why These Logos Feel Luxurious</span>
+  </div>
+  <div class="psych-grid">
+    <div class="psych-card">
+      <div class="psych-number">01</div>
+      <div class="psych-title">Gold + Black Signal</div>
+      <div class="psych-text">Gold on black is the #1 psychological cue for luxury worldwide. It activates exclusivity perception — the same reason Rolex, Versace, and Chanel use this palette.</div>
+    </div>
+    <div class="psych-card">
+      <div class="psych-number">02</div>
+      <div class="psych-title">Ultra-Thin Typography</div>
+      <div class="psych-text">Thin font weights with extreme letter spacing signal confidence and restraint. Brands that have nothing to prove use less — thick fonts feel urgent and cheap.</div>
+    </div>
+    <div class="psych-card">
+      <div class="psych-number">03</div>
+      <div class="psych-title">Crown = Royalty Cue</div>
+      <div class="psych-text">Crowns trigger deep cognitive associations with royalty, quality, and "the best." Customers unconsciously assign higher value to services marked with crown imagery.</div>
+    </div>
+    <div class="psych-card">
+      <div class="psych-number">04</div>
+      <div class="psych-title">Roman Numerals + Est.</div>
+      <div class="psych-text">"EST. MMXXIV" with Roman numerals signals heritage even for a new brand. It implies permanence — triggering trust heuristics that associate age with quality.</div>
+    </div>
+    <div class="psych-card">
+      <div class="psych-number">05</div>
+      <div class="psych-title">Geometric Symmetry</div>
+      <div class="psych-text">Perfectly balanced, symmetric compositions feel "right" at a subconscious level. Art Deco's geometric precision communicates craftsmanship and attention to detail.</div>
+    </div>
+    <div class="psych-card">
+      <div class="psych-number">06</div>
+      <div class="psych-title">Negative Space</div>
+      <div class="psych-text">Luxury brands breathe. Generous white/black space around elements signals that this brand is not competing for your attention — it doesn't need to.</div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function toggleTheme() {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('theme-label').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+  }
+</script>
+</body>
+</html>

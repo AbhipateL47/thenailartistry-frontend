@@ -24,7 +24,7 @@ export const Footer = () => {
       <div className="border-b border-white/10 py-8 overflow-hidden">
         <div className="flex animate-marquee-seamless whitespace-nowrap select-none">
           {[...Array(6)].map((_, i) => (
-            <span key={i} className="inline-block text-white/8 text-6xl md:text-8xl font-black uppercase tracking-widest px-8">
+            <span key={i} className="inline-block text-white/8 text-4xl md:text-8xl font-black uppercase tracking-widest px-8">
               The Nail Artistry ◆
             </span>
           ))}

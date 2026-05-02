@@ -1,0 +1,104 @@
+<svg width="640" height="178" viewBox="0 0 640 178" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;1,300&amp;display=swap');</style>
+
+    <!-- Soft radial background: pure white center → pink-cream edge -->
+    <radialGradient id="bgL" cx="50%" cy="50%" r="70%">
+      <stop offset="0%"  stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F5E8EF"/>
+    </radialGradient>
+
+    <!-- Main text gradient: brand pink → warm gold (left → right) -->
+    <linearGradient id="pg" gradientUnits="userSpaceOnUse" x1="108" y1="104" x2="532" y2="104">
+      <stop offset="0%"   stop-color="#DD2C6C"/>
+      <stop offset="55%"  stop-color="#C87B92"/>
+      <stop offset="100%" stop-color="#C9A96E"/>
+    </linearGradient>
+
+    <!-- Thin rule gradient -->
+    <linearGradient id="ruleL" gradientUnits="userSpaceOnUse" x1="20" y1="0" x2="620" y2="0">
+      <stop offset="0%"   stop-color="#DD2C6C" stop-opacity="0"/>
+      <stop offset="20%"  stop-color="#DD2C6C" stop-opacity="0.5"/>
+      <stop offset="50%"  stop-color="#C9A96E" stop-opacity="0.7"/>
+      <stop offset="80%"  stop-color="#DD2C6C" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#DD2C6C" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Rose ornament gradient -->
+    <radialGradient id="roseL" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#DD2C6C"/>
+      <stop offset="100%" stop-color="#C9748A" stop-opacity="0.6"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="640" height="178" fill="url(#bgL)"/>
+
+  <!-- ===== DOUBLE OUTER BORDER ===== -->
+  <rect x="14" y="14" width="612" height="150" stroke="#DD2C6C" stroke-width="0.9" fill="none" opacity="0.2"/>
+  <rect x="20" y="20" width="600" height="138" stroke="#C9A96E" stroke-width="0.4" fill="none" opacity="0.25"/>
+
+  <!-- ===== CORNER L-MARKS (brand pink) ===== -->
+  <!-- Top-left -->
+  <line x1="14" y1="14" x2="58" y2="14" stroke="#DD2C6C" stroke-width="1.3" opacity="0.75"/>
+  <line x1="14" y1="14" x2="14" y2="58" stroke="#DD2C6C" stroke-width="1.3" opacity="0.75"/>
+  <circle cx="14" cy="14" r="2.2" fill="#DD2C6C" opacity="0.5"/>
+  <!-- Top-right -->
+  <line x1="626" y1="14" x2="582" y2="14" stroke="#DD2C6C" stroke-width="1.3" opacity="0.75"/>
+  <line x1="626" y1="14" x2="626" y2="58" stroke="#DD2C6C" stroke-width="1.3" opacity="0.75"/>
+  <circle cx="626" cy="14" r="2.2" fill="#DD2C6C" opacity="0.5"/>
+  <!-- Bottom-left -->
+  <line x1="14" y1="164" x2="58" y2="164" stroke="#DD2C6C" stroke-width="1.3" opacity="0.75"/>
+  <line x1="14" y1="164" x2="14" y2="120" stroke="#DD2C6C" stroke-width="1.3" opacity="0.75"/>
+  <circle cx="14" cy="164" r="2.2" fill="#DD2C6C" opacity="0.5"/>
+  <!-- Bottom-right -->
+  <line x1="626" y1="164" x2="582" y2="164" stroke="#DD2C6C" stroke-width="1.3" opacity="0.75"/>
+  <line x1="626" y1="164" x2="626" y2="120" stroke="#DD2C6C" stroke-width="1.3" opacity="0.75"/>
+  <circle cx="626" cy="164" r="2.2" fill="#DD2C6C" opacity="0.5"/>
+
+  <!-- ===== "THE" + FLANKING HAIRLINES ===== -->
+  <line x1="28" y1="51" x2="285" y2="51" stroke="url(#ruleL)" stroke-width="0.6"/>
+  <text x="320" y="56"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="11" font-weight="300" letter-spacing="11" fill="#DD2C6C" opacity="0.9">THE</text>
+  <line x1="355" y1="51" x2="612" y2="51" stroke="url(#ruleL)" stroke-width="0.6"/>
+
+  <!-- ===== CENTERED ROSE ORNAMENT ===== -->
+  <g transform="translate(320,70)">
+    <!-- outer soft petal -->
+    <path d="M0,-16 C3,-8 8,-3 16,0 C8,3 3,8 0,16 C-3,8 -8,3 -16,0 C-8,-3 -3,-8 0,-16Z"
+      fill="#DD2C6C" opacity="0.1"/>
+    <!-- mid petal -->
+    <path d="M0,-11 C2,-5.5 5.5,-2 11,0 C5.5,2 2,5.5 0,11 C-2,5.5 -5.5,2 -11,0 C-5.5,-2 -2,-5.5 0,-11Z"
+      fill="#DD2C6C" opacity="0.3"/>
+    <!-- inner petal -->
+    <path d="M0,-7 C1.5,-3.5 3.5,-1.5 7,0 C3.5,1.5 1.5,3.5 0,7 C-1.5,3.5 -3.5,1.5 -7,0 C-3.5,-1.5 -1.5,-3.5 0,-7Z"
+      fill="#DD2C6C" opacity="0.7"/>
+    <!-- diagonal petals (45-deg rotation) -->
+    <path d="M0,-7 C1.5,-3.5 3.5,-1.5 7,0 C3.5,1.5 1.5,3.5 0,7 C-1.5,3.5 -3.5,1.5 -7,0 C-3.5,-1.5 -1.5,-3.5 0,-7Z"
+      fill="#DD2C6C" opacity="0.3" transform="rotate(45)"/>
+    <!-- Gold center -->
+    <circle cx="0" cy="0" r="2.8" fill="#C9A96E"/>
+    <circle cx="0" cy="0" r="1.2" fill="#FFFFFF" opacity="0.7"/>
+  </g>
+
+  <!-- ===== MAIN WORDMARK (pink → gold gradient) ===== -->
+  <text x="320" y="104"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="36" font-weight="200" letter-spacing="13"
+    fill="url(#pg)">NAIL ARTISTRY</text>
+
+  <!-- ===== BOTTOM RULE + TAGLINE ===== -->
+  <line x1="28" y1="118" x2="612" y2="118" stroke="url(#ruleL)" stroke-width="0.6"/>
+
+  <text x="320" y="142"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="9.5" font-weight="300" letter-spacing="7"
+    fill="#C9A96E" opacity="0.9">LUXURY NAIL STUDIO  ·  EST. MMXXIV</text>
+
+  <!-- Tiny diamond below tagline -->
+  <polygon points="320,158 323,153 320,148 317,153" fill="#DD2C6C" opacity="0.35"/>
+</svg>

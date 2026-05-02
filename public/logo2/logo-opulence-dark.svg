@@ -1,0 +1,122 @@
+<svg width="560" height="200" viewBox="0 0 560 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;1,300&amp;display=swap');</style>
+
+    <!-- Velvet dark bg matching website .dark -->
+    <radialGradient id="bgOD" cx="50%" cy="50%" r="68%">
+      <stop offset="0%"  stop-color="#250A18"/>
+      <stop offset="100%" stop-color="#0C0610"/>
+    </radialGradient>
+
+    <!-- Wordmark gradient: bright pink → gold on dark -->
+    <linearGradient id="wordGradD" gradientUnits="userSpaceOnUse" x1="106" y1="110" x2="454" y2="110">
+      <stop offset="0%"   stop-color="#F05299"/>
+      <stop offset="55%"  stop-color="#D97CAE"/>
+      <stop offset="100%" stop-color="#D4A853"/>
+    </linearGradient>
+
+    <!-- Border gradient on dark -->
+    <linearGradient id="topBorderD" gradientUnits="userSpaceOnUse" x1="14" y1="0" x2="546" y2="0">
+      <stop offset="0%"   stop-color="#F05299" stop-opacity="0"/>
+      <stop offset="15%"  stop-color="#F05299"/>
+      <stop offset="50%"  stop-color="#D4A853"/>
+      <stop offset="85%"  stop-color="#F05299"/>
+      <stop offset="100%" stop-color="#F05299" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="560" height="200" fill="url(#bgOD)"/>
+
+  <!-- Outer border with gradient -->
+  <rect x="14" y="14" width="532" height="172" stroke="url(#topBorderD)" stroke-width="1" fill="none"/>
+  <rect x="20" y="20" width="520" height="160" stroke="#F05299" stroke-width="0.35" fill="none" opacity="0.15"/>
+
+  <!-- ===== ART DECO FANS IN BRAND PINK (bright on dark) ===== -->
+  <!-- TOP-LEFT -->
+  <g transform="translate(20,20)">
+    <line x1="0" y1="0" x2="60" y2="0"  stroke="#F05299" stroke-width="1"   opacity="0.65"/>
+    <line x1="0" y1="0" x2="57" y2="18" stroke="#F05299" stroke-width="0.8" opacity="0.55"/>
+    <line x1="0" y1="0" x2="50" y2="34" stroke="#F05299" stroke-width="0.7" opacity="0.46"/>
+    <line x1="0" y1="0" x2="38" y2="47" stroke="#F05299" stroke-width="0.6" opacity="0.38"/>
+    <line x1="0" y1="0" x2="22" y2="56" stroke="#F05299" stroke-width="0.55" opacity="0.3"/>
+    <line x1="0" y1="0" x2="6"  y2="60" stroke="#F05299" stroke-width="0.5" opacity="0.25"/>
+    <line x1="0" y1="0" x2="0"  y2="60" stroke="#F05299" stroke-width="1"   opacity="0.65"/>
+    <path d="M60,0 A60,60 0 0,1 0,60" stroke="#F05299" stroke-width="1" fill="none" opacity="0.45"/>
+    <path d="M44,0 A44,44 0 0,1 0,44" stroke="#D4A853" stroke-width="0.55" fill="none" opacity="0.3"/>
+  </g>
+  <!-- TOP-RIGHT -->
+  <g transform="translate(540,20) scale(-1,1)">
+    <line x1="0" y1="0" x2="60" y2="0"  stroke="#F05299" stroke-width="1"   opacity="0.65"/>
+    <line x1="0" y1="0" x2="57" y2="18" stroke="#F05299" stroke-width="0.8" opacity="0.55"/>
+    <line x1="0" y1="0" x2="50" y2="34" stroke="#F05299" stroke-width="0.7" opacity="0.46"/>
+    <line x1="0" y1="0" x2="38" y2="47" stroke="#F05299" stroke-width="0.6" opacity="0.38"/>
+    <line x1="0" y1="0" x2="22" y2="56" stroke="#F05299" stroke-width="0.55" opacity="0.3"/>
+    <line x1="0" y1="0" x2="6"  y2="60" stroke="#F05299" stroke-width="0.5" opacity="0.25"/>
+    <line x1="0" y1="0" x2="0"  y2="60" stroke="#F05299" stroke-width="1"   opacity="0.65"/>
+    <path d="M60,0 A60,60 0 0,1 0,60" stroke="#F05299" stroke-width="1" fill="none" opacity="0.45"/>
+    <path d="M44,0 A44,44 0 0,1 0,44" stroke="#D4A853" stroke-width="0.55" fill="none" opacity="0.3"/>
+  </g>
+  <!-- BOTTOM-LEFT -->
+  <g transform="translate(20,180) scale(1,-1)">
+    <line x1="0" y1="0" x2="60" y2="0"  stroke="#F05299" stroke-width="1"   opacity="0.65"/>
+    <line x1="0" y1="0" x2="57" y2="18" stroke="#F05299" stroke-width="0.8" opacity="0.55"/>
+    <line x1="0" y1="0" x2="50" y2="34" stroke="#F05299" stroke-width="0.7" opacity="0.46"/>
+    <line x1="0" y1="0" x2="38" y2="47" stroke="#F05299" stroke-width="0.6" opacity="0.38"/>
+    <line x1="0" y1="0" x2="22" y2="56" stroke="#F05299" stroke-width="0.55" opacity="0.3"/>
+    <line x1="0" y1="0" x2="6"  y2="60" stroke="#F05299" stroke-width="0.5" opacity="0.25"/>
+    <line x1="0" y1="0" x2="0"  y2="60" stroke="#F05299" stroke-width="1"   opacity="0.65"/>
+    <path d="M60,0 A60,60 0 0,1 0,60" stroke="#F05299" stroke-width="1" fill="none" opacity="0.45"/>
+    <path d="M44,0 A44,44 0 0,1 0,44" stroke="#D4A853" stroke-width="0.55" fill="none" opacity="0.3"/>
+  </g>
+  <!-- BOTTOM-RIGHT -->
+  <g transform="translate(540,180) scale(-1,-1)">
+    <line x1="0" y1="0" x2="60" y2="0"  stroke="#F05299" stroke-width="1"   opacity="0.65"/>
+    <line x1="0" y1="0" x2="57" y2="18" stroke="#F05299" stroke-width="0.8" opacity="0.55"/>
+    <line x1="0" y1="0" x2="50" y2="34" stroke="#F05299" stroke-width="0.7" opacity="0.46"/>
+    <line x1="0" y1="0" x2="38" y2="47" stroke="#F05299" stroke-width="0.6" opacity="0.38"/>
+    <line x1="0" y1="0" x2="22" y2="56" stroke="#F05299" stroke-width="0.55" opacity="0.3"/>
+    <line x1="0" y1="0" x2="6"  y2="60" stroke="#F05299" stroke-width="0.5" opacity="0.25"/>
+    <line x1="0" y1="0" x2="0"  y2="60" stroke="#F05299" stroke-width="1"   opacity="0.65"/>
+    <path d="M60,0 A60,60 0 0,1 0,60" stroke="#F05299" stroke-width="1" fill="none" opacity="0.45"/>
+    <path d="M44,0 A44,44 0 0,1 0,44" stroke="#D4A853" stroke-width="0.55" fill="none" opacity="0.3"/>
+  </g>
+
+  <!-- Top center ornament (rose + flanking lines in pink) -->
+  <line x1="156" y1="28" x2="262" y2="28" stroke="#F05299" stroke-width="0.5" opacity="0.35"/>
+  <g transform="translate(280,28)">
+    <path d="M0,-10 C1.8,-5 5,-1.8 10,0 C5,1.8 1.8,5 0,10 C-1.8,5 -5,1.8 -10,0 C-5,-1.8 -1.8,-5 0,-10Z"
+      fill="#F05299" opacity="0.65"/>
+    <path d="M0,-10 C1.8,-5 5,-1.8 10,0 C5,1.8 1.8,5 0,10 C-1.8,5 -5,1.8 -10,0 C-5,-1.8 -1.8,-5 0,-10Z"
+      fill="#F05299" opacity="0.3" transform="rotate(45)"/>
+    <circle cx="0" cy="0" r="2.5" fill="#D4A853"/>
+  </g>
+  <line x1="298" y1="28" x2="404" y2="28" stroke="#F05299" stroke-width="0.5" opacity="0.35"/>
+
+  <!-- "THE" in brand pink -->
+  <text x="280" y="74"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="11" font-weight="300" letter-spacing="10" fill="#F05299">THE</text>
+
+  <!-- Main wordmark: bright pink → gold -->
+  <text x="280" y="114"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="34" font-weight="300" letter-spacing="10"
+    fill="url(#wordGradD)">NAIL ARTISTRY</text>
+
+  <!-- Thin rule -->
+  <line x1="90" y1="127" x2="470" y2="127" stroke="#F05299" stroke-width="0.55" opacity="0.25"/>
+
+  <!-- Tagline in gold -->
+  <text x="280" y="150"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="9.5" font-weight="300" letter-spacing="6"
+    fill="#D4A853" opacity="0.9">LUXURY NAIL STUDIO  ·  EST. MMXXIV</text>
+
+  <!-- Bottom center ornament -->
+  <line x1="156" y1="172" x2="262" y2="172" stroke="#F05299" stroke-width="0.5" opacity="0.35"/>
+  <polygon points="280,164 284,172 280,180 276,172" fill="#F05299" opacity="0.6"/>
+  <line x1="298" y1="172" x2="404" y2="172" stroke="#F05299" stroke-width="0.5" opacity="0.35"/>
+</svg>

@@ -1,0 +1,93 @@
+<svg width="640" height="178" viewBox="0 0 640 178" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;1,300&amp;display=swap');</style>
+
+    <!-- Velvet dark bg: deep warm center glowing pink toward edge -->
+    <radialGradient id="bgD" cx="50%" cy="40%" r="65%">
+      <stop offset="0%"  stop-color="#200D18"/>
+      <stop offset="100%" stop-color="#0C0610"/>
+    </radialGradient>
+
+    <!-- Main text: bright pink → gold (website dark theme primary) -->
+    <linearGradient id="pgD" gradientUnits="userSpaceOnUse" x1="108" y1="104" x2="532" y2="104">
+      <stop offset="0%"   stop-color="#F05299"/>
+      <stop offset="55%"  stop-color="#D97CAE"/>
+      <stop offset="100%" stop-color="#D4A853"/>
+    </linearGradient>
+
+    <!-- Rule gradient on dark -->
+    <linearGradient id="ruleDark" gradientUnits="userSpaceOnUse" x1="20" y1="0" x2="620" y2="0">
+      <stop offset="0%"   stop-color="#F05299" stop-opacity="0"/>
+      <stop offset="20%"  stop-color="#F05299" stop-opacity="0.45"/>
+      <stop offset="50%"  stop-color="#D4A853" stop-opacity="0.6"/>
+      <stop offset="80%"  stop-color="#F05299" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#F05299" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="640" height="178" fill="url(#bgD)"/>
+
+  <!-- ===== DOUBLE OUTER BORDER ===== -->
+  <rect x="14" y="14" width="612" height="150" stroke="#F05299" stroke-width="0.9" fill="none" opacity="0.25"/>
+  <rect x="20" y="20" width="600" height="138" stroke="#D4A853" stroke-width="0.4" fill="none" opacity="0.2"/>
+
+  <!-- ===== CORNER L-MARKS (bright brand pink on dark) ===== -->
+  <!-- Top-left -->
+  <line x1="14" y1="14" x2="58" y2="14" stroke="#F05299" stroke-width="1.3" opacity="0.8"/>
+  <line x1="14" y1="14" x2="14" y2="58" stroke="#F05299" stroke-width="1.3" opacity="0.8"/>
+  <circle cx="14" cy="14" r="2.2" fill="#F05299" opacity="0.6"/>
+  <!-- Top-right -->
+  <line x1="626" y1="14" x2="582" y2="14" stroke="#F05299" stroke-width="1.3" opacity="0.8"/>
+  <line x1="626" y1="14" x2="626" y2="58" stroke="#F05299" stroke-width="1.3" opacity="0.8"/>
+  <circle cx="626" cy="14" r="2.2" fill="#F05299" opacity="0.6"/>
+  <!-- Bottom-left -->
+  <line x1="14" y1="164" x2="58" y2="164" stroke="#F05299" stroke-width="1.3" opacity="0.8"/>
+  <line x1="14" y1="164" x2="14" y2="120" stroke="#F05299" stroke-width="1.3" opacity="0.8"/>
+  <circle cx="14" cy="164" r="2.2" fill="#F05299" opacity="0.6"/>
+  <!-- Bottom-right -->
+  <line x1="626" y1="164" x2="582" y2="164" stroke="#F05299" stroke-width="1.3" opacity="0.8"/>
+  <line x1="626" y1="164" x2="626" y2="120" stroke="#F05299" stroke-width="1.3" opacity="0.8"/>
+  <circle cx="626" cy="164" r="2.2" fill="#F05299" opacity="0.6"/>
+
+  <!-- ===== "THE" + FLANKING HAIRLINES ===== -->
+  <line x1="28" y1="51" x2="285" y2="51" stroke="url(#ruleDark)" stroke-width="0.6"/>
+  <text x="320" y="56"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="11" font-weight="300" letter-spacing="11" fill="#F05299" opacity="0.95">THE</text>
+  <line x1="355" y1="51" x2="612" y2="51" stroke="url(#ruleDark)" stroke-width="0.6"/>
+
+  <!-- ===== CENTERED ROSE ORNAMENT ===== -->
+  <g transform="translate(320,70)">
+    <path d="M0,-16 C3,-8 8,-3 16,0 C8,3 3,8 0,16 C-3,8 -8,3 -16,0 C-8,-3 -3,-8 0,-16Z"
+      fill="#F05299" opacity="0.12"/>
+    <path d="M0,-11 C2,-5.5 5.5,-2 11,0 C5.5,2 2,5.5 0,11 C-2,5.5 -5.5,2 -11,0 C-5.5,-2 -2,-5.5 0,-11Z"
+      fill="#F05299" opacity="0.35"/>
+    <path d="M0,-7 C1.5,-3.5 3.5,-1.5 7,0 C3.5,1.5 1.5,3.5 0,7 C-1.5,3.5 -3.5,1.5 -7,0 C-3.5,-1.5 -1.5,-3.5 0,-7Z"
+      fill="#F05299" opacity="0.85"/>
+    <path d="M0,-7 C1.5,-3.5 3.5,-1.5 7,0 C3.5,1.5 1.5,3.5 0,7 C-1.5,3.5 -3.5,1.5 -7,0 C-3.5,-1.5 -1.5,-3.5 0,-7Z"
+      fill="#F05299" opacity="0.35" transform="rotate(45)"/>
+    <circle cx="0" cy="0" r="2.8" fill="#D4A853"/>
+    <circle cx="0" cy="0" r="1.2" fill="#FFFFFF" opacity="0.6"/>
+  </g>
+
+  <!-- ===== MAIN WORDMARK (bright pink → gold gradient) ===== -->
+  <text x="320" y="104"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="36" font-weight="200" letter-spacing="13"
+    fill="url(#pgD)">NAIL ARTISTRY</text>
+
+  <!-- ===== BOTTOM RULE + TAGLINE ===== -->
+  <line x1="28" y1="118" x2="612" y2="118" stroke="url(#ruleDark)" stroke-width="0.6"/>
+
+  <text x="320" y="142"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="9.5" font-weight="300" letter-spacing="7"
+    fill="#D4A853" opacity="0.9">LUXURY NAIL STUDIO  ·  EST. MMXXIV</text>
+
+  <!-- Tiny diamond below tagline -->
+  <polygon points="320,158 323,153 320,148 317,153" fill="#F05299" opacity="0.5"/>
+</svg>

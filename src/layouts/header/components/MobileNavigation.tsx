@@ -44,7 +44,6 @@ export const MobileNavigation = ({
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState('');
 
-  // Create debounced function to navigate to search results
   const debouncedNavigate = useRef(
     debounce((value: string) => {
       const trimmedValue = value.trim();
@@ -54,7 +53,6 @@ export const MobileNavigation = ({
     }, 500)
   ).current;
 
-  // Cleanup debounced function on unmount
   useEffect(() => {
     return () => {
       debouncedNavigate.cancel();
@@ -64,7 +62,6 @@ export const MobileNavigation = ({
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
-    // Debounce navigation to search results
     debouncedNavigate(value);
   };
 
@@ -72,11 +69,9 @@ export const MobileNavigation = ({
     e.preventDefault();
     const trimmedValue = searchValue.trim();
     if (trimmedValue) {
-      // Cancel any pending debounced navigation
       debouncedNavigate.cancel();
-      // Navigate immediately on form submit
       navigate(`/products?search=${encodeURIComponent(trimmedValue)}`);
-      setSearchValue(''); // Clear search after navigation
+      setSearchValue('');
     }
   };
 
@@ -89,7 +84,7 @@ export const MobileNavigation = ({
     <div className="md:hidden">
       <div className="container mx-auto px-4">
         <div className="flex items-center h-16 relative">
-          {/* Left section: Menu + Logo */}
+          {/* Left: Menu + Logo */}
           <div className="flex items-center gap-3 flex-shrink-0">
             <Button
               variant="ghost"
@@ -102,7 +97,7 @@ export const MobileNavigation = ({
             <Logo className="h-12" variant="dark" />
           </div>
 
-          {/* Center: Search bar */}
+          {/* Center: Search */}
           <div className="flex-1 flex justify-center px-4">
             <form onSubmit={handleSearchSubmit} className="relative w-full max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/30 pointer-events-none" />
@@ -116,57 +111,44 @@ export const MobileNavigation = ({
             </form>
           </div>
 
-          {/* Right section: Cart icon */}
+          {/* Right: Cart */}
           <HeaderActions variant="mobile" />
         </div>
       </div>
 
-      {/* Mobile menu - Sheet */}
+      {/* Mobile Menu Sheet */}
       <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-        <SheetContent 
-          side="left" 
-          className="w-full sm:w-[320px] p-0 flex flex-col bg-white [&>button]:hidden"
-          overlayClassName="bg-black/20"
+        <SheetContent
+          side="left"
+          className="w-full sm:w-[320px] p-0 flex flex-col bg-[#0D0D0D] border-r border-white/10 [&>button]:hidden"
+          overlayClassName="bg-black/50"
         >
-          {/* Black Header */}
-          <div className="bg-black px-6 py-4 flex items-center justify-between flex-shrink-0">
-            <h2 className="text-white text-lg font-semibold uppercase">MENU</h2>
+          {/* Header */}
+          <div className="bg-[#111111] border-b border-white/10 px-6 py-4 flex items-center justify-between flex-shrink-0">
+            <h2 className="text-white text-lg font-semibold uppercase tracking-wider">Menu</h2>
             <SheetClose asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-white hover:bg-black/20"
+                className="h-8 w-8 text-white/50 hover:text-white hover:bg-white/10"
               >
                 <X className="h-5 w-5" />
               </Button>
             </SheetClose>
           </div>
-          
+
           {/* Navigation Links */}
-          <nav className="flex-1 overflow-y-auto bg-white">
+          <nav className="flex-1 overflow-y-auto bg-[#0D0D0D]">
             {navLinks.map((link) => {
               if (link.hasDropdown && link.label === 'SHOP') {
                 return (
                   <button
                     key={link.href}
-                    className="flex items-center justify-between w-full px-6 py-4 text-black text-sm font-medium uppercase border-b border-gray-200 hover:bg-gray-50 transition-colors text-left"
-                    onMouseEnter={() => {
-                      setIsMouseOverShop(true);
-                      if (shopSubmenuTimeout) {
-                        clearTimeout(shopSubmenuTimeout);
-                        setShopSubmenuTimeout(null);
-                      }
-                      setShopSubmenuOpen(true);
-                    }}
-                    onMouseLeave={() => {
-                      setIsMouseOverShop(false);
-                    }}
-                    onClick={() => {
-                      setShopSubmenuOpen(true);
-                    }}
+                    className="flex items-center justify-between w-full px-6 py-4 text-white/70 text-sm font-medium uppercase border-b border-white/8 hover:bg-white/5 hover:text-white transition-colors text-left"
+                    onClick={() => setShopSubmenuOpen(true)}
                   >
                     <span>{link.label}</span>
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
+                    <ChevronRight className="h-4 w-4 text-white/30" />
                   </button>
                 );
               }
@@ -174,7 +156,7 @@ export const MobileNavigation = ({
                 <Link
                   key={link.href}
                   to={link.href}
-                  className="block px-6 py-4 text-black text-sm font-medium uppercase border-b border-gray-200 hover:bg-gray-50 transition-colors"
+                  className="block px-6 py-4 text-white/70 text-sm font-medium uppercase border-b border-white/8 hover:bg-white/5 hover:text-white transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.label}
@@ -185,29 +167,27 @@ export const MobileNavigation = ({
 
           {/* Bottom Section */}
           {isAuthenticated ? (
-            /* Logout button when logged in */
-            <div className="flex-shrink-0 border-t border-gray-200">
+            <div className="flex-shrink-0 border-t border-white/10">
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-3 w-full px-6 py-4 text-red-500 text-sm font-medium uppercase hover:bg-red-50 transition-colors"
+                className="flex items-center gap-3 w-full px-6 py-4 text-red-400 text-sm font-medium uppercase hover:bg-red-500/10 transition-colors"
               >
                 <LogOut className="h-5 w-5" />
                 <span>LOGOUT</span>
               </button>
             </div>
           ) : (
-            /* Login/Register buttons when NOT logged in */
-            <div className="flex-shrink-0 p-6 space-y-3 bg-white border-t border-gray-200">
-              <Button 
-                className="w-full bg-black text-white hover:bg-black/90 h-12 rounded-md font-medium uppercase text-sm"
+            <div className="flex-shrink-0 p-6 space-y-3 bg-[#111111] border-t border-white/10">
+              <Button
+                className="w-full bg-[#DD2C6C] hover:bg-[#c02560] text-white h-12 rounded-lg font-medium uppercase text-sm"
                 onClick={() => setMobileMenuOpen(false)}
                 asChild
               >
                 <Link to="/login">LOG IN</Link>
               </Button>
-              <Button 
-                variant="outline" 
-                className="w-full bg-white text-black border-black hover:bg-gray-50 h-12 rounded-md font-medium uppercase text-sm"
+              <Button
+                variant="outline"
+                className="w-full bg-transparent text-white/70 border-white/20 hover:bg-white/10 hover:text-white h-12 rounded-lg font-medium uppercase text-sm"
                 onClick={() => setMobileMenuOpen(false)}
                 asChild
               >
@@ -218,7 +198,7 @@ export const MobileNavigation = ({
         </SheetContent>
       </Sheet>
 
-      {/* Shop Submenu - Sheet */}
+      {/* Shop Submenu Sheet */}
       <ShopMobileMenu
         isOpen={shopSubmenuOpen}
         onOpenChange={setShopSubmenuOpen}
@@ -234,4 +214,3 @@ export const MobileNavigation = ({
     </div>
   );
 };
-

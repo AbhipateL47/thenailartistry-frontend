@@ -1,0 +1,22 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="120" fill="#FEFAFC" rx="24"/>
+
+  <!-- Fingernail silhouette body -->
+  <path d="M36,95 L36,50 Q36,20 60,20 Q84,20 84,50 L84,95 Z" fill="#DD2C6C" opacity="0.12"/>
+  <path d="M36,95 L36,50 Q36,20 60,20 Q84,20 84,50 L84,95 Z" stroke="#DD2C6C" stroke-width="2" fill="none"/>
+
+  <!-- Nail polish color fill (top portion of nail) -->
+  <path d="M38,58 Q38,22 60,22 Q82,22 82,58 L82,68 Q60,65 38,68Z" fill="#DD2C6C" opacity="0.85"/>
+
+  <!-- Sparkle star top-right of nail -->
+  <g transform="translate(80,28)">
+    <path d="M0,-9 C1.5,-4.5 4.5,-1.5 9,0 C4.5,1.5 1.5,4.5 0,9 C-1.5,4.5 -4.5,1.5 -9,0 C-4.5,-1.5 -1.5,-4.5 0,-9Z" fill="#DD2C6C"/>
+  </g>
+
+  <!-- Shine highlight on nail -->
+  <ellipse cx="50" cy="38" rx="6" ry="10" fill="white" opacity="0.25" transform="rotate(-15,50,38)"/>
+
+  <!-- Small sparkle dots -->
+  <circle cx="94" cy="20" r="2" fill="#DD2C6C" opacity="0.5"/>
+  <circle cx="99" cy="30" r="1.2" fill="#DD2C6C" opacity="0.35"/>
+</svg>

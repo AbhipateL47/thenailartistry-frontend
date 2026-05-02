@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Nail Artistry — Logo Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FEFAFC;
+      --surface: #F5EEF3;
+      --surface2: #EDE0E8;
+      --text: #1C0A14;
+      --text-muted: #7A4060;
+      --pink: #DD2C6C;
+      --border: rgba(221,44,108,0.18);
+      --shadow: 0 4px 24px rgba(221,44,108,0.10);
+    }
+    [data-theme="dark"] {
+      --bg: #0C0610;
+      --surface: #1A0C18;
+      --surface2: #261524;
+      --text: #F8EEF3;
+      --text-muted: #C090A8;
+      --pink: #F06292;
+      --border: rgba(240,98,146,0.2);
+      --shadow: 0 4px 24px rgba(240,98,146,0.12);
+    }
+
+    body {
+      font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 40px 24px 80px;
+      transition: background 0.35s, color 0.35s;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 960px;
+      margin: 0 auto 52px;
+    }
+
+    .site-title {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 4px;
+      color: var(--pink);
+      text-transform: uppercase;
+    }
+
+    .toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 18px;
+      border-radius: 100px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: background 0.25s, border-color 0.25s;
+    }
+    .toggle-btn:hover { background: var(--surface); }
+    .toggle-btn svg { width: 16px; height: 16px; }
+
+    h2 {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .section {
+      max-width: 960px;
+      margin: 0 auto 60px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .section-title h2 { margin: 0; }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .logo-grid {
+      display: grid;
+      gap: 20px;
+    }
+    .logo-grid.two-col { grid-template-columns: 1fr 1fr; }
+    .logo-grid.three-col { grid-template-columns: repeat(3, 1fr); }
+
+    .logo-card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      transition: background 0.35s, border-color 0.35s;
+    }
+
+    .logo-card-inner {
+      padding: 36px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-card-inner.light-bg { background: #FEFAFC; }
+    .logo-card-inner.dark-bg  { background: #120810; }
+
+    .logo-card img,
+    .logo-card svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .logo-card-label {
+      padding: 12px 18px;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      background: var(--surface2);
+    }
+
+    .icon-pair {
+      display: flex;
+      gap: 20px;
+    }
+
+    .usage-section {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .usage-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .usage-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .usage-card h3 {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--pink);
+      margin-bottom: 10px;
+    }
+    .usage-card p {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 640px) {
+      .logo-grid.two-col,
+      .logo-grid.three-col,
+      .usage-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body data-theme="light">
+
+<header>
+  <span class="site-title">Logo Preview</span>
+  <button class="toggle-btn" onclick="toggleTheme()" id="theme-btn">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+    <span id="theme-label">Dark Mode</span>
+  </button>
+</header>
+
+<!-- Wordmark logos -->
+<section class="section">
+  <div class="section-title"><h2>Wordmark — Horizontal</h2></div>
+  <div class="logo-grid two-col">
+    <div class="logo-card">
+      <div class="logo-card-inner light-bg">
+        <img src="logo-wordmark-light.svg" alt="Wordmark Light"/>
+      </div>
+      <div class="logo-card-label">Light Background</div>
+    </div>
+    <div class="logo-card">
+      <div class="logo-card-inner dark-bg">
+        <img src="logo-wordmark-dark.svg" alt="Wordmark Dark"/>
+      </div>
+      <div class="logo-card-label">Dark Background</div>
+    </div>
+  </div>
+</section>
+
+<!-- Badge logos -->
+<section class="section">
+  <div class="section-title"><h2>Badge / Seal</h2></div>
+  <div class="logo-grid two-col">
+    <div class="logo-card">
+      <div class="logo-card-inner light-bg">
+        <img src="logo-badge-light.svg" alt="Badge Light" style="max-width:220px;"/>
+      </div>
+      <div class="logo-card-label">Light Background</div>
+    </div>
+    <div class="logo-card">
+      <div class="logo-card-inner dark-bg">
+        <img src="logo-badge-dark.svg" alt="Badge Dark" style="max-width:220px;"/>
+      </div>
+      <div class="logo-card-label">Dark Background</div>
+    </div>
+  </div>
+</section>
+
+<!-- Icon mark -->
+<section class="section">
+  <div class="section-title"><h2>Icon Mark</h2></div>
+  <div class="logo-grid three-col">
+    <div class="logo-card">
+      <div class="logo-card-inner light-bg">
+        <img src="logo-icon-light.svg" alt="Icon Light"/>
+      </div>
+      <div class="logo-card-label">Light Background</div>
+    </div>
+    <div class="logo-card">
+      <div class="logo-card-inner dark-bg">
+        <img src="logo-icon-dark.svg" alt="Icon Dark"/>
+      </div>
+      <div class="logo-card-label">Dark Background</div>
+    </div>
+    <div class="logo-card">
+      <div class="logo-card-inner" style="background: linear-gradient(135deg, #DD2C6C, #7c1a3c);">
+        <img src="logo-icon-light.svg" alt="Icon on Gradient" style="filter: brightness(0) invert(1) opacity(0.9);"/>
+      </div>
+      <div class="logo-card-label">On Brand Gradient</div>
+    </div>
+  </div>
+</section>
+
+<!-- Combination preview -->
+<section class="section">
+  <div class="section-title"><h2>Combination Use</h2></div>
+  <div class="logo-grid two-col">
+    <div class="logo-card">
+      <div class="logo-card-inner light-bg" style="gap:20px; flex-direction: column;">
+        <img src="logo-badge-light.svg" alt="Badge Light" style="max-width:120px;"/>
+        <img src="logo-wordmark-light.svg" alt="Wordmark Light" style="max-width:340px;"/>
+      </div>
+      <div class="logo-card-label">Full Brand Stack — Light</div>
+    </div>
+    <div class="logo-card">
+      <div class="logo-card-inner dark-bg" style="gap:20px; flex-direction: column;">
+        <img src="logo-badge-dark.svg" alt="Badge Dark" style="max-width:120px;"/>
+        <img src="logo-wordmark-dark.svg" alt="Wordmark Dark" style="max-width:340px;"/>
+      </div>
+      <div class="logo-card-label">Full Brand Stack — Dark</div>
+    </div>
+  </div>
+</section>
+
+<!-- Usage notes -->
+<section class="usage-section">
+  <div class="section-title"><h2>Usage Notes</h2></div>
+  <div class="usage-grid">
+    <div class="usage-card">
+      <h3>Wordmark</h3>
+      <p>Use horizontally across the site header and footer. Maintain clear space equal to the height of the ornament on all sides. Do not stretch or recolor.</p>
+    </div>
+    <div class="usage-card">
+      <h3>Badge / Seal</h3>
+      <p>Best for profile images, app icons, stamps on packaging, and social media avatars. Works at all sizes from 32px to full-bleed.</p>
+    </div>
+    <div class="usage-card">
+      <h3>Icon Mark</h3>
+      <p>Use as a standalone symbol where space is limited — favicon, loading screen, embossed watermark. The sparkle star must remain visible.</p>
+    </div>
+    <div class="usage-card">
+      <h3>Colors</h3>
+      <p>Primary pink <strong>#DD2C6C</strong> · Dark bg <strong>#120810</strong> · Light bg <strong>#FEFAFC</strong> · Accent gold <strong>#D4A853</strong> · Dark-mode pink <strong>#F06292</strong></p>
+    </div>
+  </div>
+</section>
+
+<script>
+  function toggleTheme() {
+    const body = document.body;
+    const label = document.getElementById('theme-label');
+    const isDark = body.getAttribute('data-theme') === 'dark';
+    body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    label.textContent = isDark ? 'Dark Mode' : 'Light Mode';
+  }
+</script>
+</body>
+</html>

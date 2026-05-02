@@ -1,0 +1,44 @@
+<svg width="620" height="170" viewBox="0 0 620 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;1,300&amp;display=swap');</style>
+  </defs>
+
+  <!-- Deep luxury black -->
+  <rect width="620" height="170" fill="#080507" rx="0"/>
+
+  <!-- Outer hairlines top + bottom in gold -->
+  <line x1="28" y1="16"  x2="592" y2="16"  stroke="#D4A853" stroke-width="0.65"/>
+  <line x1="28" y1="158" x2="592" y2="158" stroke="#D4A853" stroke-width="0.65"/>
+
+  <!-- Corner diamond ornaments in gold -->
+  <polygon points="28,16  31,13  34,16  31,19"  fill="#D4A853"/>
+  <polygon points="592,16 595,13 598,16 595,19" fill="#D4A853"/>
+  <polygon points="28,158 31,155 34,158 31,161" fill="#D4A853"/>
+  <polygon points="592,158 595,155 598,158 595,161" fill="#D4A853"/>
+
+  <!-- "THE" flanked by hairlines -->
+  <line x1="28"  y1="50" x2="242" y2="50" stroke="#D4A853" stroke-width="0.55" opacity="0.6"/>
+  <text x="310" y="55"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="11" font-weight="300" letter-spacing="12" fill="#D4A853">THE</text>
+  <line x1="378" y1="50" x2="592" y2="50" stroke="#D4A853" stroke-width="0.55" opacity="0.6"/>
+
+  <!-- Centered 4-pt star -->
+  <path d="M310,63 C311.5,60 313,58.5 316,57.5 C313,56.5 311.5,55 310,52 C308.5,55 307,56.5 304,57.5 C307,58.5 308.5,60 310,63Z" fill="#D4A853" opacity="0.8"/>
+
+  <!-- MAIN WORDMARK: white, ultra-thin, wide tracking -->
+  <text x="310" y="103"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="38" font-weight="200" letter-spacing="13" fill="#F8F2E8">NAIL ARTISTRY</text>
+
+  <!-- Thin gold rule below -->
+  <line x1="28" y1="118" x2="592" y2="118" stroke="#D4A853" stroke-width="0.55" opacity="0.6"/>
+
+  <!-- Tagline -->
+  <text x="310" y="141"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="10" font-weight="300" letter-spacing="9" fill="#D4A853" opacity="0.9">EST.  MMXXIV</text>
+</svg>

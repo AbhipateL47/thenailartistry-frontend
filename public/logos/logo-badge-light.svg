@@ -1,0 +1,49 @@
+<svg width="260" height="260" viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="260" height="260" fill="#FEFAFC" rx="16"/>
+
+  <!-- Outer ring -->
+  <circle cx="130" cy="130" r="118" stroke="#DD2C6C" stroke-width="1" opacity="0.25"/>
+  <!-- Inner ring -->
+  <circle cx="130" cy="130" r="108" stroke="#DD2C6C" stroke-width="0.6" opacity="0.2"/>
+
+  <!-- Circular text path -->
+  <defs>
+    <path id="circle-path-light" d="M130,130 m-100,0 a100,100 0 1,1 200,0 a100,100 0 1,1 -200,0"/>
+  </defs>
+  <text font-family="'Jost','Helvetica Neue',Arial,sans-serif" font-size="11" font-weight="400" letter-spacing="5.5" fill="#DD2C6C">
+    <textPath href="#circle-path-light" startOffset="8%">THE NAIL ARTISTRY  •  EST. 2024  •</textPath>
+  </text>
+
+  <!-- Inner double circle border -->
+  <circle cx="130" cy="130" r="82" stroke="#DD2C6C" stroke-width="0.8" opacity="0.3"/>
+
+  <!-- "T" large initial -->
+  <text x="130" y="118"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="20"
+    font-weight="300"
+    letter-spacing="9"
+    text-anchor="middle"
+    fill="#DD2C6C" opacity="0.7">TNA</text>
+
+  <!-- Divider line -->
+  <line x1="85" y1="125" x2="175" y2="125" stroke="#DD2C6C" stroke-width="0.6" opacity="0.4"/>
+
+  <!-- Monogram letters stacked -->
+  <text x="130" y="155"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="44"
+    font-weight="700"
+    letter-spacing="-1"
+    text-anchor="middle"
+    fill="#1C0A14">TNA</text>
+
+  <!-- Decorative diamond bottom -->
+  <polygon points="130,195 134,188 130,181 126,188" fill="#DD2C6C" opacity="0.5"/>
+
+  <!-- 4 small dots around inner circle -->
+  <circle cx="130" cy="48" r="2.5" fill="#DD2C6C" opacity="0.4"/>
+  <circle cx="130" cy="212" r="2.5" fill="#DD2C6C" opacity="0.4"/>
+  <circle cx="48" cy="130" r="2.5" fill="#DD2C6C" opacity="0.4"/>
+  <circle cx="212" cy="130" r="2.5" fill="#DD2C6C" opacity="0.4"/>
+</svg>

@@ -1,0 +1,114 @@
+<svg width="300" height="358" viewBox="0 0 300 358" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;0,600;1,300&amp;display=swap');</style>
+
+    <!-- Velvet dark bg with pink-center glow — matches website .dark bg -->
+    <radialGradient id="bgMD" cx="50%" cy="40%" r="65%">
+      <stop offset="0%"  stop-color="#2C0F1E"/>
+      <stop offset="100%" stop-color="#0C0610"/>
+    </radialGradient>
+
+    <!-- Crown fill: bright dark-mode pink → gold -->
+    <linearGradient id="crownFillD" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#F05299"/>
+      <stop offset="55%"  stop-color="#D06A8C"/>
+      <stop offset="100%" stop-color="#D4A853"/>
+    </linearGradient>
+
+    <!-- TNA gradient on dark: bright pink → gold -->
+    <linearGradient id="tnaGradD" gradientUnits="userSpaceOnUse" x1="68" y1="220" x2="232" y2="220">
+      <stop offset="0%"   stop-color="#F05299"/>
+      <stop offset="100%" stop-color="#D4A853"/>
+    </linearGradient>
+
+    <!-- Ring soft glow on dark -->
+    <radialGradient id="ringGlowD" cx="50%" cy="50%" r="50%">
+      <stop offset="78%"  stop-color="#F05299" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#F05299" stop-opacity="0.12"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="300" height="358" fill="url(#bgMD)"/>
+
+  <!-- Outer thin border -->
+  <rect x="12" y="12" width="276" height="334" stroke="#F05299" stroke-width="0.7" fill="none" opacity="0.2"/>
+
+  <!-- ===== CROWN ===== -->
+  <!-- Crown glow -->
+  <path d="M62,116 L62,96 L88,70 L102,92 L120,54 L133,88 L150,44 L167,88 L180,54 L198,92 L212,70 L238,96 L238,116 Z"
+    fill="#F05299" opacity="0.06" transform="translate(0,6)"/>
+
+  <!-- Crown body fill (gradient) -->
+  <path d="M62,116 L62,96 L88,70 L102,92 L120,54 L133,88 L150,44 L167,88 L180,54 L198,92 L212,70 L238,96 L238,116 Z"
+    fill="url(#crownFillD)" opacity="0.88"/>
+
+  <!-- Crown inner highlight -->
+  <path d="M62,116 L62,96 L88,70 L102,92 L120,54 L133,88 L150,44 L167,88 L180,54 L198,92 L212,70 L238,96 L238,116 Z"
+    fill="none" stroke="#FFFFFF" stroke-width="0.6" opacity="0.15"/>
+
+  <!-- Crown base band -->
+  <rect x="62" y="112" width="176" height="14" rx="2" fill="url(#crownFillD)" opacity="0.65"/>
+  <rect x="62" y="112" width="176" height="14" rx="2" stroke="#D4A853" stroke-width="0.8" fill="none" opacity="0.45"/>
+
+  <!-- Crown jewels — brighter on dark -->
+  <circle cx="150" cy="46" r="7"   fill="#3A0820" opacity="0.9"/>
+  <circle cx="150" cy="46" r="5.5" fill="#F05299"/>
+  <circle cx="150" cy="46" r="3"   fill="#FFB8D4" opacity="0.9"/>
+  <!-- Inner prong facets in gold -->
+  <polygon points="120,56 124,51 120,46 116,51" fill="#D4A853" opacity="0.9"/>
+  <polygon points="180,56 184,51 180,46 176,51" fill="#D4A853" opacity="0.9"/>
+  <!-- Outer small -->
+  <circle cx="88"  cy="72" r="3.5" fill="#D4A853" opacity="0.85"/>
+  <circle cx="88"  cy="72" r="1.5" fill="#FFFFFF" opacity="0.5"/>
+  <circle cx="212" cy="72" r="3.5" fill="#D4A853" opacity="0.85"/>
+  <circle cx="212" cy="72" r="1.5" fill="#FFFFFF" opacity="0.5"/>
+
+  <!-- Band dots -->
+  <circle cx="108" cy="119" r="2"   fill="#FFFFFF" opacity="0.35"/>
+  <circle cx="150" cy="119" r="2.5" fill="#FFFFFF" opacity="0.4"/>
+  <circle cx="192" cy="119" r="2"   fill="#FFFFFF" opacity="0.35"/>
+
+  <!-- Divider below crown -->
+  <line x1="58"  y1="142" x2="242" y2="142" stroke="#F05299" stroke-width="0.7" opacity="0.35"/>
+  <line x1="70"  y1="145" x2="230" y2="145" stroke="#D4A853" stroke-width="0.3" opacity="0.25"/>
+
+  <!-- Pink ring halo on dark -->
+  <circle cx="150" cy="198" r="72" fill="url(#ringGlowD)"/>
+  <circle cx="150" cy="198" r="68" stroke="#F05299" stroke-width="0.9" fill="none" opacity="0.25"/>
+  <circle cx="150" cy="198" r="72" stroke="#D4A853" stroke-width="0.4" fill="none" opacity="0.15"/>
+
+  <!-- TNA monogram: pink → gold -->
+  <text x="150" y="220"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="68" font-weight="600" letter-spacing="-1"
+    fill="url(#tnaGradD)">TNA</text>
+
+  <!-- Lower divider -->
+  <line x1="58" y1="236" x2="242" y2="236" stroke="#F05299" stroke-width="0.7" opacity="0.3"/>
+
+  <!-- Brand name in light warm white -->
+  <text x="150" y="263"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="11" font-weight="300" letter-spacing="7.5"
+    fill="#F8EEF4" opacity="0.8">THE NAIL ARTISTRY</text>
+
+  <!-- Est line flanked -->
+  <line x1="58"  y1="283" x2="116" y2="283" stroke="#D4A853" stroke-width="0.5" opacity="0.5"/>
+  <polygon points="120,283 123,280 120,277 117,280" fill="#F05299" opacity="0.6"/>
+  <text x="150" y="287"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="9" font-weight="300" letter-spacing="5"
+    fill="#D4A853" opacity="0.9">EST. MMXXIV</text>
+  <polygon points="180,283 183,280 180,277 177,280" fill="#F05299" opacity="0.6"/>
+  <line x1="184" y1="283" x2="242" y2="283" stroke="#D4A853" stroke-width="0.5" opacity="0.5"/>
+
+  <!-- Bottom star ornament -->
+  <g transform="translate(150,312)">
+    <path d="M0,-9 C1.5,-4.5 4.5,-1.5 9,0 C4.5,1.5 1.5,4.5 0,9 C-1.5,4.5 -4.5,1.5 -9,0 C-4.5,-1.5 -1.5,-4.5 0,-9Z"
+      fill="#F05299" opacity="0.6"/>
+    <circle cx="0" cy="0" r="2" fill="#D4A853" opacity="0.8"/>
+  </g>
+</svg>

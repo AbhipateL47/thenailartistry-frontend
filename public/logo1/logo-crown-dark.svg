@@ -1,0 +1,65 @@
+<svg width="300" height="340" viewBox="0 0 300 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;0,600;1,300&amp;display=swap');</style>
+  </defs>
+
+  <rect width="300" height="340" fill="#080507" rx="0"/>
+
+  <!-- Crown body fill (dark — subtle glow) -->
+  <path d="M62,112 L62,94 L86,68 L100,90 L118,52 L132,86 L150,42 L168,86 L182,52 L200,90 L214,68 L238,94 L238,112 Z"
+    fill="#D4A853" opacity="0.08"/>
+  <path d="M62,112 L62,94 L86,68 L100,90 L118,52 L132,86 L150,42 L168,86 L182,52 L200,90 L214,68 L238,94 L238,112 Z"
+    stroke="#D4A853" stroke-width="1.4" fill="none"/>
+
+  <!-- Crown base band -->
+  <rect x="62" y="108" width="176" height="14" rx="2" fill="#D4A853" opacity="0.12"/>
+  <rect x="62" y="108" width="176" height="14" rx="2" stroke="#D4A853" stroke-width="1.2" fill="none"/>
+
+  <!-- Crown jewels — center is bright pink on dark -->
+  <circle cx="150" cy="44" r="5.5" fill="#F06292" opacity="0.95"/>
+  <circle cx="150" cy="44" r="3"   fill="#FFB0CB" opacity="0.7"/>
+  <!-- Inner prong diamonds in gold -->
+  <polygon points="118,54  121,50  118,46  115,50" fill="#D4A853"/>
+  <polygon points="182,54  185,50  182,46  179,50" fill="#D4A853"/>
+  <!-- Outer small dots -->
+  <circle cx="86"  cy="70" r="3" fill="#D4A853" opacity="0.8"/>
+  <circle cx="214" cy="70" r="3" fill="#D4A853" opacity="0.8"/>
+
+  <!-- Band dots -->
+  <circle cx="110" cy="115" r="2"   fill="#D4A853" opacity="0.55"/>
+  <circle cx="150" cy="115" r="2.5" fill="#D4A853" opacity="0.7"/>
+  <circle cx="190" cy="115" r="2"   fill="#D4A853" opacity="0.55"/>
+
+  <!-- Divider double line -->
+  <line x1="60"  y1="138" x2="240" y2="138" stroke="#D4A853" stroke-width="0.6" opacity="0.45"/>
+  <line x1="60"  y1="141" x2="240" y2="141" stroke="#D4A853" stroke-width="0.3" opacity="0.25"/>
+
+  <!-- Monogram TNA in white/cream -->
+  <text x="150" y="215"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="72" font-weight="600" letter-spacing="-2"
+    fill="#F8F2E8">TNA</text>
+
+  <!-- Divider below monogram -->
+  <line x1="60" y1="228" x2="240" y2="228" stroke="#D4A853" stroke-width="0.6" opacity="0.45"/>
+
+  <!-- Brand name -->
+  <text x="150" y="256"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="11.5" font-weight="300" letter-spacing="7.5"
+    fill="#F8F2E8" opacity="0.8">THE NAIL ARTISTRY</text>
+
+  <!-- Est line flanked -->
+  <line x1="60"  y1="276" x2="118" y2="276" stroke="#D4A853" stroke-width="0.5" opacity="0.5"/>
+  <text x="150" y="280"
+    text-anchor="middle"
+    font-family="'Jost','Helvetica Neue',Arial,sans-serif"
+    font-size="9" font-weight="300" letter-spacing="5"
+    fill="#D4A853" opacity="0.9">EST. MMXXIV</text>
+  <line x1="182" y1="276" x2="240" y2="276" stroke="#D4A853" stroke-width="0.5" opacity="0.5"/>
+
+  <!-- Bottom diamond ornament -->
+  <polygon points="150,300 155,294 150,288 145,294" fill="#D4A853" opacity="0.6"/>
+</svg>

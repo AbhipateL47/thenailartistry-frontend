@@ -72,7 +72,7 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
     <div className="space-y-6">
       {/* Product Name */}
       <div>
-        <h1 className="text-2xl md:text-3xl font-bold mb-3">{product.name}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-3 text-white">{product.name}</h1>
         
         {/* Sales Info */}
         {soldCount > 0 && (
@@ -92,15 +92,15 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
       <div className="flex items-baseline gap-3">
         {isOnSale ? (
           <>
-            <span className="text-xl text-muted-foreground line-through">
+            <span className="text-xl text-white/40 line-through">
               {formatCurrency(basePrice)}
             </span>
-            <span className="text-3xl font-bold">
+            <span className="text-3xl font-bold text-white">
               {formatCurrency(finalPrice)}
             </span>
           </>
         ) : (
-          <span className="text-3xl font-bold">
+          <span className="text-3xl font-bold text-white">
             {formatCurrency(basePrice)}
           </span>
         )}
@@ -108,7 +108,7 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
 
       {/* Type Selector */}
       <div>
-        <label className="text-sm font-medium mb-2 block">
+        <label className="text-sm font-medium mb-2 block text-white/70">
           Type: {selectedVariant}
         </label>
         <div className="flex gap-2">
@@ -120,9 +120,9 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
               size="sm"
               className={cn(
                 "text-xs px-4 py-1.5 h-auto",
-                selectedVariant === variant 
-                  ? "bg-primary text-white hover:bg-primary/90" 
-                  : "bg-white border-2 hover:bg-gray-50"
+                selectedVariant === variant
+                  ? "bg-[#DD2C6C] text-white hover:bg-[#c02560] border-[#DD2C6C]"
+                  : "bg-transparent border-white/20 text-white/70 hover:bg-white/10 hover:text-white"
               )}
             >
               {variant}
@@ -135,7 +135,7 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
       <div className="flex gap-3">
         <Button
           size="lg"
-          className="flex-1 bg-primary text-white hover:bg-primary/90"
+          className="flex-1 bg-[#DD2C6C] text-white hover:bg-[#c02560]"
           onClick={handleBuyNow}
           disabled={!inStock}
         >
@@ -144,7 +144,7 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
         <Button
           size="lg"
           variant="outline"
-          className="flex-1 border-2"
+          className="flex-1 border-white/20 bg-transparent text-white/80 hover:bg-white/10 hover:text-white"
           onClick={handleAddToCart}
           disabled={!inStock}
         >
@@ -153,7 +153,7 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
         <Button
           size="lg"
           variant="outline"
-          className="px-4"
+          className="px-4 border-white/20 bg-transparent text-white/70 hover:bg-white/10 hover:text-white"
           onClick={handleWishlistToggle}
         >
           <Heart className={cn('h-5 w-5', isWishlisted && 'fill-red-500 text-red-500')} />
@@ -164,17 +164,17 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
       <ProductDeliveryTimeline />
 
       {/* Trust signals */}
-      <div className="pt-4 border-t border-dashed flex flex-wrap gap-4">
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Lock className="h-3.5 w-3.5 text-primary" />
+      <div className="pt-4 border-t border-white/10 border-dashed flex flex-wrap gap-4">
+        <div className="flex items-center gap-1.5 text-xs text-white/45">
+          <Lock className="h-3.5 w-3.5 text-[#DD2C6C]" />
           <span>Secure Checkout via Razorpay</span>
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <RefreshCw className="h-3.5 w-3.5 text-primary" />
+        <div className="flex items-center gap-1.5 text-xs text-white/45">
+          <RefreshCw className="h-3.5 w-3.5 text-[#DD2C6C]" />
           <span>Easy Returns</span>
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Award className="h-3.5 w-3.5 text-primary" />
+        <div className="flex items-center gap-1.5 text-xs text-white/45">
+          <Award className="h-3.5 w-3.5 text-[#DD2C6C]" />
           <span>Genuine Products</span>
         </div>
       </div>

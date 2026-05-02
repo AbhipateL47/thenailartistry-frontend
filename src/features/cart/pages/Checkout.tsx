@@ -566,16 +566,16 @@ export default function Checkout() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#0D0D0D]">
       {/* Header */}
-      <div className="bg-white border-b">
+      <div className="bg-[#111111] border-b border-white/10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <Link to="/" className="text-2xl font-bold text-primary">The Nail Artistry</Link>
-              <p className="text-sm text-gray-500">Get Press-on Nails at Home</p>
+              <Link to="/" className="text-2xl font-bold text-[#DD2C6C]">The Nail Artistry</Link>
+              <p className="text-sm text-white/40">Get Press-on Nails at Home</p>
             </div>
-            <Link to="/cart" className="text-gray-600 hover:text-gray-900">
+            <Link to="/cart" className="text-white/50 hover:text-white transition-colors">
               <ShoppingBag className="h-6 w-6" />
             </Link>
           </div>
@@ -592,9 +592,9 @@ export default function Checkout() {
             {/* Left Column - Forms */}
             <div className="space-y-6 order-2 lg:order-1">
               {/* Contact Section */}
-              <section className="bg-white border border-gray-200 rounded-lg p-6">
+              <section className="bg-white/5 border border-white/10 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold">Contact</h2>
+                  <h2 className="text-lg font-semibold text-white">Contact</h2>
                   {!isAuthenticated && (
                     <Link to="/login" className="text-sm text-primary hover:underline">
                       Sign in
@@ -603,7 +603,7 @@ export default function Checkout() {
                 </div>
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email" className="text-white/70">Email</Label>
                     <Input
                       id="email"
                       type="email"
@@ -614,7 +614,7 @@ export default function Checkout() {
                           message: 'Invalid email address',
                         },
                       })}
-                      className="mt-1"
+                      className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/25 focus:border-[#DD2C6C]"
                     />
                     {errors.email && (
                       <p className="text-sm text-destructive mt-1">{errors.email.message}</p>
@@ -640,17 +640,17 @@ export default function Checkout() {
               </section>
 
               {/* Delivery Section */}
-              <section className="bg-white border border-gray-200 rounded-lg p-6">
+              <section className="bg-white/5 border border-white/10 rounded-xl p-6">
                 <h2 className="text-lg font-semibold mb-4">Delivery</h2>
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="country">Country/Region</Label>
+                    <Label htmlFor="country" className="text-white/70">Country/Region</Label>
                     <Controller
                       name="country"
                       control={control}
                       render={({ field }) => (
                         <Select value={field.value} onValueChange={field.onChange}>
-                          <SelectTrigger className="mt-1">
+                          <SelectTrigger className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/25 focus:border-[#DD2C6C]">
                             <SelectValue placeholder="Select country" />
                           </SelectTrigger>
                           <SelectContent>
@@ -662,22 +662,22 @@ export default function Checkout() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="firstName">First name</Label>
+                      <Label htmlFor="firstName" className="text-white/70">First name</Label>
                       <Input
                         id="firstName"
                         {...register('firstName', { required: 'First name is required' })}
-                        className="mt-1"
+                        className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/25 focus:border-[#DD2C6C]"
                       />
                       {errors.firstName && (
                         <p className="text-sm text-destructive mt-1">{errors.firstName.message}</p>
                       )}
                     </div>
                     <div>
-                      <Label htmlFor="lastName">Last name</Label>
+                      <Label htmlFor="lastName" className="text-white/70">Last name</Label>
                       <Input
                         id="lastName"
                         {...register('lastName', { required: 'Last name is required' })}
-                        className="mt-1"
+                        className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/25 focus:border-[#DD2C6C]"
                       />
                       {errors.lastName && (
                         <p className="text-sm text-destructive mt-1">{errors.lastName.message}</p>
@@ -685,47 +685,47 @@ export default function Checkout() {
                     </div>
                   </div>
                   <div>
-                    <Label htmlFor="addressLine1">Address</Label>
+                    <Label htmlFor="addressLine1" className="text-white/70">Address</Label>
                     <div className="relative mt-1">
                       <Input
                         id="addressLine1"
                         {...register('addressLine1', { required: 'Address is required' })}
                         className="pr-10"
                       />
-                      <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
                     </div>
                     {errors.addressLine1 && (
                       <p className="text-sm text-destructive mt-1">{errors.addressLine1.message}</p>
                     )}
                   </div>
                   <div>
-                    <Label htmlFor="addressLine2">Apartment, suite, etc.</Label>
+                    <Label htmlFor="addressLine2" className="text-white/70">Apartment, suite, etc.</Label>
                     <Input
                       id="addressLine2"
                       {...register('addressLine2')}
-                      className="mt-1"
+                      className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/25 focus:border-[#DD2C6C]"
                     />
                   </div>
                   <div className="grid grid-cols-3 gap-4">
                     <div>
-                      <Label htmlFor="city">City</Label>
+                      <Label htmlFor="city" className="text-white/70">City</Label>
                       <Input
                         id="city"
                         {...register('city', { required: 'City is required' })}
-                        className="mt-1"
+                        className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/25 focus:border-[#DD2C6C]"
                       />
                       {errors.city && (
                         <p className="text-sm text-destructive mt-1">{errors.city.message}</p>
                       )}
                     </div>
                     <div>
-                      <Label htmlFor="state">State</Label>
+                      <Label htmlFor="state" className="text-white/70">State</Label>
                       <Controller
                         name="state"
                         control={control}
                         render={({ field }) => (
                           <Select value={field.value} onValueChange={field.onChange}>
-                            <SelectTrigger className="mt-1">
+                            <SelectTrigger className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/25 focus:border-[#DD2C6C]">
                               <SelectValue placeholder="Select state" />
                             </SelectTrigger>
                             <SelectContent>
@@ -743,11 +743,11 @@ export default function Checkout() {
                       )}
                     </div>
                     <div>
-                      <Label htmlFor="postalCode">PIN code</Label>
+                      <Label htmlFor="postalCode" className="text-white/70">PIN code</Label>
                       <Input
                         id="postalCode"
                         {...register('postalCode', { required: 'PIN code is required' })}
-                        className="mt-1"
+                        className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/25 focus:border-[#DD2C6C]"
                       />
                       {errors.postalCode && (
                         <p className="text-sm text-destructive mt-1">{errors.postalCode.message}</p>
@@ -755,9 +755,9 @@ export default function Checkout() {
                     </div>
                   </div>
                   <div>
-                    <Label htmlFor="phone" className="flex items-center gap-2">
+                    <Label htmlFor="phone" className="flex items-center gap-2 text-white/70">
                       Phone
-                      <HelpCircle className="h-4 w-4 text-gray-400" />
+                      <HelpCircle className="h-4 w-4 text-white/30" />
                     </Label>
                     <Input
                       id="phone"
@@ -769,7 +769,7 @@ export default function Checkout() {
                           message: 'Phone must be 10 digits',
                         },
                       })}
-                      className="mt-1"
+                      className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/25 focus:border-[#DD2C6C]"
                     />
                     {errors.phone && (
                       <p className="text-sm text-destructive mt-1">{errors.phone.message}</p>
@@ -797,21 +797,21 @@ export default function Checkout() {
               </section>
 
               {/* Shipping Method Section */}
-              <section className="bg-white border border-gray-200 rounded-lg p-6">
+              <section className="bg-white/5 border border-white/10 rounded-xl p-6">
                 <h2 className="text-lg font-semibold mb-4">Shipping method</h2>
                 <Input
                   placeholder="Enter your shipping address to view available shipping methods"
                   disabled
-                  className="bg-gray-50"
+                  className="bg-white/5 border-white/15 text-white/40 placeholder:text-white/25"
                 />
               </section>
 
               {/* Payment Section */}
-              <section className="bg-white border border-gray-200 rounded-lg p-6">
+              <section className="bg-white/5 border border-white/10 rounded-xl p-6">
                 <h2 className="text-lg font-semibold mb-2">Payment</h2>
 
                 {/* Trust bar */}
-                <div className="flex items-center justify-center gap-4 py-2.5 px-3 mb-4 bg-green-50 border border-green-100 rounded-lg text-xs text-green-700 flex-wrap">
+                <div className="flex items-center justify-center gap-4 py-2.5 px-3 mb-4 bg-green-500/10 border border-green-500/25 rounded-lg text-xs text-green-400 flex-wrap">
                   <span className="flex items-center gap-1.5">
                     <Lock className="h-3.5 w-3.5" /> SSL Secured
                   </span>
@@ -825,13 +825,13 @@ export default function Checkout() {
                   </span>
                 </div>
 
-                <p className="text-sm text-gray-500 mb-4">All transactions are secure and encrypted.</p>
+                <p className="text-sm text-white/40 mb-4">All transactions are secure and encrypted.</p>
                 <Controller
                   name="paymentMethod"
                   control={control}
                   render={({ field }) => (
                     <RadioGroup value={field.value} onValueChange={field.onChange} className="space-y-4">
-                      <div className="border rounded-lg p-4">
+                      <div className="border border-white/15 bg-white/3 rounded-lg p-4">
                         <div className="flex items-start space-x-3">
                           <RadioGroupItem value="razorpay" id="razorpay" />
                           <div className="flex-1">
@@ -839,16 +839,16 @@ export default function Checkout() {
                               Razorpay Secure (UPI, Cards, Int'l Cards, Wallets)
                             </Label>
                             <div className="flex items-center gap-2 mt-2">
-                              <div className="flex items-center gap-1 text-xs text-gray-600">
+                              <div className="flex items-center gap-1 text-xs text-white/45">
                                 <span>UPI</span>
                                 <CreditCard className="h-4 w-4" />
                                 <span>+17</span>
                               </div>
                             </div>
-                            <p className="text-xs text-gray-500 mt-2">
+                            <p className="text-xs text-white/35 mt-2">
                               Clicking "Pay now" will redirect you to Razorpay to complete your purchase securely.
                             </p>
-                            <div className="mt-3 p-2 bg-gray-50 rounded border border-gray-200 text-xs text-gray-400">
+                            <div className="mt-3 p-2 bg-white/5 rounded border border-white/10 text-xs text-white/25">
                               [Browser window preview]
                             </div>
                           </div>
@@ -860,7 +860,7 @@ export default function Checkout() {
               </section>
 
               {/* Billing Address Section */}
-              <section className="bg-white border border-gray-200 rounded-lg p-6">
+              <section className="bg-white/5 border border-white/10 rounded-xl p-6">
                 <h2 className="text-lg font-semibold mb-4">Billing address</h2>
                 <Controller
                   name="sameAsShipping"
@@ -884,7 +884,7 @@ export default function Checkout() {
               <Button
                 type="submit"
                 size="lg"
-                className="w-full bg-gray-900 hover:bg-gray-800 text-white"
+                className="w-full bg-[#DD2C6C] hover:bg-[#c02560] text-white shadow-lg shadow-[#DD2C6C]/20"
                 disabled={isSubmitting || showRazorpayCheckout}
               >
                 {isSubmitting || showRazorpayCheckout ? (
@@ -898,19 +898,19 @@ export default function Checkout() {
               </Button>
 
               {/* Footer Links */}
-              <div className="flex flex-wrap gap-4 text-sm text-gray-500 pt-4">
-                <Link to="/refund-policy" className="hover:text-gray-900">Refund policy</Link>
-                <Link to="/shipping" className="hover:text-gray-900">Shipping</Link>
-                <Link to="/privacy" className="hover:text-gray-900">Privacy policy</Link>
-                <Link to="/terms" className="hover:text-gray-900">Terms of service</Link>
-                <Link to="/contact" className="hover:text-gray-900">Contact</Link>
+              <div className="flex flex-wrap gap-4 text-sm text-white/35 pt-4">
+                <Link to="/refund-policy" className="hover:text-white/70 transition-colors">Refund policy</Link>
+                <Link to="/shipping" className="hover:text-white/70 transition-colors">Shipping</Link>
+                <Link to="/privacy" className="hover:text-white/70 transition-colors">Privacy policy</Link>
+                <Link to="/terms" className="hover:text-white/70 transition-colors">Terms of service</Link>
+                <Link to="/contact" className="hover:text-white/70 transition-colors">Contact</Link>
               </div>
             </div>
 
             {/* Right Column - Order Summary */}
             <div className="lg:sticky lg:top-4 h-fit order-1 lg:order-2">
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+              <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+                <h2 className="text-lg font-semibold text-white mb-4">Order Summary</h2>
 
                 {/* Scrollable Product List */}
                 <div className="max-h-[400px] overflow-y-auto space-y-4 mb-6 pr-2">
@@ -922,18 +922,18 @@ export default function Checkout() {
                         className="w-20 h-20 rounded-md object-cover flex-shrink-0"
                       />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900">{item.name}</p>
-                        <p className="text-xs text-gray-500 mt-1">Both Hands</p>
-                        <p className="text-sm font-semibold text-gray-900 mt-2">
+                        <p className="text-sm font-medium text-white">{item.name}</p>
+                        <p className="text-xs text-white/40 mt-1">Both Hands</p>
+                        <p className="text-sm font-semibold text-white mt-2">
                           {formatCurrency(item.price * item.quantity)}
                         </p>
                       </div>
-                      <div className="text-sm text-gray-600">{item.quantity}</div>
+                      <div className="text-sm text-white/50">{item.quantity}</div>
                     </div>
                   ))}
                   {items.length > 3 && (
                     <div className="text-center pt-2">
-                      <Button variant="ghost" size="sm" className="text-gray-500">
+                      <Button variant="ghost" size="sm" className="text-white/40 hover:text-white/70">
                         Scroll for more items ↓
                       </Button>
                     </div>
@@ -944,7 +944,7 @@ export default function Checkout() {
 
                 {/* Discount Code */}
                 <div className="space-y-2 mb-6">
-                  <Label className="text-sm font-medium">Discount code</Label>
+                  <Label className="text-sm font-medium text-white/70">Discount code</Label>
                   <div className="flex gap-2">
                     <Input
                       placeholder="Enter code"
@@ -962,14 +962,14 @@ export default function Checkout() {
                           handleApplyCoupon();
                         }
                       }}
-                      className="flex-1"
+                      className="flex-1 bg-white/5 border-white/15 text-white placeholder:text-white/25 focus:border-[#DD2C6C]"
                     />
                     <Button
                       type="button"
                       variant="outline"
                       onClick={handleApplyCoupon}
                       disabled={isApplyingCoupon || !couponCode.trim()}
-                      className="shrink-0"
+                      className="shrink-0 border-white/20 bg-transparent text-white/70 hover:bg-white/10 hover:text-white"
                     >
                       {isApplyingCoupon ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -985,15 +985,15 @@ export default function Checkout() {
                       {appliedCoupons.map((coupon) => (
                         <div
                           key={coupon.id}
-                          className="flex items-center justify-between bg-green-50 border border-green-200 rounded-md px-3 py-2 animate-in slide-in-from-top-1 fade-in"
+                          className="flex items-center justify-between bg-green-500/10 border border-green-500/25 rounded-lg px-3 py-2 animate-in slide-in-from-top-1 fade-in"
                         >
                           <div className="flex items-center gap-2 flex-1 min-w-0">
                             <svg className="h-4 w-4 text-green-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                             </svg>
                             <div className="flex-1 min-w-0">
-                              <span className="text-sm font-medium text-green-800">{coupon.code}</span>
-                              <span className="text-xs text-green-600 ml-2">
+                              <span className="text-sm font-medium text-green-400">{coupon.code}</span>
+                              <span className="text-xs text-green-500 ml-2">
                                 {coupon.type === 'percentage' 
                                   ? `${coupon.originalValue}% off` 
                                   : `${formatCurrency(coupon.originalValue)} off`}
@@ -1052,13 +1052,13 @@ export default function Checkout() {
                 {/* Price Breakdown */}
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Subtotal · {items.length} item{items.length !== 1 ? 's' : ''}</span>
+                    <span className="text-white/55">Subtotal · {items.length} item{items.length !== 1 ? 's' : ''}</span>
                     <span className="font-medium">{formatCurrency(rawSubtotal)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 flex items-center gap-1">
+                    <span className="text-white/55 flex items-center gap-1">
                       Shipping
-                      <HelpCircle className="h-3 w-3 text-gray-400" />
+                      <HelpCircle className="h-3 w-3 text-white/30" />
                     </span>
                     <span className="font-medium">
                       {shippingFee === 0 ? 'Free' : formatCurrency(shippingFee)}
@@ -1073,7 +1073,7 @@ export default function Checkout() {
                         </div>
                       ))}
                       {appliedCoupons.length > 1 && (
-                        <div className="flex justify-between text-sm font-semibold text-green-700 pt-1 border-t border-green-200">
+                        <div className="flex justify-between text-sm font-semibold text-green-400 pt-1 border-t border-green-500/20">
                           <span>Total Discount</span>
                           <span>-{formatCurrency(totalDiscount)}</span>
                         </div>
@@ -1081,7 +1081,7 @@ export default function Checkout() {
                     </div>
                   )}
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Tax (GST)</span>
+                    <span className="text-white/55">Tax (GST)</span>
                     <span className="font-medium">{formatCurrency(tax)}</span>
                   </div>
                 </div>
