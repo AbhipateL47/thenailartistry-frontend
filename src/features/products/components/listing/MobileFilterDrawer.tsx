@@ -42,18 +42,19 @@ export const MobileFilterDrawer = ({
 
   return (
     <div className="fixed inset-0 z-50 md:hidden animate-fade-in">
-      <div 
-        className="fixed inset-0 bg-black/50" 
-        onClick={onClose} 
+      <div
+        className="fixed inset-0 bg-black/60"
+        onClick={onClose}
       />
-      <div className="fixed inset-y-0 right-0 w-80 max-w-[85vw] bg-background shadow-lg overflow-y-auto animate-slide-in-right">
+      <div className="fixed inset-y-0 right-0 w-80 max-w-[85vw] bg-[#0D0D0D] border-l border-white/10 shadow-2xl overflow-y-auto animate-slide-in-right">
         <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold">Filters</h2>
+            <h2 className="text-xl font-bold text-white">Filters</h2>
             <Button
               variant="ghost"
               size="icon"
               onClick={onClose}
+              className="text-white/50 hover:text-white hover:bg-white/10"
             >
               <X className="h-5 w-5" />
             </Button>
@@ -72,10 +73,9 @@ export const MobileFilterDrawer = ({
             variant="mobile"
           />
 
-          {/* Apply button */}
-          <Button 
+          <Button
             onClick={onApply}
-            className="w-full"
+            className="w-full bg-[#DD2C6C] hover:bg-[#c02560] text-white font-semibold"
           >
             Apply Filters
           </Button>

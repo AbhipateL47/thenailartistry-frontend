@@ -43,15 +43,14 @@ export const ProductFilters = ({
 }: ProductFiltersProps) => {
   const prefix = variant === 'mobile' ? 'mobile-' : '';
 
-  // Get default accordion values - include price and any attributes
   const defaultAccordionValues = ['price', ...attributes.map(attr => attr.slug)];
 
   return (
     <div className="space-y-1">
       <Accordion type="multiple" defaultValue={defaultAccordionValues} className="w-full">
         {/* Price */}
-        <AccordionItem value="price" className="border-b border-gray-200">
-          <AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
+        <AccordionItem value="price" className="border-b border-white/10">
+          <AccordionTrigger className="py-4 text-sm font-medium text-white hover:no-underline hover:text-[#DD2C6C]">
             Price
           </AccordionTrigger>
           <AccordionContent className="pb-4 pt-2">
@@ -64,8 +63,8 @@ export const ProductFilters = ({
                 onValueChange={onPriceRangeChange}
                 className="mb-3"
               />
-              <p className="text-sm text-muted-foreground">
-                Price: {formatCurrency(priceRange[0])} - {formatCurrency(priceRange[1])}
+              <p className="text-sm text-white/50">
+                Price: {formatCurrency(priceRange[0])} – {formatCurrency(priceRange[1])}
               </p>
             </div>
           </AccordionContent>
@@ -75,8 +74,8 @@ export const ProductFilters = ({
         {(onFeaturedToggle || onSaleToggle) && (
           <>
             {onFeaturedToggle && (
-              <AccordionItem value="featured" className="border-b border-gray-200">
-                <AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
+              <AccordionItem value="featured" className="border-b border-white/10">
+                <AccordionTrigger className="py-4 text-sm font-medium text-white hover:no-underline hover:text-[#DD2C6C]">
                   Featured
                 </AccordionTrigger>
                 <AccordionContent className="pb-4">
@@ -85,11 +84,11 @@ export const ProductFilters = ({
                       id={`${prefix}featured`}
                       checked={isFeatured}
                       onCheckedChange={(checked) => onFeaturedToggle(checked === true)}
-                      className="h-4 w-4 rounded border-gray-300"
+                      className="h-4 w-4 rounded border-white/30 data-[state=checked]:bg-[#DD2C6C] data-[state=checked]:border-[#DD2C6C]"
                     />
                     <Label
                       htmlFor={`${prefix}featured`}
-                      className="cursor-pointer text-sm font-normal text-gray-700"
+                      className="cursor-pointer text-sm font-normal text-white/65 hover:text-white"
                     >
                       Featured Products
                     </Label>
@@ -99,8 +98,8 @@ export const ProductFilters = ({
             )}
 
             {onSaleToggle && (
-              <AccordionItem value="sale" className="border-b border-gray-200">
-                <AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
+              <AccordionItem value="sale" className="border-b border-white/10">
+                <AccordionTrigger className="py-4 text-sm font-medium text-white hover:no-underline hover:text-[#DD2C6C]">
                   On Sale
                 </AccordionTrigger>
                 <AccordionContent className="pb-4">
@@ -109,11 +108,11 @@ export const ProductFilters = ({
                       id={`${prefix}sale`}
                       checked={isOnSale}
                       onCheckedChange={(checked) => onSaleToggle(checked === true)}
-                      className="h-4 w-4 rounded border-gray-300"
+                      className="h-4 w-4 rounded border-white/30 data-[state=checked]:bg-[#DD2C6C] data-[state=checked]:border-[#DD2C6C]"
                     />
                     <Label
                       htmlFor={`${prefix}sale`}
-                      className="cursor-pointer text-sm font-normal text-gray-700"
+                      className="cursor-pointer text-sm font-normal text-white/65 hover:text-white"
                     >
                       On Sale Products
                     </Label>
@@ -128,8 +127,8 @@ export const ProductFilters = ({
         {attributes.map((attribute) => {
           const selectedValues = selectedAttributeFilters[attribute.slug] || [];
           return (
-            <AccordionItem key={attribute._id} value={attribute.slug} className="border-b border-gray-200">
-              <AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
+            <AccordionItem key={attribute._id} value={attribute.slug} className="border-b border-white/10">
+              <AccordionTrigger className="py-4 text-sm font-medium text-white hover:no-underline hover:text-[#DD2C6C]">
                 {attribute.name}
               </AccordionTrigger>
               <AccordionContent className="pb-4">
@@ -140,11 +139,11 @@ export const ProductFilters = ({
                         id={`${prefix}attr-${attribute.slug}-${value}`}
                         checked={selectedValues.includes(value)}
                         onCheckedChange={() => onAttributeToggle?.(attribute.slug, value)}
-                        className="h-4 w-4 rounded border-gray-300"
+                        className="h-4 w-4 rounded border-white/30 data-[state=checked]:bg-[#DD2C6C] data-[state=checked]:border-[#DD2C6C]"
                       />
                       <Label
                         htmlFor={`${prefix}attr-${attribute.slug}-${value}`}
-                        className="cursor-pointer text-sm font-normal text-gray-700"
+                        className="cursor-pointer text-sm font-normal text-white/65 hover:text-white"
                       >
                         {value}
                       </Label>
