@@ -1,0 +1,2181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toast Designer - Customize Your Toast</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #f5f5f5;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .designer-container {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Left Panel - Settings */
+    .settings-panel {
+      width: 400px;
+      background: #ffffff;
+      border-right: 1px solid #e5e7eb;
+      overflow-y: auto;
+      padding: 24px;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .settings-panel h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .settings-panel .subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 16px;
+    }
+
+    .version-info {
+      font-size: 12px;
+      color: #10b981;
+      background: #ecfdf5;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .version-info .auto-save {
+      font-weight: 500;
+    }
+
+    .settings-section {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .settings-section:last-child {
+      border-bottom: none;
+    }
+
+    .settings-section h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .form-group input[type="text"]:focus,
+    .form-group input[type="number"]:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .form-group input[type="color"] {
+      width: 100%;
+      height: 40px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .form-group input[type="range"] {
+      width: 100%;
+    }
+
+    .range-value {
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: #ffffff;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+    }
+
+    .btn.active {
+      background: #3b82f6;
+      color: #ffffff;
+      border-color: #3b82f6;
+    }
+
+    .btn-primary {
+      background: #3b82f6;
+      color: #ffffff;
+      border-color: #3b82f6;
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .btn-primary:hover {
+      background: #2563eb;
+    }
+
+    /* Right Panel - Preview */
+    .preview-panel {
+      flex: 1;
+      background: #f9fafb;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .preview-area {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    #preview-toast {
+      position: absolute;
+      z-index: 1000;
+      pointer-events: auto;
+      transition: all 0.3s ease;
+    }
+
+    .preview-label {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 500;
+      background: #ffffff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid #e5e7eb;
+    }
+
+    /* Toast Styles (Dynamic) */
+    .preview-toast-item {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 16px 20px;
+      min-width: 300px;
+      max-width: 420px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .preview-toast-icon {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 16px;
+    }
+
+    .preview-toast-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .preview-toast-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #111827;
+      line-height: 1.4;
+    }
+
+    .preview-toast-message {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+
+    .preview-toast-close {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: all 0.2s;
+      padding: 0;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .preview-toast-close:hover {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .preview-toast-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: rgba(0, 0, 0, 0.1);
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .preview-toast-progress-bar {
+      height: 100%;
+      width: 100%;
+      transform-origin: left;
+    }
+
+    /* Position indicators */
+    .position-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .position-btn {
+      padding: 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 11px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .position-btn:hover {
+      background: #f9fafb;
+    }
+
+    .position-btn.active {
+      background: #3b82f6;
+      color: #ffffff;
+      border-color: #3b82f6;
+    }
+
+    .reset-btn {
+      background: #ef4444;
+      color: #ffffff;
+      border-color: #ef4444;
+      margin-top: 16px;
+    }
+
+    .reset-btn:hover {
+      background: #dc2626;
+    }
+
+    .save-indicator {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 10000;
+    }
+
+    .save-indicator.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="designer-container">
+    <!-- Left Panel: Settings -->
+    <div class="settings-panel">
+      <h1>🎨 Toast Designer</h1>
+      <p class="subtitle">Customize your toast notification with live preview</p>
+      <div class="version-info">
+        <span class="auto-save">💾 Auto-saving...</span>
+        <span id="version-number">v1.0.0</span>
+      </div>
+
+      <!-- Basic Settings -->
+      <div class="settings-section">
+        <h2>📝 Basic Settings</h2>
+        
+        <div class="form-group">
+          <label>Toast Type</label>
+          <div class="button-group">
+            <button class="btn active" data-type="success">Success</button>
+            <button class="btn" data-type="error">Error</button>
+            <button class="btn" data-type="warning">Warning</button>
+            <button class="btn" data-type="info">Info</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" id="toast-title" value="Success" placeholder="Enter title">
+        </div>
+
+        <div class="form-group">
+          <label>Message</label>
+          <textarea id="toast-message" placeholder="Enter message">Item added to wishlist</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Position</label>
+          <div class="position-grid">
+            <button class="position-btn" data-position="top-start">Top Start</button>
+            <button class="position-btn" data-position="top-center">Top Center</button>
+            <button class="position-btn active" data-position="top-end">Top End</button>
+            <button class="position-btn" data-position="middle-start">Middle Start</button>
+            <button class="position-btn" data-position="middle-center">Middle Center</button>
+            <button class="position-btn" data-position="middle-end">Middle End</button>
+            <button class="position-btn" data-position="bottom-start">Bottom Start</button>
+            <button class="position-btn" data-position="bottom-center">Bottom Center</button>
+            <button class="position-btn" data-position="bottom-end">Bottom End</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Duration (ms) <span class="range-value" id="duration-value">3000</span></label>
+          <input type="range" id="toast-duration" min="0" max="10000" step="500" value="3000">
+          <div class="checkbox-group" style="margin-top: 8px;">
+            <input type="checkbox" id="no-auto-dismiss">
+            <label for="no-auto-dismiss" style="margin: 0;">No auto-dismiss (0ms)</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appearance Settings -->
+      <div class="settings-section">
+        <h2>🎨 Appearance</h2>
+
+        <div class="form-group">
+          <label>Background Color</label>
+          <input type="color" id="bg-color" value="#ffffff">
+        </div>
+
+        <div class="form-group">
+          <label>Title Color</label>
+          <input type="color" id="title-color" value="#111827">
+        </div>
+
+        <div class="form-group">
+          <label>Message Color</label>
+          <input type="color" id="message-color" value="#6b7280">
+        </div>
+
+        <div class="form-group">
+          <label>Border Color</label>
+          <input type="color" id="border-color" value="#e5e7eb">
+        </div>
+
+        <div class="form-group">
+          <label>Border Width (px) <span class="range-value" id="border-width-value">1</span></label>
+          <input type="range" id="border-width" min="0" max="5" step="1" value="1">
+        </div>
+
+        <div class="form-group">
+          <label>Border Radius (px) <span class="range-value" id="radius-value">12</span></label>
+          <input type="range" id="border-radius" min="0" max="30" step="1" value="12">
+        </div>
+
+        <div class="form-group">
+          <label>Padding (px) <span class="range-value" id="padding-value">16</span></label>
+          <input type="range" id="padding" min="8" max="32" step="2" value="16">
+        </div>
+
+        <div class="form-group">
+          <label>Width (px) <span class="range-value" id="width-value">auto</span></label>
+          <input type="range" id="toast-width" min="200" max="600" step="20" value="420">
+          <div class="checkbox-group" style="margin-top: 8px;">
+            <input type="checkbox" id="auto-width">
+            <label for="auto-width" style="margin: 0;">Auto width (fit content)</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Min Width (px) <span class="range-value" id="min-width-value">300</span></label>
+          <input type="range" id="toast-min-width" min="200" max="500" step="20" value="300">
+        </div>
+
+        <div class="form-group">
+          <label>Max Width (px) <span class="range-value" id="max-width-value">420</span></label>
+          <input type="range" id="toast-max-width" min="300" max="800" step="20" value="420">
+        </div>
+      </div>
+
+      <!-- Icon Settings -->
+      <div class="settings-section">
+        <h2>🎯 Icon Settings</h2>
+
+        <div class="form-group">
+          <label>Icon Size (px) <span class="range-value" id="icon-size-value">24</span></label>
+          <input type="range" id="icon-size" min="16" max="48" step="2" value="24">
+        </div>
+
+        <div class="form-group">
+          <label>Success Icon Color</label>
+          <input type="color" id="icon-success-color" value="#10b981">
+        </div>
+
+        <div class="form-group">
+          <label>Error Icon Color</label>
+          <input type="color" id="icon-error-color" value="#ef4444">
+        </div>
+
+        <div class="form-group">
+          <label>Warning Icon Color</label>
+          <input type="color" id="icon-warning-color" value="#f59e0b">
+        </div>
+
+        <div class="form-group">
+          <label>Info Icon Color</label>
+          <input type="color" id="icon-info-color" value="#3b82f6">
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="show-icon" checked>
+          <label for="show-icon" style="margin: 0;">Show Icon</label>
+        </div>
+      </div>
+
+      <!-- Typography -->
+      <div class="settings-section">
+        <h2>✍️ Typography</h2>
+
+        <div class="form-group">
+          <label>Title Font Size (px) <span class="range-value" id="title-size-value">15</span></label>
+          <input type="range" id="title-size" min="12" max="24" step="1" value="15">
+        </div>
+
+        <div class="form-group">
+          <label>Message Font Size (px) <span class="range-value" id="message-size-value">14</span></label>
+          <input type="range" id="message-size" min="12" max="20" step="1" value="14">
+        </div>
+
+        <div class="form-group">
+          <label>Title Font Weight</label>
+          <select id="title-weight">
+            <option value="400">Normal</option>
+            <option value="500">Medium</option>
+            <option value="600">Semibold</option>
+            <option value="700" selected>Bold</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Shadow & Effects -->
+      <div class="settings-section">
+        <h2>✨ Shadow & Effects</h2>
+
+        <div class="form-group">
+          <label>Shadow Blur (px) <span class="range-value" id="shadow-blur-value">15</span></label>
+          <input type="range" id="shadow-blur" min="0" max="100" step="5" value="15">
+        </div>
+
+        <div class="form-group">
+          <label>Shadow Opacity <span class="range-value" id="shadow-opacity-value">0.05</span></label>
+          <input type="range" id="shadow-opacity" min="0" max="1" step="0.05" value="0.05">
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="show-progress">
+          <label for="show-progress" style="margin: 0;">Show Progress Bar</label>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="show-close" checked>
+          <label for="show-close" style="margin: 0;">Show Close Button</label>
+        </div>
+      </div>
+
+      <!-- Animation Settings -->
+      <div class="settings-section">
+        <h2>🎬 Animation Settings</h2>
+
+        <div class="form-group">
+          <label>Entrance Animation</label>
+          <select id="entrance-animation">
+            <option value="slideDown" selected>Slide Down (From Top)</option>
+            <option value="slideIn">Slide In</option>
+            <option value="fadeIn">Fade In</option>
+            <option value="scaleIn">Scale In</option>
+            <option value="blurIn">Blur In</option>
+            <option value="bounceIn">Bounce In</option>
+            <option value="slideUp">Slide Up</option>
+            <option value="slideLeft">Slide Left</option>
+            <option value="slideRight">Slide Right</option>
+            <option value="zoomIn">Zoom In</option>
+            <option value="flipIn">Flip In</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Exit Animation</label>
+          <select id="exit-animation">
+            <option value="slideUpOut" selected>Slide Up (To Top)</option>
+            <option value="slideOut">Slide Out</option>
+            <option value="fadeOut">Fade Out</option>
+            <option value="scaleOut">Scale Out</option>
+            <option value="blurOut">Blur Out</option>
+            <option value="bounceOut">Bounce Out</option>
+            <option value="slideDownOut">Slide Down</option>
+            <option value="slideLeftOut">Slide Left</option>
+            <option value="slideRightOut">Slide Right</option>
+            <option value="zoomOut">Zoom Out</option>
+            <option value="flipOut">Flip Out</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Animation Duration (ms) <span class="range-value" id="animation-duration-value">250</span></label>
+          <input type="range" id="animation-duration" min="100" max="1000" step="50" value="250">
+        </div>
+
+        <div class="form-group">
+          <label>Animation Easing</label>
+          <select id="animation-easing">
+            <option value="ease-in" selected>Ease In</option>
+            <option value="ease">Ease</option>
+            <option value="ease-out">Ease Out</option>
+            <option value="ease-in-out">Ease In Out</option>
+            <option value="linear">Linear</option>
+            <option value="cubic-bezier(0.68, -0.55, 0.265, 1.55)">Bounce</option>
+            <option value="cubic-bezier(0.25, 0.46, 0.45, 0.94)">Smooth</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Animation Direction (for slide animations)</label>
+          <select id="animation-direction">
+            <option value="top">From Top</option>
+            <option value="bottom" selected>From Bottom</option>
+            <option value="left">From Left</option>
+            <option value="right">From Right</option>
+            <option value="center">From Center</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="settings-section">
+        <button class="btn btn-primary" id="preview-btn">Show Preview Toast</button>
+        <button class="btn btn-primary reset-btn" id="reset-btn">Reset to Defaults</button>
+      </div>
+    </div>
+
+    <!-- Right Panel: Preview -->
+    <div class="preview-panel">
+      <div class="preview-area" id="preview-area">
+        <div class="preview-label">Live Preview</div>
+        <div id="preview-toast" class="preview-toast-item" style="display: none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="save-indicator" id="save-indicator">💾 Saved!</div>
+
+  <!-- Toast System (shown when in iframe) -->
+  <div id="toast-system" style="display: none;">
+    <div id="toast-container" class="toast-top-center"></div>
+  </div>
+
+  <script>
+    // Detect if we're in an iframe (toast system mode) or standalone (designer mode)
+    const isInIframe = window.self !== window.top;
+    
+    // Immediately hide designer if in iframe
+    if (isInIframe) {
+      document.querySelector('.designer-container').style.display = 'none';
+      document.getElementById('toast-system').style.display = 'block';
+      document.body.style.background = 'transparent';
+      document.body.style.height = '100vh';
+      document.body.style.overflow = 'hidden';
+      document.body.style.margin = '0';
+      document.body.style.padding = '0';
+    }
+    
+    const STORAGE_KEY = 'toast-designer-settings';
+    const VERSION_KEY = 'toast-designer-version';
+    const VERSION = '1.0.0';
+
+    // Default settings (Admin can modify these)
+    const defaultSettings = {
+      type: 'success',
+      title: 'Success',
+      message: 'Item added to wishlist',
+      position: 'top-end',
+      duration: 3000,
+      bgColor: '#ffffff',
+      titleColor: '#111827',
+      messageColor: '#6b7280',
+      borderColor: '#e5e7eb',
+      borderWidth: 1,
+      borderRadius: 7,
+      padding: 10,
+      width: 340,
+      autoWidth: false,
+      minWidth: 300,
+      maxWidth: 340,
+      iconSize: 24,
+      iconSuccessColor: '#10b981',
+      iconErrorColor: '#ef4444',
+      iconWarningColor: '#f59e0b',
+      iconInfoColor: '#3b82f6',
+      showIcon: true,
+      titleSize: 15,
+      messageSize: 13,
+      titleWeight: 700,
+      shadowBlur: 15,
+      shadowOpacity: 0.05,
+      showProgress: false,
+      showClose: true,
+      entranceAnimation: 'slideDown',
+      exitAnimation: 'slideUpOut',
+      animationDuration: 250,
+      animationEasing: 'ease-in',
+      animationDirection: 'bottom'
+    };
+
+    let currentSettings = { ...defaultSettings };
+    let saveTimeout = null;
+
+    // Load saved settings
+    function loadSettings() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        const savedVersion = localStorage.getItem(VERSION_KEY);
+        
+        if (saved && savedVersion === VERSION) {
+          const parsed = JSON.parse(saved);
+          currentSettings = { ...defaultSettings, ...parsed };
+          applySettingsToUI();
+          showSaveIndicator('📂 Loaded saved settings');
+          return true;
+        }
+      } catch (e) {
+        console.error('Error loading settings:', e);
+      }
+      return false;
+    }
+
+    // Save settings
+    function saveSettings() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(currentSettings));
+        localStorage.setItem(VERSION_KEY, VERSION);
+        showSaveIndicator('💾 Saved!');
+      } catch (e) {
+        console.error('Error saving settings:', e);
+        showSaveIndicator('❌ Save failed', true);
+      }
+    }
+
+    // Debounced save
+    function debouncedSave() {
+      if (saveTimeout) {
+        clearTimeout(saveTimeout);
+      }
+      saveTimeout = setTimeout(() => {
+        saveSettings();
+      }, 500);
+    }
+
+    // Apply settings to UI
+    function applySettingsToUI() {
+      const settings = currentSettings;
+      
+      // Type buttons
+      document.querySelectorAll('[data-type]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.type === settings.type);
+      });
+      
+      // Position buttons
+      document.querySelectorAll('.position-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.position === settings.position);
+      });
+      
+      // Text inputs
+      document.getElementById('toast-title').value = settings.title;
+      document.getElementById('toast-message').value = settings.message;
+      document.getElementById('toast-duration').value = settings.duration;
+      document.getElementById('duration-value').textContent = settings.duration;
+      
+      // Colors
+      document.getElementById('bg-color').value = settings.bgColor;
+      document.getElementById('title-color').value = settings.titleColor;
+      document.getElementById('message-color').value = settings.messageColor;
+      document.getElementById('border-color').value = settings.borderColor;
+      
+      // Ranges
+      document.getElementById('border-width').value = settings.borderWidth;
+      document.getElementById('border-width-value').textContent = settings.borderWidth;
+      document.getElementById('border-radius').value = settings.borderRadius;
+      document.getElementById('radius-value').textContent = settings.borderRadius;
+      document.getElementById('padding').value = settings.padding;
+      document.getElementById('padding-value').textContent = settings.padding;
+      document.getElementById('toast-width').value = settings.width;
+      document.getElementById('toast-width').disabled = settings.autoWidth;
+      document.getElementById('width-value').textContent = settings.autoWidth ? 'auto' : settings.width;
+      document.getElementById('auto-width').checked = settings.autoWidth;
+      document.getElementById('toast-min-width').value = settings.minWidth;
+      document.getElementById('min-width-value').textContent = settings.minWidth;
+      document.getElementById('toast-max-width').value = settings.maxWidth;
+      document.getElementById('max-width-value').textContent = settings.maxWidth;
+      document.getElementById('icon-size').value = settings.iconSize;
+      document.getElementById('icon-size-value').textContent = settings.iconSize;
+      document.getElementById('title-size').value = settings.titleSize;
+      document.getElementById('title-size-value').textContent = settings.titleSize;
+      document.getElementById('message-size').value = settings.messageSize;
+      document.getElementById('message-size-value').textContent = settings.messageSize;
+      document.getElementById('shadow-blur').value = settings.shadowBlur;
+      document.getElementById('shadow-blur-value').textContent = settings.shadowBlur;
+      document.getElementById('shadow-opacity').value = settings.shadowOpacity;
+      document.getElementById('shadow-opacity-value').textContent = settings.shadowOpacity.toFixed(2);
+      
+      // Icon colors
+      document.getElementById('icon-success-color').value = settings.iconSuccessColor;
+      document.getElementById('icon-error-color').value = settings.iconErrorColor;
+      document.getElementById('icon-warning-color').value = settings.iconWarningColor;
+      document.getElementById('icon-info-color').value = settings.iconInfoColor;
+      
+      // Checkboxes
+      document.getElementById('show-icon').checked = settings.showIcon;
+      document.getElementById('show-progress').checked = settings.showProgress;
+      document.getElementById('show-close').checked = settings.showClose;
+      document.getElementById('no-auto-dismiss').checked = settings.duration === 0;
+      
+      // Select
+      document.getElementById('title-weight').value = settings.titleWeight;
+      
+      // Animation settings
+      if (document.getElementById('entrance-animation')) {
+        document.getElementById('entrance-animation').value = settings.entranceAnimation || 'slideDown';
+        document.getElementById('exit-animation').value = settings.exitAnimation || 'slideUpOut';
+        document.getElementById('animation-duration').value = settings.animationDuration || 250;
+        document.getElementById('animation-duration-value').textContent = settings.animationDuration || 250;
+        document.getElementById('animation-easing').value = settings.animationEasing || 'ease-in';
+        document.getElementById('animation-direction').value = settings.animationDirection || 'bottom';
+      }
+    }
+
+    // Show save indicator
+    function showSaveIndicator(message, isError = false) {
+      const indicator = document.getElementById('save-indicator');
+      indicator.textContent = message;
+      indicator.style.background = isError ? '#ef4444' : '#10b981';
+      indicator.classList.add('show');
+      setTimeout(() => {
+        indicator.classList.remove('show');
+      }, 2000);
+    }
+
+    // Icons
+    const icons = {
+      success: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.333 4L6 11.333 2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      error: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      warning: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 5.333V8M8 10.667h.007M2 12l6-10 6 10H2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      info: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 7.333V12M8 4h.007M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    };
+
+    // Position mapping
+    const positionMap = {
+      'top-start': { top: '20px', left: '20px', transform: 'none' },
+      'top-center': { top: '20px', left: '50%', transform: 'translateX(-50%)' },
+      'top-end': { top: '20px', right: '20px', transform: 'none' },
+      'middle-start': { top: '50%', left: '20px', transform: 'translateY(-50%)' },
+      'middle-center': { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' },
+      'middle-end': { top: '50%', right: '20px', transform: 'translateY(-50%)' },
+      'bottom-start': { bottom: '20px', left: '20px', transform: 'none' },
+      'bottom-center': { bottom: '20px', left: '50%', transform: 'translateX(-50%)' },
+      'bottom-end': { bottom: '20px', right: '20px', transform: 'none' }
+    };
+
+    // Update preview
+    function updatePreview() {
+      const toast = document.getElementById('preview-toast');
+      const settings = currentSettings;
+      
+      // Get icon color based on type - Fixed property name
+      const iconColorMap = {
+        success: settings.iconSuccessColor,
+        error: settings.iconErrorColor,
+        warning: settings.iconWarningColor,
+        info: settings.iconInfoColor
+      };
+      const iconColor = iconColorMap[settings.type] || settings.iconSuccessColor;
+      
+      // Build toast HTML
+      let html = '';
+      
+      if (settings.showIcon) {
+        html += `<div class="preview-toast-icon" style="width: ${settings.iconSize}px; height: ${settings.iconSize}px; background: ${iconColor}; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">${icons[settings.type]}</div>`;
+      }
+      
+      html += `<div class="preview-toast-content">`;
+      if (settings.title) {
+        html += `<div class="preview-toast-title" style="font-size: ${settings.titleSize}px; font-weight: ${settings.titleWeight}; color: ${settings.titleColor};">${escapeHtml(settings.title)}</div>`;
+      }
+      if (settings.message) {
+        html += `<div class="preview-toast-message" style="font-size: ${settings.messageSize}px; color: ${settings.messageColor};">${escapeHtml(settings.message)}</div>`;
+      }
+      html += `</div>`;
+      
+      if (settings.showClose) {
+        html += `<button class="preview-toast-close">×</button>`;
+      }
+      
+      if (settings.showProgress && settings.duration > 0) {
+        html += `<div class="preview-toast-progress"><div class="preview-toast-progress-bar" style="background: ${iconColor};"></div></div>`;
+      }
+      
+      toast.innerHTML = html;
+      
+      // Apply styles
+      const position = positionMap[settings.position];
+      const widthStyle = settings.autoWidth ? 'auto' : `${settings.width}px`;
+      const entranceAnim = settings.entranceAnimation || 'slideDown';
+      const exitAnim = settings.exitAnimation || 'slideUpOut';
+      const animDuration = settings.animationDuration || 250;
+      const animEasing = settings.animationEasing || 'ease-in';
+      
+      Object.assign(toast.style, {
+        background: settings.bgColor,
+        border: `${settings.borderWidth}px solid ${settings.borderColor}`,
+        borderRadius: `${settings.borderRadius}px`,
+        padding: `${settings.padding}px ${settings.padding + 4}px`,
+        boxShadow: `0 10px ${settings.shadowBlur}px rgba(0, 0, 0, ${settings.shadowOpacity}), 0 2px 8px rgba(0, 0, 0, ${settings.shadowOpacity * 0.7})`,
+        display: 'flex',
+        width: widthStyle,
+        minWidth: `${settings.minWidth}px`,
+        maxWidth: `${settings.maxWidth}px`,
+        ...position
+      });
+      
+      // Apply entrance animation - reset first to trigger re-animation
+      toast.style.animation = 'none';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          toast.style.animation = `${entranceAnim} ${animDuration}ms ${animEasing}`;
+        });
+      });
+      
+      // Store exit animation for later use
+      toast.dataset.exitAnimation = exitAnim;
+      toast.dataset.animDuration = animDuration;
+      toast.dataset.animEasing = animEasing;
+      
+      toast.style.display = 'flex';
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Event listeners (only in designer mode)
+    if (!isInIframe) {
+      // Type buttons
+      document.querySelectorAll('[data-type]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('[data-type]').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentSettings.type = btn.dataset.type;
+          updatePreview();
+          debouncedSave();
+        });
+      });
+
+      // Position buttons
+      document.querySelectorAll('.position-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.position-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentSettings.position = btn.dataset.position;
+          updatePreview();
+          debouncedSave();
+        });
+      });
+
+      // Input listeners
+      const titleInput = document.getElementById('toast-title');
+      if (titleInput) {
+        titleInput.addEventListener('input', (e) => {
+          currentSettings.title = e.target.value;
+          updatePreview();
+          debouncedSave();
+        });
+      }
+
+      const messageInput = document.getElementById('toast-message');
+      if (messageInput) {
+        messageInput.addEventListener('input', (e) => {
+          currentSettings.message = e.target.value;
+          updatePreview();
+          debouncedSave();
+        });
+      }
+
+      const durationInput = document.getElementById('toast-duration');
+      if (durationInput) {
+        durationInput.addEventListener('input', (e) => {
+          const value = parseInt(e.target.value);
+          const durationValueEl = document.getElementById('duration-value');
+          if (durationValueEl) durationValueEl.textContent = value;
+          currentSettings.duration = value;
+          const noAutoDismiss = document.getElementById('no-auto-dismiss');
+          if (noAutoDismiss) noAutoDismiss.checked = value === 0;
+          updatePreview();
+          debouncedSave();
+        });
+      }
+
+      const noAutoDismiss = document.getElementById('no-auto-dismiss');
+      if (noAutoDismiss) {
+        noAutoDismiss.addEventListener('change', (e) => {
+          if (e.target.checked) {
+            const durationInput = document.getElementById('toast-duration');
+            const durationValueEl = document.getElementById('duration-value');
+            if (durationInput) durationInput.value = 0;
+            if (durationValueEl) durationValueEl.textContent = '0';
+            currentSettings.duration = 0;
+            updatePreview();
+            debouncedSave();
+          }
+        });
+      }
+
+      // Color inputs
+      const colorMap = {
+        'bg-color': 'bgColor',
+        'title-color': 'titleColor',
+        'message-color': 'messageColor',
+        'border-color': 'borderColor'
+      };
+
+      Object.keys(colorMap).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', (e) => {
+            currentSettings[colorMap[id]] = e.target.value;
+            updatePreview();
+            debouncedSave();
+          });
+        }
+      });
+
+      // Icon color inputs
+      const iconColorMap = {
+        'icon-success-color': 'iconSuccessColor',
+        'icon-error-color': 'iconErrorColor',
+        'icon-warning-color': 'iconWarningColor',
+        'icon-info-color': 'iconInfoColor'
+      };
+
+      Object.keys(iconColorMap).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', (e) => {
+            currentSettings[iconColorMap[id]] = e.target.value;
+            updatePreview();
+            debouncedSave();
+          });
+        }
+      });
+
+      // Range inputs
+      const rangeInputs = [
+        { id: 'border-width', key: 'borderWidth', valueId: 'border-width-value' },
+        { id: 'border-radius', key: 'borderRadius', valueId: 'radius-value' },
+        { id: 'padding', key: 'padding', valueId: 'padding-value' },
+        { id: 'toast-width', key: 'width', valueId: 'width-value', format: (val) => currentSettings.autoWidth ? 'auto' : val },
+        { id: 'toast-min-width', key: 'minWidth', valueId: 'min-width-value' },
+        { id: 'toast-max-width', key: 'maxWidth', valueId: 'max-width-value' },
+        { id: 'icon-size', key: 'iconSize', valueId: 'icon-size-value' },
+        { id: 'title-size', key: 'titleSize', valueId: 'title-size-value' },
+        { id: 'message-size', key: 'messageSize', valueId: 'message-size-value' },
+        { id: 'shadow-blur', key: 'shadowBlur', valueId: 'shadow-blur-value' }
+      ];
+
+      rangeInputs.forEach(({ id, key, valueId, format }) => {
+        const input = document.getElementById(id);
+        if (input) {
+          input.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            const valueEl = document.getElementById(valueId);
+            if (valueEl) valueEl.textContent = format ? format(value) : value;
+            currentSettings[key] = value;
+            updatePreview();
+            debouncedSave();
+          });
+        }
+      });
+
+      // Auto width checkbox
+      const autoWidthCheckbox = document.getElementById('auto-width');
+      if (autoWidthCheckbox) {
+        autoWidthCheckbox.addEventListener('change', (e) => {
+          currentSettings.autoWidth = e.target.checked;
+          const widthInput = document.getElementById('toast-width');
+          const widthValueEl = document.getElementById('width-value');
+          if (widthInput) widthInput.disabled = e.target.checked;
+          if (widthValueEl) widthValueEl.textContent = e.target.checked ? 'auto' : currentSettings.width;
+          updatePreview();
+          debouncedSave();
+        });
+      }
+
+      const shadowOpacityInput = document.getElementById('shadow-opacity');
+      if (shadowOpacityInput) {
+        shadowOpacityInput.addEventListener('input', (e) => {
+          const value = parseFloat(e.target.value);
+          const shadowOpacityValueEl = document.getElementById('shadow-opacity-value');
+          if (shadowOpacityValueEl) shadowOpacityValueEl.textContent = value.toFixed(2);
+          currentSettings.shadowOpacity = value;
+          updatePreview();
+          debouncedSave();
+        });
+      }
+
+      const titleWeightSelect = document.getElementById('title-weight');
+      if (titleWeightSelect) {
+        titleWeightSelect.addEventListener('change', (e) => {
+          currentSettings.titleWeight = parseInt(e.target.value);
+          updatePreview();
+          debouncedSave();
+        });
+      }
+
+      const showIconCheckbox = document.getElementById('show-icon');
+      if (showIconCheckbox) {
+        showIconCheckbox.addEventListener('change', (e) => {
+          currentSettings.showIcon = e.target.checked;
+          updatePreview();
+          debouncedSave();
+        });
+      }
+
+      const showProgressCheckbox = document.getElementById('show-progress');
+      if (showProgressCheckbox) {
+        showProgressCheckbox.addEventListener('change', (e) => {
+          currentSettings.showProgress = e.target.checked;
+          updatePreview();
+          debouncedSave();
+        });
+      }
+
+      const showCloseCheckbox = document.getElementById('show-close');
+      if (showCloseCheckbox) {
+        showCloseCheckbox.addEventListener('change', (e) => {
+          currentSettings.showClose = e.target.checked;
+          updatePreview();
+          debouncedSave();
+        });
+      }
+
+      // Animation settings
+      const entranceAnimEl = document.getElementById('entrance-animation');
+      const exitAnimEl = document.getElementById('exit-animation');
+      const animDurationEl = document.getElementById('animation-duration');
+      const animEasingEl = document.getElementById('animation-easing');
+      const animDirectionEl = document.getElementById('animation-direction');
+      
+      if (entranceAnimEl) {
+        entranceAnimEl.addEventListener('change', (e) => {
+          currentSettings.entranceAnimation = e.target.value;
+          // Force re-animation to show the new animation
+          const toast = document.getElementById('preview-toast');
+          if (toast) {
+            const anim = e.target.value;
+            const duration = currentSettings.animationDuration || 250;
+            const easing = currentSettings.animationEasing || 'ease-in';
+            toast.style.animation = 'none';
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                toast.style.animation = `${anim} ${duration}ms ${easing}`;
+              });
+            });
+          }
+          updatePreview();
+          debouncedSave();
+        });
+      }
+
+      if (exitAnimEl) {
+        exitAnimEl.addEventListener('change', (e) => {
+          currentSettings.exitAnimation = e.target.value;
+          updatePreview();
+          debouncedSave();
+        });
+      }
+
+      if (animDurationEl) {
+        animDurationEl.addEventListener('input', (e) => {
+          const value = parseInt(e.target.value);
+          const valueEl = document.getElementById('animation-duration-value');
+          if (valueEl) valueEl.textContent = value;
+          currentSettings.animationDuration = value;
+          // Force re-animation with new duration
+          const toast = document.getElementById('preview-toast');
+          if (toast) {
+            const anim = currentSettings.entranceAnimation || 'slideDown';
+            const easing = currentSettings.animationEasing || 'ease';
+            toast.style.animation = 'none';
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                toast.style.animation = `${anim} ${value}ms ${easing}`;
+              });
+            });
+          }
+          updatePreview();
+          debouncedSave();
+        });
+      }
+
+      if (animEasingEl) {
+        animEasingEl.addEventListener('change', (e) => {
+          currentSettings.animationEasing = e.target.value;
+          // Force re-animation with new easing
+          const toast = document.getElementById('preview-toast');
+          if (toast) {
+            const anim = currentSettings.entranceAnimation || 'slideDown';
+            const duration = currentSettings.animationDuration || 300;
+            toast.style.animation = 'none';
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                toast.style.animation = `${anim} ${duration}ms ${e.target.value}`;
+              });
+            });
+          }
+          updatePreview();
+          debouncedSave();
+        });
+      }
+
+      if (animDirectionEl) {
+        animDirectionEl.addEventListener('change', (e) => {
+          currentSettings.animationDirection = e.target.value;
+          updatePreview();
+          debouncedSave();
+        });
+      }
+    }
+
+    // Preview button (only in designer mode)
+    if (!isInIframe) {
+      const previewBtn = document.getElementById('preview-btn');
+      if (previewBtn) {
+        previewBtn.addEventListener('click', () => {
+          const toast = document.getElementById('preview-toast');
+          if (!toast) return;
+          
+          const settings = currentSettings;
+          const entranceAnim = settings.entranceAnimation || 'slideDown';
+          const animDuration = settings.animationDuration || 300;
+          const animEasing = settings.animationEasing || 'ease';
+          
+          // Reset animation
+          toast.style.animation = 'none';
+          setTimeout(() => {
+            toast.style.animation = `${entranceAnim} ${animDuration}ms ${animEasing}`;
+            updatePreview();
+          }, 10);
+        });
+      }
+
+      // Reset button
+      const resetBtn = document.getElementById('reset-btn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          if (confirm('Are you sure you want to reset all settings to defaults? This cannot be undone.')) {
+            currentSettings = { ...defaultSettings };
+            applySettingsToUI();
+            updatePreview();
+            saveSettings();
+            showSaveIndicator('🔄 Reset to defaults');
+          }
+        });
+      }
+    }
+
+    // Set version
+    if (!isInIframe) {
+      document.getElementById('version-number').textContent = `v${VERSION}`;
+      // Initialize designer
+      loadSettings();
+      updatePreview();
+    }
+
+    // Add all animation keyframes for designer/preview mode
+    const animationStyle = document.createElement('style');
+    animationStyle.id = 'toast-animations';
+    animationStyle.textContent = `
+      /* Entrance Animations */
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      
+      @keyframes blurIn {
+        from {
+          opacity: 0;
+          filter: blur(10px);
+        }
+        to {
+          opacity: 1;
+          filter: blur(0);
+        }
+      }
+      
+      @keyframes bounceIn {
+        0% {
+          opacity: 0;
+          transform: scale(0.3);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.05);
+        }
+        70% {
+          transform: scale(0.9);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes slideLeft {
+        from {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      
+      @keyframes slideRight {
+        from {
+          opacity: 0;
+          transform: translateX(-100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      
+      @keyframes zoomIn {
+        from {
+          opacity: 0;
+          transform: scale(0.5);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      
+      @keyframes flipIn {
+        from {
+          opacity: 0;
+          transform: rotateY(-90deg);
+        }
+        to {
+          opacity: 1;
+          transform: rotateY(0);
+        }
+      }
+      
+      /* Exit Animations */
+      @keyframes slideOut {
+        from {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(-20px) scale(0.95);
+        }
+      }
+      
+      @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+      
+      @keyframes scaleOut {
+        from {
+          opacity: 1;
+          transform: scale(1);
+        }
+        to {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+      }
+      
+      @keyframes blurOut {
+        from {
+          opacity: 1;
+          filter: blur(0);
+        }
+        to {
+          opacity: 0;
+          filter: blur(10px);
+        }
+      }
+      
+      @keyframes bounceOut {
+        0% {
+          transform: scale(1);
+        }
+        25% {
+          transform: scale(0.9);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.1);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0.3);
+        }
+      }
+      
+      @keyframes slideDownOut {
+        from {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(100%);
+        }
+      }
+      
+      @keyframes slideUpOut {
+        from {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(-100%);
+        }
+      }
+      
+      @keyframes slideLeftOut {
+        from {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateX(-100%);
+        }
+      }
+      
+      @keyframes slideRightOut {
+        from {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+      }
+      
+      @keyframes zoomOut {
+        from {
+          opacity: 1;
+          transform: scale(1);
+        }
+        to {
+          opacity: 0;
+          transform: scale(0.5);
+        }
+      }
+      
+      @keyframes flipOut {
+        from {
+          opacity: 1;
+          transform: rotateY(0);
+        }
+        to {
+          opacity: 0;
+          transform: rotateY(90deg);
+        }
+      }
+    `;
+    document.head.appendChild(animationStyle);
+
+    // ============================================
+    // TOAST SYSTEM (for iframe mode)
+    // ============================================
+    
+    if (isInIframe) {
+      // Designer already hidden above, just add styles
+
+      // Toast System Styles
+      const toastSystemStyle = document.createElement('style');
+      toastSystemStyle.textContent = `
+        html, body {
+          margin: 0 !important;
+          padding: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          overflow: hidden !important;
+          background: transparent !important;
+        }
+        
+        .designer-container {
+          display: none !important;
+        }
+        
+        #toast-system {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 10000;
+          display: block !important;
+        }
+        
+        #toast-container {
+          position: fixed;
+          z-index: 10000;
+          pointer-events: none;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          padding: 16px;
+          max-width: 420px;
+          width: auto;
+        }
+
+        .toast-top-start { top: 0; left: 0; align-items: flex-start; }
+        .toast-top-center { top: 0; left: 50%; transform: translateX(-50%); align-items: center; }
+        .toast-top-end { top: 0; right: 0; align-items: flex-end; }
+        .toast-middle-start { top: 50%; left: 0; transform: translateY(-50%); align-items: flex-start; }
+        .toast-middle-center { top: 50%; left: 50%; transform: translate(-50%, -50%); align-items: center; }
+        .toast-middle-end { top: 50%; right: 0; transform: translateY(-50%); align-items: flex-end; }
+        .toast-bottom-start { bottom: 0; left: 0; align-items: flex-start; }
+        .toast-bottom-center { bottom: 0; left: 50%; transform: translateX(-50%); align-items: center; }
+        .toast-bottom-end { bottom: 0; right: 0; align-items: flex-end; }
+
+        .toast-item {
+          background: #ffffff;
+          border-radius: 7px;
+          box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05), 0 2px 8px rgba(0, 0, 0, 0.05);
+          padding: 10px 14px;
+          pointer-events: auto;
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          position: relative;
+          overflow: hidden;
+          border: 1px solid rgba(0, 0, 0, 0.05);
+          /* Animation applied dynamically via JavaScript */
+        }
+
+        /* All Animation Keyframes for Toast System */
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
+        @keyframes blurIn {
+          from {
+            opacity: 0;
+            filter: blur(10px);
+          }
+          to {
+            opacity: 1;
+            filter: blur(0);
+          }
+        }
+        
+        @keyframes bounceIn {
+          0% {
+            opacity: 0;
+            transform: scale(0.3);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.05);
+          }
+          70% {
+            transform: scale(0.9);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+        
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-100%);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(100%);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes slideLeft {
+          from {
+            opacity: 0;
+            transform: translateX(100%);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        @keyframes slideRight {
+          from {
+            opacity: 0;
+            transform: translateX(-100%);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        @keyframes zoomIn {
+          from {
+            opacity: 0;
+            transform: scale(0.5);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
+        @keyframes flipIn {
+          from {
+            opacity: 0;
+            transform: rotateY(-90deg);
+          }
+          to {
+            opacity: 1;
+            transform: rotateY(0);
+          }
+        }
+        
+        @keyframes slideOut {
+          from {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+          to {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+          }
+        }
+        
+        @keyframes fadeOut {
+          from { opacity: 1; }
+          to { opacity: 0; }
+        }
+        
+        @keyframes scaleOut {
+          from {
+            opacity: 1;
+            transform: scale(1);
+          }
+          to {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+        }
+        
+        @keyframes blurOut {
+          from {
+            opacity: 1;
+            filter: blur(0);
+          }
+          to {
+            opacity: 0;
+            filter: blur(10px);
+          }
+        }
+        
+        @keyframes bounceOut {
+          0% {
+            transform: scale(1);
+          }
+          25% {
+            transform: scale(0.9);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.05);
+          }
+          100% {
+            opacity: 0;
+            transform: scale(0.3);
+          }
+        }
+        
+        @keyframes slideDownOut {
+          from {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          to {
+            opacity: 0;
+            transform: translateY(100%);
+          }
+        }
+        
+        @keyframes slideUpOut {
+          from {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          to {
+            opacity: 0;
+            transform: translateY(-100%);
+          }
+        }
+        
+        @keyframes slideLeftOut {
+          from {
+            opacity: 1;
+            transform: translateX(0);
+          }
+          to {
+            opacity: 0;
+            transform: translateX(-100%);
+          }
+        }
+        
+        @keyframes slideRightOut {
+          from {
+            opacity: 1;
+            transform: translateX(0);
+          }
+          to {
+            opacity: 0;
+            transform: translateX(100%);
+          }
+        }
+        
+        @keyframes zoomOut {
+          from {
+            opacity: 1;
+            transform: scale(1);
+          }
+          to {
+            opacity: 0;
+            transform: scale(0.5);
+          }
+        }
+        
+        @keyframes flipOut {
+          from {
+            opacity: 1;
+            transform: rotateY(0);
+          }
+          to {
+            opacity: 0;
+            transform: rotateY(90deg);
+          }
+        }
+
+        .toast-icon {
+          flex-shrink: 0;
+          width: 24px;
+          height: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          font-size: 16px;
+        }
+
+        .toast-icon.success { background: #10b981; color: white; }
+        .toast-icon.error { background: #ef4444; color: white; }
+        .toast-icon.warning { background: #f59e0b; color: white; }
+        .toast-icon.info { background: #3b82f6; color: white; }
+
+        .toast-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .toast-title {
+          font-size: 15px;
+          font-weight: 700;
+          color: #111827;
+          line-height: 1.4;
+        }
+
+        .toast-message {
+          font-size: 14px;
+          color: #6b7280;
+          line-height: 1.5;
+        }
+
+        .toast-close {
+          flex-shrink: 0;
+          width: 20px;
+          height: 20px;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+          color: #9ca3af;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 4px;
+          transition: all 0.2s;
+          padding: 0;
+          font-size: 18px;
+          line-height: 1;
+        }
+
+        .toast-close:hover {
+          background: #f3f4f6;
+          color: #374151;
+        }
+
+        .toast-progress {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          height: 3px;
+          background: rgba(0, 0, 0, 0.1);
+          width: 100%;
+          overflow: hidden;
+        }
+
+        .toast-progress-bar {
+          height: 100%;
+          background: rgba(0, 0, 0, 0.2);
+          width: 100%;
+          transform-origin: left;
+          transition: transform linear;
+        }
+
+        .toast-progress-bar.success { background: #10b981; }
+        .toast-progress-bar.error { background: #ef4444; }
+        .toast-progress-bar.warning { background: #f59e0b; }
+        .toast-progress-bar.info { background: #3b82f6; }
+
+        @media (max-width: 640px) {
+          #toast-container {
+            max-width: 100%;
+            padding: 12px;
+            width: 100%;
+          }
+          .toast-item {
+            min-width: auto !important;
+            max-width: calc(100% - 24px) !important;
+            width: calc(100% - 24px) !important;
+          }
+        }
+      `;
+      document.head.appendChild(toastSystemStyle);
+
+      // Toast Manager for iframe mode
+      class ToastManager {
+        constructor() {
+          this.toasts = new Map();
+          this.container = document.getElementById('toast-container');
+          this.storageKey = STORAGE_KEY; // Access to storage key
+          this.defaultSettings = defaultSettings; // Access to default settings
+          this.setupMessageListener();
+        }
+
+        setupMessageListener() {
+          window.addEventListener('message', (event) => {
+            if (event.data.type === 'show-toast') {
+              this.show(event.data);
+            } else if (event.data.type === 'dismiss-toast') {
+              this.dismiss(event.data.id);
+            } else if (event.data.type === 'update-position') {
+              this.updatePosition(event.data.position);
+            }
+          });
+        }
+
+        updatePosition(position) {
+          this.container.className = this.container.className.replace(/toast-\w+-\w+/g, '');
+          this.container.classList.add(`toast-${position}`);
+        }
+
+        show({ id, toastType = 'info', title, message, duration = 3000, position = 'top-center' }) {
+          if (position) {
+            this.updatePosition(position);
+          }
+
+          // Load saved settings from localStorage (admin can modify)
+          let settings = this.defaultSettings;
+          try {
+            const saved = localStorage.getItem(this.storageKey);
+            if (saved) {
+              const parsed = JSON.parse(saved);
+              // Merge with defaults to ensure all properties exist
+              settings = { ...this.defaultSettings, ...parsed };
+              // Fix position if it's "top-right" (map to "top-end")
+              if (settings.position === 'top-right') {
+                settings.position = 'top-end';
+              }
+            }
+          } catch (e) {
+            console.error('Error loading settings:', e);
+          }
+
+          const toast = document.createElement('div');
+          toast.className = 'toast-item';
+          toast.id = `toast-${id}`;
+          
+          // Apply width settings - responsive: full width on mobile, custom width on desktop/tablet
+          const isMobile = window.innerWidth <= 640;
+          let widthStyle, minWidthStyle, maxWidthStyle;
+          
+          if (isMobile) {
+            // Mobile: full width
+            widthStyle = 'calc(100% - 24px)';
+            minWidthStyle = 'auto';
+            maxWidthStyle = '100%';
+          } else {
+            // Desktop/Tablet: use settings
+            widthStyle = settings.autoWidth ? 'auto' : `${settings.width}px`;
+            minWidthStyle = `${settings.minWidth}px`;
+            maxWidthStyle = `${settings.maxWidth}px`;
+          }
+          
+          toast.style.width = widthStyle;
+          toast.style.minWidth = minWidthStyle;
+          toast.style.maxWidth = maxWidthStyle;
+          
+          // Apply other settings
+          toast.style.background = settings.bgColor;
+          toast.style.border = `${settings.borderWidth}px solid ${settings.borderColor}`;
+          toast.style.borderRadius = `${settings.borderRadius}px`;
+          toast.style.padding = `${settings.padding}px ${settings.padding + 4}px`;
+          toast.style.boxShadow = `0 10px ${settings.shadowBlur}px rgba(0, 0, 0, ${settings.shadowOpacity}), 0 2px 8px rgba(0, 0, 0, ${settings.shadowOpacity * 0.7})`;
+          
+          // Apply entrance animation
+          const entranceAnim = settings.entranceAnimation || 'slideDown';
+          const animDuration = settings.animationDuration || 300;
+          const animEasing = settings.animationEasing || 'ease';
+          toast.style.animation = `${entranceAnim} ${animDuration}ms ${animEasing}`;
+          
+          // Store exit animation for dismiss
+          toast.dataset.exitAnimation = settings.exitAnimation || 'slideUpOut';
+          toast.dataset.animDuration = animDuration;
+          toast.dataset.animEasing = animEasing;
+
+          // Get icon color based on type
+          const iconColorMap = {
+            success: settings.iconSuccessColor,
+            error: settings.iconErrorColor,
+            warning: settings.iconWarningColor,
+            info: settings.iconInfoColor
+          };
+          const iconColor = iconColorMap[toastType] || settings.iconSuccessColor;
+          const iconSvg = this.getIcon(toastType);
+
+          // Build toast HTML with settings
+          let html = '';
+          
+          if (settings.showIcon) {
+            html += `<div class="toast-icon ${toastType}" style="width: ${settings.iconSize}px; height: ${settings.iconSize}px; background: ${iconColor}; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">${iconSvg}</div>`;
+          }
+          
+          html += `<div class="toast-content">`;
+          if (title) {
+            html += `<div class="toast-title" style="font-size: ${settings.titleSize}px; font-weight: ${settings.titleWeight}; color: ${settings.titleColor};">${this.escapeHtml(title)}</div>`;
+          }
+          if (message) {
+            html += `<div class="toast-message" style="font-size: ${settings.messageSize}px; color: ${settings.messageColor};">${this.escapeHtml(message)}</div>`;
+          }
+          html += `</div>`;
+          
+          if (settings.showClose) {
+            html += `<button class="toast-close" onclick="window.toastManager.dismiss('${id}')">×</button>`;
+          }
+          
+          if (settings.showProgress && duration > 0) {
+            html += `<div class="toast-progress"><div class="toast-progress-bar ${toastType}" style="background: ${iconColor}; animation: progress ${duration}ms linear forwards;"></div></div>`;
+          }
+          
+          toast.innerHTML = html;
+
+          this.container.appendChild(toast);
+          this.toasts.set(id, { element: toast, duration, timeoutId: null });
+
+          if (duration > 0) {
+            const timeoutId = setTimeout(() => {
+              this.dismiss(id);
+            }, duration);
+            this.toasts.get(id).timeoutId = timeoutId;
+          }
+
+          if (duration > 0) {
+            const style = document.createElement('style');
+            style.textContent = `
+              @keyframes progress {
+                from { transform: scaleX(1); }
+                to { transform: scaleX(0); }
+              }
+            `;
+            if (!document.getElementById('toast-progress-style')) {
+              style.id = 'toast-progress-style';
+              document.head.appendChild(style);
+            }
+          }
+        }
+
+        dismiss(id) {
+          const toastData = this.toasts.get(id);
+          if (!toastData) return;
+
+          if (toastData.timeoutId) {
+            clearTimeout(toastData.timeoutId);
+          }
+
+          // Get exit animation from element data or settings
+          let exitAnim = toastData.element.dataset.exitAnimation || 'slideUpOut';
+          let animDuration = parseInt(toastData.element.dataset.animDuration) || 300;
+          let animEasing = toastData.element.dataset.animEasing || 'ease';
+          
+          // Fallback to localStorage if not in dataset
+          if (!toastData.element.dataset.exitAnimation) {
+            try {
+              const saved = localStorage.getItem(this.storageKey);
+              if (saved) {
+                const parsed = JSON.parse(saved);
+                exitAnim = parsed.exitAnimation || 'slideUpOut';
+                animDuration = parsed.animationDuration || 250;
+                animEasing = parsed.animationEasing || 'ease-in';
+              }
+            } catch (e) {
+              console.error('Error loading animation settings:', e);
+            }
+          }
+
+          // Apply exit animation
+          toastData.element.style.animation = `${exitAnim} ${animDuration}ms ${animEasing} forwards`;
+
+          setTimeout(() => {
+            toastData.element.remove();
+            this.toasts.delete(id);
+          }, animDuration);
+        }
+
+        getIcon(type) {
+          const icons = {
+            success: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.333 4L6 11.333 2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+            error: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+            warning: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 5.333V8M8 10.667h.007M2 12l6-10 6 10H2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+            info: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 7.333V12M8 4h.007M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+          };
+          return icons[type] || icons.info;
+        }
+
+        escapeHtml(text) {
+          const div = document.createElement('div');
+          div.textContent = text;
+          return div.innerHTML;
+        }
+      }
+
+      // Initialize toast manager for iframe mode
+      window.toastManager = new ToastManager();
+    } else {
+      // Designer mode - initialize designer (code above already handles this)
+      // The designer initialization happens in the main script above
+    }
+  </script>
+</body>
+</html>
