@@ -12,8 +12,32 @@ interface ProductGalleryProps {
 
 export const ProductGallery = ({ product, onFullscreenClick }: ProductGalleryProps) => {
   const [selectedImage, setSelectedImage] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const thumbnailScrollRef = useRef<HTMLDivElement>(null);
   const images = [product.primaryImage, ...product.gallery];
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    if (distance > minSwipeDistance && selectedImage < images.length - 1) {
+      setSelectedImage(selectedImage + 1);
+    }
+    if (distance < -minSwipeDistance && selectedImage > 0) {
+      setSelectedImage(selectedImage - 1);
+    }
+  };
   
   // Only show discount badge if product is on sale AND has valid salePercent
   const isOnSale = product.isOnSale === true && typeof product.salePercent === 'number' && product.salePercent > 0;
@@ -124,7 +148,12 @@ export const ProductGallery = ({ product, onFullscreenClick }: ProductGalleryPro
       {/* Main Image Container */}
       <div className="flex-1 order-2 md:order-2">
         {/* Main Image */}
-        <div className="relative aspect-square rounded-lg overflow-hidden bg-muted group">
+        <div
+          className="relative aspect-square rounded-lg overflow-hidden bg-muted group"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           <img
             src={images[selectedImage]}
             alt={`${product.name} - View ${selectedImage + 1}`}

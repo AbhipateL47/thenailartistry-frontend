@@ -2,11 +2,13 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Filter, Loader2, X } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { productService, Product } from '@/features/products/services/product.service';
 import { ProductFilters } from '@/features/products/components/listing/ProductFilters';
 import { MobileFilterDrawer } from '@/features/products/components/listing/MobileFilterDrawer';
 import { ProductGrid } from '@/features/products/components/listing/ProductGrid';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
+import { useMetaTags } from '@/shared/hooks/useMetaTags';
 
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -239,11 +241,20 @@ export default function Products() {
 
   // Update page title
   const pageTitle = getPageTitle();
-  if (pageTitle === 'All Products') {
-    usePageTitle('Shop Premium Press - On Nails - 200+ Designs');
-  } else {
-    usePageTitle(`${pageTitle} - Premium Press-On Nails`);
-  }
+  const pageTitleStr = pageTitle === 'All Products'
+    ? 'Shop Premium Press-On Nails - 200+ Designs'
+    : `${pageTitle} - Premium Press-On Nails`;
+  usePageTitle(pageTitleStr);
+  useMetaTags({
+    title: pageTitle === 'All Products' ? 'Shop All Products' : pageTitle,
+    description: `Browse our collection of ${pageTitle.toLowerCase()} press-on nails. Salon-quality, reusable, and perfect for every occasion.`,
+  });
+
+  const activeFilterCount =
+    Object.values(selectedAttributeFilters).flat().length +
+    (isFeatured ? 1 : 0) +
+    (isOnSale ? 1 : 0) +
+    (minPrice > 0 || maxPrice < 2000 ? 1 : 0);
 
   return (
     <div className="min-h-screen">
@@ -251,7 +262,7 @@ export default function Products() {
         <div className="flex gap-8">
           {/* Sidebar Filters - Tablet & Desktop */}
           <aside className="hidden md:block w-64 flex-shrink-0">
-            <div className="scrollbar-thin">
+            <div className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-thin pr-1">
               <ProductFilters
                 priceRange={priceRange}
                 onPriceRangeChange={handlePriceRangeChange}
@@ -277,6 +288,11 @@ export default function Products() {
               >
                 <Filter className="h-4 w-4 mr-2" />
                 Filters
+                {activeFilterCount > 0 && (
+                  <Badge className="ml-2 h-5 min-w-5 px-1.5 bg-[#DD2C6C] text-white text-xs rounded-full">
+                    {activeFilterCount}
+                  </Badge>
+                )}
               </Button>
             </div>
 

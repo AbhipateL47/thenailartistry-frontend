@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid3x3, List, ChevronDown, SearchX, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/features/products/components/ProductCard';
+import { QuickViewModal } from '@/features/products/components/QuickViewModal';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Product } from '@/features/products/services/product.service';
 import { cn } from '@/shared/utils/cn';
@@ -48,6 +49,8 @@ export const ProductGrid = ({
   onClearSearch,
 }: ProductGridProps) => {
   const currentSort = sortOptions.find((s) => s.value === sortBy) || sortOptions[0];
+
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
   const [gridVisible, setGridVisible] = useState(true);
   useEffect(() => {
@@ -171,7 +174,11 @@ export const ProductGrid = ({
                 className="animate-fade-in"
                 style={{ animationDelay: `${Math.min(index * 50, 300)}ms`, animationFillMode: 'both' }}
               >
-                <ProductCard product={product} viewMode={viewMode} />
+                <ProductCard
+                  product={product}
+                  viewMode={viewMode}
+                  onQuickView={setQuickViewProduct}
+                />
               </div>
             ))
           )}
@@ -186,6 +193,11 @@ export const ProductGrid = ({
           </p>
         </div>
       )}
+
+      <QuickViewModal
+        product={quickViewProduct}
+        onClose={() => setQuickViewProduct(null)}
+      />
     </div>
   );
 };

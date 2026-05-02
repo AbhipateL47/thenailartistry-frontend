@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { HeroSection } from '@/features/home/components/HeroSectionV5';
 import { SaleBannerSection } from '@/features/home/components/SaleBannerSection';
 import { FeaturesSection } from '@/features/home/components/FeaturesSection';
@@ -9,11 +9,13 @@ import { NewsletterSection } from '@/features/home/components/NewsletterSection'
 import { categories } from '@/features/home/constants/homeData';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { useQuery } from '@tanstack/react-query';
-import { productService } from '@/features/products/services/product.service';
+import { productService, Product } from '@/features/products/services/product.service';
+import { QuickViewModal } from '@/features/products/components/QuickViewModal';
 
 export default function Home() {
   usePageTitle('The Nail Artistry - Premium Press-On Nails | Reusable & Salon Quality');
-  
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
+
   // Log page load
   useEffect(() => {
     console.log('📄 Home Page Loaded');
@@ -28,13 +30,22 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      <HeroSection />
+      <HeroSection featuredProducts={featuredProducts} />
       <SaleBannerSection />
       <FeaturesSection />
-      <FeaturedProductsSection products={featuredProducts} isLoading={isLoadingFeatured} />
+      <FeaturedProductsSection
+        products={featuredProducts}
+        isLoading={isLoadingFeatured}
+        onQuickView={setQuickViewProduct}
+      />
       <CategorySection categories={categories} />
       <WhyChooseUsSection />
       <NewsletterSection />
+
+      <QuickViewModal
+        product={quickViewProduct}
+        onClose={() => setQuickViewProduct(null)}
+      />
     </div>
   );
 }

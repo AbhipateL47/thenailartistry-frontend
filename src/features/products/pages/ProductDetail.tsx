@@ -8,10 +8,13 @@ import { FullscreenGalleryModal } from '@/features/products/components/detail/Fu
 import { ProductReviewsSection } from '@/features/products/components/detail/ProductReviewsSection';
 import { ProductDescription } from '@/features/products/components/detail/ProductDescription';
 import { YouMayAlsoLikeSection } from '@/features/products/components/detail/YouMayAlsoLikeSection';
+import { RecentlyViewedSection } from '@/features/products/components/detail/RecentlyViewedSection';
 import { StickyAddToCartBar } from '@/features/products/components/detail/StickyAddToCartBar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
 import { Breadcrumbs } from '@/shared/components/Breadcrumbs';
+import { useRecentlyViewed } from '@/shared/hooks/useRecentlyViewed';
+import { useMetaTags } from '@/shared/hooks/useMetaTags';
 
 export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>(); // This can be either slug or ID, backend handles both
@@ -35,8 +38,15 @@ export default function ProductDetail() {
     enabled: !!product?._id, // Only fetch when product is loaded and has _id
   });
 
+  const recentlyViewed = useRecentlyViewed(product);
+
   // Update page title
   usePageTitle(product?.name ? `${product.name} - Premium Press-On Nails` : 'Product');
+  useMetaTags({
+    title: product?.name,
+    description: product?.shortDescription || product?.description?.substring(0, 160),
+    image: product?.primaryImage,
+  });
 
   if (isLoading) {
     return (
@@ -112,6 +122,9 @@ export default function ProductDetail() {
           products={recommendations || []}
           isLoading={isLoadingRecommendations}
         />
+
+        {/* Recently Viewed */}
+        <RecentlyViewedSection products={recentlyViewed} />
 
         {/* Fullscreen Gallery Modal */}
         <FullscreenGalleryModal

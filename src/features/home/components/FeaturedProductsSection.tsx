@@ -1,79 +1,84 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/features/products/components/ProductCard';
 import { Product } from '@/features/products/services/product.service';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from '@/components/ui/carousel';
 import { cn } from '@/shared/utils/cn';
-import { Loader2 } from 'lucide-react';
 
 interface FeaturedProductsSectionProps {
   products: Product[];
   isLoading?: boolean;
+  onQuickView?: (product: Product) => void;
 }
 
-export const FeaturedProductsSection = ({ products, isLoading = false }: FeaturedProductsSectionProps) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [isPaused, setIsPaused] = useState(false);
-  const scrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
+export const FeaturedProductsSection = ({
+  products,
+  isLoading = false,
+  onQuickView,
+}: FeaturedProductsSectionProps) => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [snapCount, setSnapCount] = useState(0);
 
-  // Auto-scroll functionality - move one product at a time
+  // Track selected slide for dot indicators
+  const onSelect = useCallback((emblaApi: CarouselApi) => {
+    if (!emblaApi) return;
+    setActiveIndex(emblaApi.selectedScrollSnap());
+    setSnapCount(emblaApi.scrollSnapList().length);
+  }, []);
+
   useEffect(() => {
-    if (!scrollRef.current || isPaused || products.length === 0) return;
-
-    const scroll = () => {
-      if (scrollRef.current) {
-        // Get the first product element to calculate width
-        const firstProduct = scrollRef.current.querySelector('div[data-product-index]') as HTMLElement;
-        if (!firstProduct) return;
-
-        const productWidth = firstProduct.offsetWidth;
-        const gap = 24; // gap-6 = 24px
-        const scrollAmount = productWidth + gap;
-        
-        const maxIndex = products.length;
-        const nextIndex = (currentIndex + 1) % maxIndex;
-        
-        scrollRef.current.scrollTo({
-          left: nextIndex * scrollAmount,
-          behavior: 'smooth'
-        });
-        
-        setCurrentIndex(nextIndex);
-        
-        // Reset to start when reaching the end (seamless loop)
-        if (nextIndex === 0 && scrollRef.current) {
-          setTimeout(() => {
-            if (scrollRef.current) {
-              scrollRef.current.scrollLeft = 0;
-              setCurrentIndex(0);
-            }
-          }, 600); // After animation completes
-        }
-      }
-    };
-
-    scrollIntervalRef.current = setInterval(scroll, 3000); // Move every 3 seconds
-
+    if (!api) return;
+    onSelect(api);
+    api.on('select', onSelect);
+    api.on('reInit', onSelect);
     return () => {
-      if (scrollIntervalRef.current) {
-        clearInterval(scrollIntervalRef.current);
-      }
+      api.off('select', onSelect);
+      api.off('reInit', onSelect);
     };
-  }, [isPaused, products.length, currentIndex]);
+  }, [api, onSelect]);
+
+  // Auto-advance every 4 seconds
+  useEffect(() => {
+    if (!api || products.length === 0) return;
+    const interval = setInterval(() => {
+      if (!api.canScrollNext()) {
+        api.scrollTo(0);
+      } else {
+        api.scrollNext();
+      }
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [api, products.length]);
 
   if (isLoading) {
     return (
-      <section className="py-16">
+      <section className="py-16 md:py-20">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-end justify-between mb-8">
             <div>
-              <h2 className="text-3xl font-bold mb-2">Featured Products</h2>
-              <p className="text-muted-foreground">Trending press-on nail designs</p>
+              <Skeleton className="h-8 w-56 mb-2" />
+              <Skeleton className="h-4 w-40" />
             </div>
+            <Skeleton className="h-9 w-24" />
           </div>
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="space-y-3">
+                <Skeleton className="aspect-square w-full rounded-xl" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -82,77 +87,82 @@ export const FeaturedProductsSection = ({ products, isLoading = false }: Feature
 
   if (!products || products.length === 0) return null;
 
-  // Duplicate products for seamless infinite loop
-  const duplicatedProducts = [...products, ...products, ...products];
-
   return (
-    <section className="relative py-20 overflow-hidden">
-      {/* Sparkling Background Effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-10 w-2 h-2 bg-pink-400 rounded-full animate-pulse opacity-60"></div>
-        <div className="absolute top-32 right-20 w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse opacity-50" style={{ animationDelay: '0.5s' }}></div>
-        <div className="absolute bottom-20 left-1/4 w-2.5 h-2.5 bg-rose-300 rounded-full animate-pulse opacity-40" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 right-1/3 w-1 h-1 bg-pink-300 rounded-full animate-pulse opacity-70" style={{ animationDelay: '1.5s' }}></div>
-        <div className="absolute bottom-32 right-10 w-2 h-2 bg-purple-300 rounded-full animate-pulse opacity-50" style={{ animationDelay: '2s' }}></div>
+    <section className="relative py-16 md:py-20 overflow-hidden">
+      {/* Subtle background sparkles */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-12 left-8 w-2 h-2 bg-pink-300 rounded-full opacity-50 animate-pulse" />
+        <div className="absolute top-1/3 right-12 w-1.5 h-1.5 bg-rose-300 rounded-full opacity-40 animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute bottom-16 left-1/4 w-2.5 h-2.5 bg-pink-400 rounded-full opacity-30 animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-pink-50/30 via-transparent to-purple-50/20 pointer-events-none"></div>
-
       <div className="container mx-auto px-4 relative z-10">
-        {/* Header Section */}
-        <div className="flex items-center justify-between mb-8">
+        {/* Section header */}
+        <div className="flex items-end justify-between mb-8">
           <div>
-            <h2 className="text-3xl font-bold mb-2">Featured Products</h2>
-            <p className="text-muted-foreground">Trending press-on nail designs</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-[#1a1a1a] mb-1">
+              Our Most Loved Sets ✨
+            </h2>
+            <p className="text-sm text-muted-foreground">Fresh, trending, obsession-worthy</p>
           </div>
-          <Button variant="outline" asChild>
+          <Button variant="outline" size="sm" asChild className="hidden sm:inline-flex">
             <Link to="/products">View All</Link>
           </Button>
         </div>
 
-        {/* Auto-Scrolling Carousel - Shows 4 products at once */}
-        <div 
-          className="relative overflow-hidden"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
+        {/* Embla Carousel */}
+        <Carousel
+          setApi={setApi}
+          opts={{ align: 'start', loop: true, dragFree: false }}
+          className="w-full"
         >
-          {/* Products Carousel */}
-          <div
-            ref={scrollRef}
-            className={cn(
-              "flex gap-6 overflow-x-hidden scrollbar-hide",
-              "scroll-smooth"
-            )}
-            style={{ 
-              scrollbarWidth: 'none', 
-              msOverflowStyle: 'none',
-              WebkitOverflowScrolling: 'touch'
-            }}
-          >
-            {duplicatedProducts.map((product, index) => (
-              <div 
-                key={`${product._id}-${index}`}
-                data-product-index={index % products.length}
-                className={cn(
-                  "flex-shrink-0",
-                  "w-[260px] sm:w-[280px] md:w-[300px]"
-                )}
+          <CarouselContent className="-ml-3 md:-ml-4">
+            {products.map((product, index) => (
+              <CarouselItem
+                key={product._id}
+                className="pl-3 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4"
               >
-                {/* Product Card - Borderless */}
-                <div className="relative bg-transparent">
-                  <ProductCard product={product} />
-                </div>
-              </div>
+                <ProductCard
+                  product={product}
+                  onQuickView={onQuickView}
+                  loading={index < 4 ? 'eager' : 'lazy'}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+
+          <CarouselPrevious
+            className="hidden md:flex -left-5 h-9 w-9 border-gray-200 bg-white shadow-md hover:bg-pink-50 hover:border-[#DD2C6C]"
+            aria-label="Previous products"
+          />
+          <CarouselNext
+            className="hidden md:flex -right-5 h-9 w-9 border-gray-200 bg-white shadow-md hover:bg-pink-50 hover:border-[#DD2C6C]"
+            aria-label="Next products"
+          />
+        </Carousel>
+
+        {/* Dot indicators */}
+        {snapCount > 1 && (
+          <div className="flex justify-center gap-2 mt-6">
+            {Array.from({ length: snapCount }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => api?.scrollTo(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                className={cn(
+                  'h-2 rounded-full transition-all duration-300',
+                  i === activeIndex ? 'w-8 bg-[#DD2C6C]' : 'w-2 bg-gray-300 hover:bg-gray-400'
+                )}
+              />
             ))}
           </div>
-        </div>
+        )}
 
-        {/* Bottom accent line */}
-        <div className="flex items-center justify-center gap-2 mt-12">
-          <div className="w-12 h-px bg-[#DD2C6C]/20" />
-          <div className="w-2 h-2 rounded-full bg-[#DD2C6C]/30" />
-          <div className="w-12 h-px bg-[#DD2C6C]/20" />
+        {/* Mobile "View All" */}
+        <div className="mt-6 text-center sm:hidden">
+          <Button variant="outline" asChild className="w-full max-w-xs">
+            <Link to="/products">View All Products</Link>
+          </Button>
         </div>
       </div>
     </section>

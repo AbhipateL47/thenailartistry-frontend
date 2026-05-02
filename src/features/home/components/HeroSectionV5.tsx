@@ -2,21 +2,33 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, RefreshCw, Leaf, Scissors } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { Product } from '@/features/products/services/product.service';
 
-/**
- * HeroSection 1.5 - Interactive Nail Color Picker Experience
- * User can tap/click nail colors and see the hand change
- * Mobile: vertical stacked | Desktop: horizontal left-right
- */
-export const HeroSection = () => {
+interface HeroSectionProps {
+  featuredProducts?: Product[];
+}
+
+const FALLBACK_STYLES = [
+  { name: 'Rose Blush', accent: '#DD2C6C', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=500', slug: undefined },
+  { name: 'French Classic', accent: '#E8B4B8', image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=500', slug: undefined },
+  { name: 'Berry Dream', accent: '#C71585', image: 'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=500', slug: undefined },
+  { name: 'Nude Glow', accent: '#DEB887', image: 'https://images.unsplash.com/photo-1571290274554-6a2eaa771e5f?w=500', slug: undefined },
+];
+
+const ACCENT_PALETTE = ['#DD2C6C', '#E8B4B8', '#C71585', '#DEB887'];
+
+export const HeroSection = ({ featuredProducts }: HeroSectionProps) => {
   const [activeColor, setActiveColor] = useState(0);
-  
-  const nailStyles = [
-    { name: 'Rose Blush', accent: '#DD2C6C', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=500' },
-    { name: 'French Classic', accent: '#E8B4B8', image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=500' },
-    { name: 'Berry Dream', accent: '#C71585', image: 'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=500' },
-    { name: 'Nude Glow', accent: '#DEB887', image: 'https://images.unsplash.com/photo-1571290274554-6a2eaa771e5f?w=500' },
-  ];
+
+  const nailStyles =
+    featuredProducts && featuredProducts.length >= 4
+      ? featuredProducts.slice(0, 4).map((p, i) => ({
+          name: p.name,
+          accent: ACCENT_PALETTE[i],
+          image: p.primaryImage,
+          slug: p.slug,
+        }))
+      : FALLBACK_STYLES;
 
   const current = nailStyles[activeColor];
 
@@ -180,17 +192,30 @@ export const HeroSection = () => {
               
               {/* Main image */}
               <div className="relative w-64 lg:w-80 xl:w-96 h-[380px] lg:h-[450px] xl:h-[520px] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/80">
-                <img
-                  key={activeColor}
-                  src={current.image}
-                  alt={current.name}
-                  className="w-full h-full object-cover animate-fade-scale"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a]/40 via-transparent to-transparent" />
-                
+                {current.slug ? (
+                  <Link to={`/products/${current.slug}`} className="block w-full h-full">
+                    <img
+                      key={activeColor}
+                      src={current.image}
+                      alt={current.name}
+                      className="w-full h-full object-cover animate-fade-scale"
+                      loading="eager"
+                    />
+                  </Link>
+                ) : (
+                  <img
+                    key={activeColor}
+                    src={current.image}
+                    alt={current.name}
+                    className="w-full h-full object-cover animate-fade-scale"
+                    loading="eager"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a]/40 via-transparent to-transparent pointer-events-none" />
+
                 {/* Style name badge */}
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm px-6 py-2.5 rounded-full shadow-lg">
-                  <span className="font-bold text-[#1a1a1a]">{current.name}</span>
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm px-6 py-2.5 rounded-full shadow-lg pointer-events-none">
+                  <span className="font-bold text-[#1a1a1a] truncate max-w-[160px] block text-center">{current.name}</span>
                 </div>
               </div>
 
@@ -273,14 +298,27 @@ export const HeroSection = () => {
             </div>
             
             <div className="relative w-64 h-[300px] sm:w-72 sm:h-[340px] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white">
-              <img
-                key={activeColor}
-                src={current.image}
-                alt={current.name}
-                className="w-full h-full object-cover animate-fade-scale"
-              />
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm px-5 py-2 rounded-full shadow-lg">
-                <span className="font-bold text-sm text-[#1a1a1a]">{current.name}</span>
+              {current.slug ? (
+                <Link to={`/products/${current.slug}`} className="block w-full h-full">
+                  <img
+                    key={activeColor}
+                    src={current.image}
+                    alt={current.name}
+                    className="w-full h-full object-cover animate-fade-scale"
+                    loading="eager"
+                  />
+                </Link>
+              ) : (
+                <img
+                  key={activeColor}
+                  src={current.image}
+                  alt={current.name}
+                  className="w-full h-full object-cover animate-fade-scale"
+                  loading="eager"
+                />
+              )}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm px-5 py-2 rounded-full shadow-lg pointer-events-none">
+                <span className="font-bold text-sm text-[#1a1a1a] truncate max-w-[140px] block text-center">{current.name}</span>
               </div>
             </div>
             
