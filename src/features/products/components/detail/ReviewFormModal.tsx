@@ -212,13 +212,13 @@ export const ReviewFormModal = ({
                     className={`h-8 w-8 transition-colors ${
                       star <= (hoveredRating || rating)
                         ? 'fill-yellow-400 text-yellow-400'
-                        : 'text-muted-foreground'
+                        : 'text-white/45'
                     }`}
                   />
                 </button>
               ))}
               {rating > 0 && (
-                <span className="ml-2 text-sm text-muted-foreground">
+                <span className="ml-2 text-sm text-white/45">
                   {rating} {rating === 1 ? 'star' : 'stars'}
                 </span>
               )}
@@ -239,7 +239,7 @@ export const ReviewFormModal = ({
                 rows={5}
                 maxLength={1000}
               />
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-white/45 mt-1">
                 {comment.length}/1000 characters
               </p>
             </div>
@@ -272,7 +272,7 @@ export const ReviewFormModal = ({
                   rows={5}
                   maxLength={1000}
                 />
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-white/45 mt-1">
                   {body.length}/1000 characters
                 </p>
               </div>
@@ -302,8 +302,8 @@ export const ReviewFormModal = ({
                     htmlFor="review-images"
                     className="flex items-center justify-center gap-2 border-2 border-dashed border-muted-foreground/25 rounded-md p-4 cursor-pointer hover:border-primary transition-colors"
                   >
-                    <Upload className="h-5 w-5 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">
+                    <Upload className="h-5 w-5 text-white/45" />
+                    <span className="text-sm text-white/45">
                       Upload photos ({images.length}/5)
                     </span>
                   </Label>
@@ -312,7 +312,7 @@ export const ReviewFormModal = ({
 
               {/* Uploading Indicator */}
               {uploadingImages.length > 0 && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 text-sm text-white/45">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Uploading {uploadingImages.length} image(s)...
                 </div>
@@ -340,7 +340,7 @@ export const ReviewFormModal = ({
                 </div>
               )}
             </div>
-            <p className="text-xs text-muted-foreground mt-2">
+            <p className="text-xs text-white/45 mt-2">
               You can upload up to 5 photos. Max size: 5MB per image.
             </p>
           </div>

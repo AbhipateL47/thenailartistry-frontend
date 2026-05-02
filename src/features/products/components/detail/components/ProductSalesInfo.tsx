@@ -11,7 +11,7 @@ export const ProductSalesInfo = ({ soldCount, stockCount }: ProductSalesInfoProp
   return (
     <div className="space-y-2">
       {soldCount !== undefined && soldCount > 0 && (
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-white/45">
           {soldCount} sold in last 24 hours
         </p>
       )}

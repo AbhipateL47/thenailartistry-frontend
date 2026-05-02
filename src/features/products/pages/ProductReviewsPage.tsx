@@ -340,11 +340,11 @@ export default function ProductReviewsPage() {
       />
 
       {/* Product Review Header */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-8">
+      <div className="bg-white/5 rounded-xl border border-white/10 p-6 mb-8">
         <div className="flex flex-col md:flex-row md:items-center gap-6">
           {/* Product Image */}
           <div className="flex-shrink-0">
-            <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200">
+            <div className="w-24 h-24 rounded-full overflow-hidden bg-white/8 border-2 border-white/15">
               <img
                 src={product.primaryImage}
                 alt={product.name}
@@ -357,7 +357,7 @@ export default function ProductReviewsPage() {
           <div className="flex-1">
             <Link
               to={`/products/${product.slug}`}
-              className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1 mb-2"
+              className="text-sm text-white/45 hover:text-white inline-flex items-center gap-1 mb-2"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Product Details
@@ -372,7 +372,7 @@ export default function ProductReviewsPage() {
                       "h-5 w-5",
                       i < Math.round(product.ratingAvg || 0)
                         ? "fill-yellow-400 text-yellow-400"
-                        : "text-gray-300"
+                        : "text-white/20"
                     )}
                   />
                 ))}
@@ -399,12 +399,12 @@ export default function ProductReviewsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 mb-12">
         {/* Left Column: Rating Snapshot */}
         <div className="lg:col-span-4">
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 lg:p-8 space-y-6 sticky top-[88px]">
+          <div className="bg-white/5 rounded-xl border border-white/10 p-6 lg:p-8 space-y-6 sticky top-[88px]">
             <h2 className="text-xl font-bold">Rating Snapshot</h2>
 
             {/* Overall Rating */}
             <div className="flex items-center gap-4">
-              <div className="text-5xl font-bold text-gray-900">{product.ratingAvg?.toFixed(1) || '0.0'}</div>
+              <div className="text-5xl font-bold text-white">{product.ratingAvg?.toFixed(1) || '0.0'}</div>
               <div>
                 <div className="flex items-center gap-1 mb-2">
                   {[...Array(5)].map((_, i) => (
@@ -412,12 +412,12 @@ export default function ProductReviewsPage() {
                       key={i}
                       className={`h-5 w-5 ${i < Math.floor(product.ratingAvg || 0) || (i === Math.floor(product.ratingAvg || 0) && product.ratingAvg % 1 >= 0.5)
                         ? 'fill-yellow-400 text-yellow-400'
-                        : 'text-gray-300'
+                        : 'text-white/20'
                         }`}
                     />
                   ))}
                 </div>
-                <p className="text-sm text-gray-600">Based on {product.ratingCount || 0} reviews</p>
+                <p className="text-sm text-white/55">Based on {product.ratingCount || 0} reviews</p>
               </div>
             </div>
 
@@ -443,18 +443,18 @@ export default function ProductReviewsPage() {
                       {/* Star label */}
                       <span
                         className={cn(
-                          "text-sm font-medium w-6 transition-colors text-gray-900"
+                          "text-sm font-medium w-6 transition-colors text-white"
                         )}
                       >
                         {star}★
                       </span>
 
                       {/* Progress bar */}
-                      <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                         <div
                           className={cn(
                             "h-full rounded-full transition-colors",
-                            isHighlighted ? "bg-[#DD2C6C]" : "bg-gray-400"
+                            isHighlighted ? "bg-[#DD2C6C]" : "bg-white/30"
                           )}
                           style={{ width: `${percentage}%` }}
                         />
@@ -463,7 +463,7 @@ export default function ProductReviewsPage() {
                       {/* Percentage */}
                       <span
                         className={cn(
-                          "text-xs w-10 text-right transition-colors text-muted-foreground"
+                          "text-xs w-10 text-right transition-colors text-white/45"
                         )}
                       >
                         {percentage}%
@@ -496,13 +496,13 @@ export default function ProductReviewsPage() {
                     <>
                       <div key={star} className="flex items-center gap-2.5">
                         <span className="text-sm font-medium w-6">{star}★</span>
-                        <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                           <div
                             className="h-full bg-[#DD2C6C] rounded-full transition-all"
                             style={{ width: `${percentage}%` }}
                           />
                         </div>
-                        <span className="text-xs text-muted-foreground w-10 text-right">{percentage}%</span>
+                        <span className="text-xs text-white/45 w-10 text-right">{percentage}%</span>
                       </div>
                     </>
                   );
@@ -511,9 +511,9 @@ export default function ProductReviewsPage() {
             )} */}
 
             {/* Write Review Section */}
-            <div className="pt-4 border-t border-gray-200">
+            <div className="pt-4 border-t border-white/10">
               <h3 className="font-semibold mb-2">Review this product</h3>
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-sm text-white/45 mb-4">
                 Share your thoughts with other customers. It helps them make better decisions!
               </p>
               {isAuthenticated ? (
@@ -540,11 +540,11 @@ export default function ProductReviewsPage() {
         {/* Right Column: Individual Reviews */}
         <div className="lg:col-span-8 space-y-4">
           {/* Search and Filters */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 space-y-4">
+          <div className="bg-white/5 rounded-xl border border-white/10 p-4 space-y-4">
             
             {/* Search Bar */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
               <Input
                 type="search"
                 placeholder="Search reviews..."
@@ -564,7 +564,7 @@ export default function ProductReviewsPage() {
                     setSearchInputValue('');
                     updateSearchParams({ search: '', page: 1 });
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/55"
                   aria-label="Clear search"
                 >
                   <X className="h-4 w-4" />
@@ -578,7 +578,7 @@ export default function ProductReviewsPage() {
                 variant={filter === 'all' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => updateSearchParams({ filter: 'all', page: 1 })}
-                className={cn('hover:bg-gray-900 hover:text-white', filter === 'all' ? 'bg-gray-900 text-white' : '')}
+                className={cn('hover:bg-white/10 hover:text-white', filter === 'all' ? 'bg-white/15 text-white' : '')}
               >
                 All Reviews
               </Button>
@@ -586,7 +586,7 @@ export default function ProductReviewsPage() {
                 variant={filter === 'photos' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => updateSearchParams({ filter: 'photos', page: 1 })}
-                className={cn('hover:bg-gray-900 hover:text-white', filter === 'photos' ? 'bg-gray-900 text-white' : '')}
+                className={cn('hover:bg-white/10 hover:text-white', filter === 'photos' ? 'bg-white/15 text-white' : '')}
               >
                 With Photos
               </Button>
@@ -594,7 +594,7 @@ export default function ProductReviewsPage() {
                 variant={filter === 'verified' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => updateSearchParams({ filter: 'verified', page: 1 })}
-                className={cn('hover:bg-gray-900 hover:text-white', filter === 'verified' ? 'bg-gray-900 text-white' : '')}
+                className={cn('hover:bg-white/10 hover:text-white', filter === 'verified' ? 'bg-white/15 text-white' : '')}
               >
                 Verified Buyers
               </Button>
@@ -608,7 +608,7 @@ export default function ProductReviewsPage() {
                     updateSearchParams({ rating: 5, filter: 'all', page: 1 });
                   }
                 }}
-                className={cn('hover:bg-gray-900 hover:text-white', rating === 5 ? 'bg-gray-900 text-white' : '')}
+                className={cn('hover:bg-white/10 hover:text-white', rating === 5 ? 'bg-white/15 text-white' : '')}
               >
                 5 Stars Only
               </Button>
@@ -639,7 +639,7 @@ export default function ProductReviewsPage() {
           {isLoadingReviews ? (
             <div className="space-y-4">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                <div key={i} className="bg-white/5 rounded-xl border border-white/10 p-5">
                   <div className="flex items-start gap-3 mb-3">
                     <Skeleton className="w-10 h-10 rounded-full" />
                     <div className="flex-1 space-y-2">
@@ -653,8 +653,8 @@ export default function ProductReviewsPage() {
               ))}
             </div>
           ) : reviews.length === 0 ? (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-12 text-center">
-              <p className="text-muted-foreground">No reviews found matching your filters.</p>
+            <div className="bg-white/5 rounded-xl border border-white/10 p-12 text-center">
+              <p className="text-white/45">No reviews found matching your filters.</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -664,7 +664,7 @@ export default function ProductReviewsPage() {
                 const isVerified = !!review.orderId;
 
                 return (
-                  <div key={review._id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition-shadow">
+                  <div key={review._id} className="bg-white/5 rounded-xl border border-white/10 p-5 hover:shadow-md transition-shadow">
                     {/* User Info */}
                     <div className="flex items-start gap-3 mb-3">
                       <div className="w-10 h-10 rounded-full bg-[#DD2C6C]/10 flex items-center justify-center flex-shrink-0">
@@ -684,7 +684,7 @@ export default function ProductReviewsPage() {
                             </Badge>
                           )}
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-2 text-sm text-white/45">
                           {isVerified && <span>Verified Buyer</span>}
                           {isVerified && <span>•</span>}
                           <span>{formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}</span>
@@ -701,7 +701,7 @@ export default function ProductReviewsPage() {
                             "h-4 w-4",
                             i < review.rating
                               ? "fill-yellow-400 text-yellow-400"
-                              : "text-gray-300"
+                              : "text-white/20"
                           )}
                         />
                       ))}
@@ -714,7 +714,7 @@ export default function ProductReviewsPage() {
 
                     {/* Review Body */}
                     {review.body && (
-                      <p className="text-sm text-muted-foreground mb-3 whitespace-pre-line">{review.body}</p>
+                      <p className="text-sm text-white/45 mb-3 whitespace-pre-line">{review.body}</p>
                     )}
 
                     {/* Review Images */}
@@ -724,7 +724,7 @@ export default function ProductReviewsPage() {
                         {review.images.map((image, index) => (
                           <button
                             key={index}
-                            className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200 hover:border-[#DD2C6C] transition-colors flex-shrink-0"
+                            className="relative w-16 h-16 rounded-lg overflow-hidden border border-white/10 hover:border-[#DD2C6C] transition-colors flex-shrink-0"
                             onClick={() => window.open(image, '_blank')}
                             aria-label={`View review image ${index + 1} in new tab`}
                           >
@@ -748,7 +748,7 @@ export default function ProductReviewsPage() {
                           "h-8 px-3 text-sm transition-colors",
                           review.isHelpful
                             ? "text-[#DD2C6C] hover:text-[#DD2C6C] hover:bg-[#DD2C6C]/10 bg-[#DD2C6C]/5"
-                            : "text-muted-foreground hover:text-foreground hover:bg-gray-50"
+                            : "text-white/45 hover:text-white hover:bg-gray-50"
                         )}
                         aria-label={review.isHelpful ? "Remove helpful vote" : "Mark review as helpful"}
                         aria-pressed={review.isHelpful}
@@ -761,7 +761,7 @@ export default function ProductReviewsPage() {
                         {review.helpfulCount > 0 && (
                           <span className={cn(
                             "ml-1.5",
-                            review.isHelpful ? "text-[#DD2C6C]" : "text-muted-foreground"
+                            review.isHelpful ? "text-[#DD2C6C]" : "text-white/45"
                           )}>
                             ({review.helpfulCount})
                           </span>
@@ -777,7 +777,7 @@ export default function ProductReviewsPage() {
           {/* Pagination */}
           {reviewsData && reviewsData.pagination && reviewsData.pagination.pages > 1 && (
             <div className="flex items-center justify-between pt-4">
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-white/45">
                 Showing {((page - 1) * limit) + 1} - {Math.min(page * limit, totalReviews)} of {totalReviews} review{totalReviews !== 1 ? 's' : ''}
               </div>
               <div className="flex gap-2">

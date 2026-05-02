@@ -149,7 +149,7 @@ export const ProductGallery = ({ product, onFullscreenClick }: ProductGalleryPro
       <div className="flex-1 order-2 md:order-2">
         {/* Main Image */}
         <div
-          className="relative aspect-square rounded-lg overflow-hidden bg-muted group"
+          className="relative aspect-square rounded-lg overflow-hidden bg-white/8 group"
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}

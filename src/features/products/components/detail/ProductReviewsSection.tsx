@@ -234,7 +234,7 @@ export const ProductReviewsSection = ({
                           key={i}
                           className={`h-5 w-5 ${i < Math.floor(rating) || (i === Math.floor(rating) && rating % 1 >= 0.5)
                             ? 'fill-yellow-400 text-yellow-400'
-                            : 'text-gray-300'
+                            : 'text-white/20'
                             }`}
                         />
                       ))}
@@ -397,7 +397,7 @@ export const ProductReviewsSection = ({
                                     key={i}
                                     className={`h-3.5 w-3.5 ${i < review.rating
                                       ? 'fill-yellow-400 text-yellow-400'
-                                      : 'text-gray-300'
+                                      : 'text-white/20'
                                       }`}
                                   />
                                 ))}
@@ -473,7 +473,7 @@ export const ProductReviewsSection = ({
                           {review.helpfulCount > 0 && (
                             <span className={cn(
                               "ml-1.5",
-                              review.isHelpful ? "text-[#DD2C6C]" : "text-muted-foreground"
+                              review.isHelpful ? "text-[#DD2C6C]" : "text-white/35"
                             )}>
                               ({review.helpfulCount})
                             </span>

@@ -57,27 +57,28 @@ html, body {
      * Background: Warm off-white cream for elegance
      */
     
-    --background: 330 33% 99%;
-    --foreground: 340 20% 15%;       /* Dark warm gray */
-    
+    /* Dark luxury theme — entire app is dark */
+    --background: 0 0% 5%;           /* #0D0D0D */
+    --foreground: 0 0% 95%;          /* near white */
+
     --primary: 340 75% 52%;          /* Brand pink #DD2C6C */
     --primary-foreground: 0 0% 100%;
     --primary-hover: 340 75% 45%;
-    
-    --secondary: 340 30% 96%;        /* Very light pink tint */
-    --secondary-foreground: 340 75% 45%;
-    
-    --accent: 340 40% 94%;           /* Soft pink accent */
-    --accent-foreground: 340 65% 40%;
-    
-    --muted: 30 15% 95%;             /* Warm muted */
-    --muted-foreground: 340 10% 45%;
-    
-    --card: 0 0% 100%;
-    --card-foreground: 340 20% 15%;
-    
-    --border: 340 15% 88%;
-    --input: 340 15% 90%;
+
+    --secondary: 0 0% 9%;            /* #171717 */
+    --secondary-foreground: 0 0% 80%;
+
+    --accent: 340 75% 52%;
+    --accent-foreground: 0 0% 100%;
+
+    --muted: 0 0% 10%;               /* dark surface */
+    --muted-foreground: 0 0% 55%;    /* white/55 equivalent */
+
+    --card: 0 0% 7%;                 /* #111111 */
+    --card-foreground: 0 0% 95%;
+
+    --border: 0 0% 100% / 10%;       /* white/10 */
+    --input: 0 0% 100% / 8%;         /* white/8 */
     --ring: 340 75% 52%;
     
     --destructive: 0 84% 60%;

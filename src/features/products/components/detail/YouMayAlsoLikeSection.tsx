@@ -15,7 +15,7 @@ interface YouMayAlsoLikeSectionProps {
 // Product Card Skeleton Component
 const ProductCardSkeleton = () => {
   return (
-    <div className="flex-shrink-0 w-[200px] md:w-[240px] bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div className="flex-shrink-0 w-[200px] md:w-[240px] bg-white/5 rounded-xl border border-white/10 overflow-hidden">
       {/* Image */}
       <Skeleton className="w-full aspect-square rounded-t-xl" />
 
@@ -57,9 +57,9 @@ export const YouMayAlsoLikeSection = ({
     <div className="mb-6 md:mb-16">
       {/* Header */}
       <div className="mb-4">
-        <h2 className="text-2xl font-bold mb-2">{title}</h2>
+        <h2 className="text-2xl font-bold mb-2 text-white">{title}</h2>
         {subtitle && (
-          <p className="text-sm text-muted-foreground">{subtitle}</p>
+          <p className="text-sm text-white/45">{subtitle}</p>
         )}
       </div>
 

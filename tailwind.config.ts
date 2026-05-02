@@ -146,6 +146,10 @@ export default {
           "0%": { transform: "translateX(0%)" },
           "100%": { transform: "translateX(-25%)" },
         },
+        "shimmer": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -156,6 +160,7 @@ export default {
         "marquee": "marquee linear infinite",
         "marquee-seamless": "marquee-seamless linear infinite",
         "marquee-infinite": "marquee-infinite linear infinite",
+        "shimmer": "shimmer 1.6s ease-in-out infinite",
       },
     },
   },

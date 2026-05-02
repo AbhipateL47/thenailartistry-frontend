@@ -35,7 +35,7 @@ export const RelatedProductsSection = ({
       <div className="mb-4">
         <h2 className="text-2xl font-bold mb-2">{title}</h2>
         {subtitle && (
-          <p className="text-sm text-muted-foreground">{subtitle}</p>
+          <p className="text-sm text-white/45">{subtitle}</p>
         )}
       </div>
 
@@ -44,7 +44,7 @@ export const RelatedProductsSection = ({
         <Button
           variant="outline"
           size="icon"
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-md rounded-full h-10 w-10"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/10 border border-white/15 hover:bg-white/20 rounded-full h-10 w-10 text-white"
           onClick={() => scroll('left')}
         >
           <ChevronLeft className="h-5 w-5" />
@@ -52,7 +52,7 @@ export const RelatedProductsSection = ({
         <Button
           variant="outline"
           size="icon"
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-md rounded-full h-10 w-10"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/10 border border-white/15 hover:bg-white/20 rounded-full h-10 w-10 text-white"
           onClick={() => scroll('right')}
         >
           <ChevronRight className="h-5 w-5" />
