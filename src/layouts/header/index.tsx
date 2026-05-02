@@ -102,7 +102,7 @@ export const Header = () => {
           <div className="flex items-center h-20">
             {/* Logo */}
             <div className="flex-shrink-0">
-              <Logo className="h-16" />
+              <Logo className="h-16" variant="dark" />
             </div>
 
             {/* Desktop Navigation - Centered */}

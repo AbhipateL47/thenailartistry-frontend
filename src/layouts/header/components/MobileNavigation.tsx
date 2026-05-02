@@ -97,21 +97,21 @@ export const MobileNavigation = ({
               className="h-10 w-10 flex-shrink-0"
               onClick={() => setMobileMenuOpen(true)}
             >
-              <Menu className="h-6 w-6 text-gray-700" />
+              <Menu className="h-6 w-6 text-white/70" />
             </Button>
-            <Logo className="h-12" />
+            <Logo className="h-12" variant="dark" />
           </div>
 
           {/* Center: Search bar */}
           <div className="flex-1 flex justify-center px-4">
             <form onSubmit={handleSearchSubmit} className="relative w-full max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/30 pointer-events-none" />
               <Input
                 type="search"
                 placeholder="I'm looking for..."
                 value={searchValue}
                 onChange={handleSearchChange}
-                className="w-full pl-9 pr-4 h-9 rounded-full border-gray-300 text-sm focus:border-[#DD2C6C] focus:ring-[#DD2C6C]"
+                className="w-full pl-9 pr-4 h-9 rounded-full bg-white/10 border-white/20 text-white placeholder:text-white/30 text-sm focus:border-[#DD2C6C] focus:ring-[#DD2C6C]"
               />
             </form>
           </div>
