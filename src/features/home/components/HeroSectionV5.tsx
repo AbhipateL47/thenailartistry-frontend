@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles, RefreshCw, Leaf, Scissors } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Product } from '@/features/products/services/product.service';
@@ -9,18 +9,25 @@ interface HeroSectionProps {
 }
 
 const FALLBACK_STYLES = [
-  { name: 'Rose Blush', accent: '#DD2C6C', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=500', slug: undefined },
-  { name: 'French Classic', accent: '#E8B4B8', image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=500', slug: undefined },
-  { name: 'Berry Dream', accent: '#C71585', image: 'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=500', slug: undefined },
-  { name: 'Nude Glow', accent: '#DEB887', image: 'https://images.unsplash.com/photo-1571290274554-6a2eaa771e5f?w=500', slug: undefined },
+  { name: 'Rose Blush', accent: '#DD2C6C', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600', slug: undefined },
+  { name: 'French Classic', accent: '#E8B4B8', image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=600', slug: undefined },
+  { name: 'Berry Dream', accent: '#C71585', image: 'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=600', slug: undefined },
+  { name: 'Nude Glow', accent: '#DEB887', image: 'https://images.unsplash.com/photo-1571290274554-6a2eaa771e5f?w=600', slug: undefined },
 ];
 
 const ACCENT_PALETTE = ['#DD2C6C', '#E8B4B8', '#C71585', '#DEB887'];
 
-export const HeroSection = ({ featuredProducts }: HeroSectionProps) => {
-  const [activeColor, setActiveColor] = useState(0);
+const stats = [
+  { value: '200+', label: 'Designs' },
+  { value: '50K+', label: 'Customers' },
+  { value: '4.9★', label: 'Rating' },
+  { value: '15+', label: 'Reuses' },
+];
 
-  const nailStyles =
+export const HeroSection = ({ featuredProducts }: HeroSectionProps) => {
+  const [active, setActive] = useState(0);
+
+  const styles =
     featuredProducts && featuredProducts.length >= 4
       ? featuredProducts.slice(0, 4).map((p, i) => ({
           name: p.name,
@@ -30,391 +37,206 @@ export const HeroSection = ({ featuredProducts }: HeroSectionProps) => {
         }))
       : FALLBACK_STYLES;
 
-  const current = nailStyles[activeColor];
+  const current = styles[active];
+
+  const MainImage = () => (
+    <div className="relative w-full aspect-[3/4] max-w-xs mx-auto lg:max-w-none">
+      {/* Glow behind image */}
+      <div
+        className="absolute inset-0 rounded-3xl blur-3xl opacity-30 transition-all duration-700 scale-90"
+        style={{ background: `radial-gradient(circle, ${current.accent}, transparent 70%)` }}
+      />
+      {/* Image frame */}
+      <div className="relative rounded-3xl overflow-hidden border border-white/10 h-full">
+        {current.slug ? (
+          <Link to={`/products/${current.slug}`} className="block h-full">
+            <img
+              key={active}
+              src={current.image}
+              alt={current.name}
+              className="w-full h-full object-cover transition-all duration-500"
+              loading="eager"
+            />
+          </Link>
+        ) : (
+          <img
+            key={active}
+            src={current.image}
+            alt={current.name}
+            className="w-full h-full object-cover transition-all duration-500"
+            loading="eager"
+          />
+        )}
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D]/60 via-transparent to-transparent pointer-events-none" />
+        {/* Product name badge */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full pointer-events-none">
+          <span className="text-white text-xs font-medium truncate max-w-[160px] block text-center">
+            {current.name}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
-    <section className="relative min-h-[100svh] bg-[#f7cdd6] overflow-hidden">
-      {/* Fixed background decorations */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 right-[10%] w-32 h-32 md:w-48 md:h-48 rounded-full bg-[#DD2C6C]/10 blur-2xl" />
-        <div className="absolute bottom-20 left-[5%] w-40 h-40 md:w-64 md:h-64 rounded-full bg-[#F9A8D4]/15 blur-3xl" />
-      </div>
+    <section
+      className="relative min-h-[100svh] bg-[#0D0D0D] overflow-hidden"
+      style={{
+        backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px)',
+        backgroundSize: '28px 28px',
+      }}
+    >
+      {/* Ambient glow */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#DD2C6C]/8 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#DD2C6C]/5 rounded-full blur-[100px] pointer-events-none" />
 
-      {/* Desktop & Tablet Layout - Side by side */}
-      <div className="relative z-10 container mx-auto px-5 min-h-[100svh] hidden md:flex items-center">
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-12 xl:gap-20 items-center w-full">
-          
-          {/* Left - Content */}
-          <div className="relative">
-            {/* Decorative corner brackets */}
-            <div className="absolute -left-4 -top-4 w-8 h-8 border-l-2 border-t-2 border-[#DD2C6C]/30" />
-            <div className="absolute -left-4 bottom-0 w-8 h-8 border-l-2 border-b-2 border-[#DD2C6C]/20" />
-            
-            <div className="space-y-5 pl-6">
-              {/* Animated badge */}
-              <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white shadow-md border border-[#DD2C6C]/10">
-                <div className="relative">
-                  <Sparkles className="w-4 h-4 text-[#DD2C6C]" />
-                  <div className="absolute inset-0 w-4 h-4 bg-[#DD2C6C]/30 rounded-full animate-ping" />
-                </div>
-                <span className="text-[#1a1a1a] text-sm font-semibold">Pick Your Vibe</span>
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-              </div>
-              
-              {/* Main heading */}
-              <div className="relative">
-                <h1 className="text-5xl lg:text-6xl xl:text-7xl font-black text-[#1a1a1a] leading-[1]">
-                  <span className="block overflow-hidden">
-                    <span className="inline-block hover:translate-x-2 transition-transform duration-300 cursor-default">Press.</span>
-                  </span>
-                  <span className="block overflow-hidden">
-                    <span className="inline-block text-[#DD2C6C] hover:translate-x-2 transition-transform duration-300 cursor-default">Slay.</span>
-                  </span>
-                  <span className="block overflow-hidden">
-                    <span className="inline-block hover:translate-x-2 transition-transform duration-300 cursor-default">Repeat.</span>
-                  </span>
-                </h1>
-                
-                {/* Floating sparkle */}
-                <Sparkles className="absolute -right-2 top-0 w-6 h-6 text-[#DD2C6C]/50 animate-pulse" />
-              </div>
+      {/* ── DESKTOP ── */}
+      <div className="hidden md:flex items-center min-h-[100svh] container mx-auto px-6">
+        <div className="grid grid-cols-2 gap-12 lg:gap-20 items-center w-full py-20">
 
-              {/* Description with highlight */}
-              <p className="text-[#1a1a1a]/60 text-base lg:text-lg max-w-sm leading-relaxed">
-                Soft gel press-on nails that make you feel 
-                <span className="relative mx-1">
-                  <span className="relative z-10 text-[#1a1a1a] font-semibold">unstoppable</span>
-                  <span className="absolute bottom-0 left-0 right-0 h-2 bg-[#DD2C6C]/20 -rotate-1" />
-                </span>
-              </p>
-
-              {/* Color picker - Horizontal scroll style */}
-              <div className="relative">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-8 h-[1px] bg-[#DD2C6C]/30" />
-                  <span className="text-xs text-[#1a1a1a]/50 uppercase tracking-widest font-medium">Styles</span>
-                </div>
-                <div className="flex gap-3">
-                  {nailStyles.map((style, i) => (
-                    <button
-                      key={style.name}
-                      onClick={() => setActiveColor(i)}
-                      className="group relative"
-                      title={style.name}
-                    >
-                      <div 
-                        className={`w-14 h-14 rounded-2xl transition-all duration-300 flex items-center justify-center ${
-                          activeColor === i 
-                            ? 'scale-110 shadow-xl' 
-                            : 'opacity-50 hover:opacity-80 hover:scale-105'
-                        }`}
-                        style={{ 
-                          backgroundColor: style.accent,
-                          boxShadow: activeColor === i ? `0 10px 30px ${style.accent}60` : 'none'
-                        }}
-                      >
-                        {activeColor === i && (
-                          <div className="w-3 h-3 rounded-full bg-white/80" />
-                        )}
-                      </div>
-                      <span className={`block mt-2 text-[10px] font-semibold uppercase tracking-wide text-center transition-all ${
-                        activeColor === i ? 'text-[#1a1a1a]' : 'text-[#1a1a1a]/30'
-                      }`}>
-                        {style.name.split(' ')[0]}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* CTA */}
-              <div className="flex items-center gap-4 pt-2">
-                <Button
-                  size="lg"
-                  className="group px-8 py-6 bg-[#DD2C6C] hover:bg-[#c42460] text-white rounded-full font-bold text-base shadow-xl shadow-[#DD2C6C]/30 hover:shadow-[#DD2C6C]/50 hover:scale-105 transition-all"
-                  asChild
-                >
-                  <Link to="/products">
-                    Shop Now
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </Button>
-                <Link 
-                  to="/tutorial" 
-                  className="text-[#1a1a1a]/60 text-sm font-medium hover:text-[#DD2C6C] transition-colors flex items-center gap-1 group"
-                >
-                  How it works
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-
-              {/* Features - Minimal style */}
-              <div className="flex items-center gap-6 pt-4">
-                <div className="flex items-center gap-2 text-[#1a1a1a]/60">
-                  <div className="w-8 h-8 rounded-lg bg-[#DD2C6C]/10 flex items-center justify-center">
-                    <RefreshCw className="w-4 h-4 text-[#DD2C6C]" />
-                  </div>
-                  <span className="text-sm font-medium">15+ Uses</span>
-                </div>
-                <div className="flex items-center gap-2 text-[#1a1a1a]/60">
-                  <div className="w-8 h-8 rounded-lg bg-[#DD2C6C]/10 flex items-center justify-center">
-                    <Leaf className="w-4 h-4 text-[#DD2C6C]" />
-                  </div>
-                  <span className="text-sm font-medium">Gentle</span>
-                </div>
-                <div className="flex items-center gap-2 text-[#1a1a1a]/60">
-                  <div className="w-8 h-8 rounded-lg bg-[#DD2C6C]/10 flex items-center justify-center">
-                    <Scissors className="w-4 h-4 text-[#DD2C6C]" />
-                  </div>
-                  <span className="text-sm font-medium">Custom</span>
-                </div>
-              </div>
+          {/* Left — content */}
+          <div className="space-y-8">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm">
+              <span className="w-2 h-2 rounded-full bg-[#DD2C6C] animate-pulse" />
+              <span className="text-white/70 font-medium">New drops every week</span>
             </div>
-          </div>
 
-          {/* Right - Image showcase */}
-          <div className="flex justify-center">
-            <div className="relative">
-              {/* Multiple decorative rings */}
-              <div className="absolute inset-0 -m-6 rounded-full border border-[#DD2C6C]/10" />
-              <div className="absolute inset-0 -m-12 rounded-full border-2 border-dashed border-[#DD2C6C]/20 animate-[spin_30s_linear_infinite]" />
-              <div className="absolute inset-0 -m-20 rounded-full border border-dotted border-[#DD2C6C]/10 animate-[spin_45s_linear_infinite_reverse]" />
-              
-              {/* Orbiting dots on the rings */}
-              <div className="absolute -m-12 inset-0 animate-[spin_20s_linear_infinite]">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#DD2C6C]" />
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 rounded-full bg-[#F9A8D4]" />
-              </div>
-              <div className="absolute -m-20 inset-0 animate-[spin_25s_linear_infinite_reverse]">
-                <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-[#DD2C6C]/70" />
-                <div className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#F9A8D4]/80" />
-              </div>
-              
-              {/* Main image */}
-              <div className="relative w-64 lg:w-80 xl:w-96 h-[380px] lg:h-[450px] xl:h-[520px] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/80">
-                {current.slug ? (
-                  <Link to={`/products/${current.slug}`} className="block w-full h-full">
-                    <img
-                      key={activeColor}
-                      src={current.image}
-                      alt={current.name}
-                      className="w-full h-full object-cover animate-fade-scale"
-                      loading="eager"
+            {/* Headline */}
+            <div>
+              <h1 className="text-6xl xl:text-7xl font-black leading-[1.0] tracking-tight">
+                <span className="block text-white">Press.</span>
+                <span className="block text-[#DD2C6C]">Wear.</span>
+                <span className="block text-white">Obsess.</span>
+              </h1>
+            </div>
+
+            {/* Subtitle */}
+            <p className="text-white/50 text-lg leading-relaxed max-w-sm">
+              Salon-quality press-on nails that last 2–3 weeks. Reusable 15+ times. Applied in 2 minutes.
+            </p>
+
+            {/* Swatches */}
+            <div>
+              <p className="text-white/30 text-xs uppercase tracking-widest mb-3">Pick a style</p>
+              <div className="flex gap-3">
+                {styles.map((s, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActive(i)}
+                    className="relative rounded-2xl transition-all duration-300 overflow-hidden"
+                    style={{ width: 56, height: 56 }}
+                  >
+                    <img src={s.image} alt={s.name} className="w-full h-full object-cover" />
+                    <div
+                      className={`absolute inset-0 rounded-2xl border-2 transition-all duration-300 ${
+                        active === i ? 'border-[#DD2C6C]' : 'border-transparent hover:border-white/40'
+                      }`}
                     />
-                  </Link>
-                ) : (
-                  <img
-                    key={activeColor}
-                    src={current.image}
-                    alt={current.name}
-                    className="w-full h-full object-cover animate-fade-scale"
-                    loading="eager"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a]/40 via-transparent to-transparent pointer-events-none" />
-
-                {/* Style name badge */}
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm px-6 py-2.5 rounded-full shadow-lg pointer-events-none">
-                  <span className="font-bold text-[#1a1a1a] truncate max-w-[160px] block text-center">{current.name}</span>
-                </div>
-              </div>
-
-              {/* Floating mini cards */}
-              <div className="absolute -left-10 top-1/4 w-20 h-24 lg:w-24 lg:h-28 rounded-2xl overflow-hidden border-4 border-white shadow-xl transform -rotate-6 hover:rotate-0 transition-transform duration-300">
-                <img
-                  src={nailStyles[(activeColor + 1) % 4].image}
-                  alt="Style preview"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              
-              <div className="absolute -right-8 bottom-1/4 w-20 h-24 lg:w-24 lg:h-28 rounded-2xl overflow-hidden border-4 border-white shadow-xl transform rotate-6 hover:rotate-0 transition-transform duration-300">
-                <img
-                  src={nailStyles[(activeColor + 2) % 4].image}
-                  alt="Style preview"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Decorative elements */}
-              <div className="absolute -top-6 right-8 w-4 h-4 rounded-full bg-[#DD2C6C] animate-pulse" />
-              <div className="absolute top-1/3 -right-12 w-3 h-3 rounded-full bg-[#F9A8D4] animate-pulse delay-300" />
-              <div className="absolute -bottom-4 left-8 w-5 h-5 rounded-full bg-[#DD2C6C]/60 animate-pulse delay-700" />
-              
-              {/* Price tag */}
-              <div className="absolute -right-4 lg:-right-8 top-8 px-5 py-2.5 rounded-full bg-[#DD2C6C] text-white font-bold text-sm shadow-xl">
-                From ₹299
-              </div>
-              
-              {/* Rating badge */}
-              <div className="absolute -left-4 lg:-left-8 bottom-12 px-4 py-2 rounded-full bg-white shadow-xl flex items-center gap-2">
-                <span className="text-amber-500">★</span>
-                <span className="font-bold text-sm text-[#1a1a1a]">4.9</span>
+                    {active === i && (
+                      <div className="absolute inset-0 bg-[#DD2C6C]/20 rounded-2xl" />
+                    )}
+                  </button>
+                ))}
               </div>
             </div>
+
+            {/* CTA */}
+            <div className="flex items-center gap-4">
+              <Button
+                size="lg"
+                className="group bg-[#DD2C6C] hover:bg-[#c42460] text-white px-8 py-6 rounded-full font-bold text-base shadow-lg shadow-[#DD2C6C]/30 hover:shadow-[#DD2C6C]/50 hover:scale-105 transition-all"
+                asChild
+              >
+                <Link to="/products">
+                  Shop Now
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </Button>
+              <Link
+                to="/tutorial"
+                className="text-white/40 text-sm hover:text-white/70 transition-colors flex items-center gap-1.5 group"
+              >
+                How it works
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </div>
+
+          {/* Right — image */}
+          <MainImage />
         </div>
       </div>
 
-      {/* Mobile Layout - Vertical stacked (only on small screens) */}
-      <div className="relative z-10 px-4 py-8 min-h-[100svh] flex flex-col justify-center md:hidden">
-        
-        {/* Animated badge */}
-        <div className="flex justify-center mb-4">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-md border border-[#DD2C6C]/10">
-            <div className="relative">
-              <Sparkles className="w-4 h-4 text-[#DD2C6C]" />
-              <div className="absolute inset-0 w-4 h-4 bg-[#DD2C6C]/30 rounded-full animate-ping" />
-            </div>
-            <span className="text-[#1a1a1a] text-xs font-semibold">Pick Your Vibe</span>
-            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+      {/* ── MOBILE ── */}
+      <div className="md:hidden flex flex-col min-h-[100svh] px-5 pt-8 pb-6">
+        {/* Badge */}
+        <div className="flex justify-center mb-5">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#DD2C6C] animate-pulse" />
+            <span className="text-white/60 font-medium">New drops every week</span>
           </div>
         </div>
 
-        {/* Heading */}
-        <div className="text-center mb-5">
-          <h1 className="text-5xl sm:text-6xl font-black text-[#1a1a1a] leading-[1]">
-            <span className="block">Press.</span>
-            <span className="block text-[#DD2C6C]">Slay.</span>
-            <span className="block">Repeat.</span>
+        {/* Headline */}
+        <div className="text-center mb-6">
+          <h1 className="text-5xl font-black leading-[1.05] tracking-tight">
+            <span className="block text-white">Press.</span>
+            <span className="block text-[#DD2C6C]">Wear.</span>
+            <span className="block text-white">Obsess.</span>
           </h1>
         </div>
 
-        {/* Image showcase */}
-        <div className="flex justify-center mb-5">
-          <div className="relative">
-            {/* Multiple rotating rings - behind image */}
-            <div className="absolute inset-0 -m-3 rounded-full border border-[#DD2C6C]/10 -z-10" />
-            <div className="absolute inset-0 -m-6 rounded-full border border-dashed border-[#DD2C6C]/20 animate-[spin_25s_linear_infinite] -z-10" />
-            <div className="absolute inset-0 -m-10 rounded-full border border-dotted border-[#DD2C6C]/10 animate-[spin_35s_linear_infinite_reverse] -z-10" />
-            
-            {/* Orbiting dots */}
-            <div className="absolute inset-0 -m-6 animate-[spin_18s_linear_infinite] -z-10">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#DD2C6C]" />
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#F9A8D4]" />
-            </div>
-            <div className="absolute inset-0 -m-10 animate-[spin_22s_linear_infinite_reverse] -z-10">
-              <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#DD2C6C]/60" />
-            </div>
-            
-            <div className="relative w-64 h-[300px] sm:w-72 sm:h-[340px] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white">
-              {current.slug ? (
-                <Link to={`/products/${current.slug}`} className="block w-full h-full">
-                  <img
-                    key={activeColor}
-                    src={current.image}
-                    alt={current.name}
-                    className="w-full h-full object-cover animate-fade-scale"
-                    loading="eager"
-                  />
-                </Link>
-              ) : (
-                <img
-                  key={activeColor}
-                  src={current.image}
-                  alt={current.name}
-                  className="w-full h-full object-cover animate-fade-scale"
-                  loading="eager"
-                />
-              )}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm px-5 py-2 rounded-full shadow-lg pointer-events-none">
-                <span className="font-bold text-sm text-[#1a1a1a] truncate max-w-[140px] block text-center">{current.name}</span>
-              </div>
-            </div>
-            
-            {/* Price tag */}
-            <div className="absolute -right-2 top-6 px-4 py-2 rounded-full bg-[#DD2C6C] text-white font-bold text-sm shadow-xl">
-              ₹299
-            </div>
-            
-            {/* Rating badge */}
-            <div className="absolute -left-2 bottom-10 px-3 py-1.5 rounded-full bg-white shadow-lg flex items-center gap-1.5">
-              <span className="text-amber-500 text-sm">★</span>
-              <span className="font-bold text-xs text-[#1a1a1a]">4.9</span>
-            </div>
-          </div>
+        {/* Image */}
+        <div className="flex-1 flex items-center justify-center py-4">
+          <MainImage />
         </div>
 
-        {/* Color picker with labels */}
-        <div className="mb-4">
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <div className="w-6 h-[1px] bg-[#DD2C6C]/30" />
-            <span className="text-[10px] text-[#1a1a1a]/50 uppercase tracking-widest font-medium">Styles</span>
-            <div className="w-6 h-[1px] bg-[#DD2C6C]/30" />
-          </div>
-          <div className="flex justify-center gap-4">
-            {nailStyles.map((style, i) => (
-              <button
-                key={style.name}
-                onClick={() => setActiveColor(i)}
-                className="group"
-              >
-                <div 
-                  className={`w-12 h-12 rounded-xl transition-all duration-300 flex items-center justify-center ${
-                    activeColor === i 
-                      ? 'scale-110 shadow-xl' 
-                      : 'opacity-50'
-                  }`}
-                  style={{ 
-                    backgroundColor: style.accent,
-                    boxShadow: activeColor === i ? `0 8px 25px ${style.accent}60` : 'none'
-                  }}
-                >
-                  {activeColor === i && (
-                    <div className="w-2.5 h-2.5 rounded-full bg-white/80" />
-                  )}
-                </div>
-                <span className={`block mt-1.5 text-[9px] font-semibold uppercase tracking-wide text-center transition-all ${
-                  activeColor === i ? 'text-[#1a1a1a]' : 'text-[#1a1a1a]/30'
-                }`}>
-                  {style.name.split(' ')[0]}
-                </span>
-              </button>
-            ))}
-          </div>
+        {/* Swatches */}
+        <div className="flex justify-center gap-3 mb-6">
+          {styles.map((s, i) => (
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              className="relative rounded-xl overflow-hidden transition-all duration-300"
+              style={{ width: 44, height: 44 }}
+            >
+              <img src={s.image} alt={s.name} className="w-full h-full object-cover" />
+              <div
+                className={`absolute inset-0 rounded-xl border-2 transition-all ${
+                  active === i ? 'border-[#DD2C6C]' : 'border-transparent'
+                }`}
+              />
+            </button>
+          ))}
         </div>
 
         {/* CTA */}
-        <div className="text-center">
-          <Button
-            size="lg"
-            className="w-full max-w-xs px-8 py-6 bg-[#DD2C6C] hover:bg-[#c42460] text-white rounded-full font-bold text-base shadow-xl shadow-[#DD2C6C]/30"
-            asChild
-          >
-            <Link to="/products">
-              Shop Now
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-          </Button>
-          
-          {/* Features row */}
-          <div className="flex items-center justify-center gap-4 mt-5">
-            <div className="flex items-center gap-1.5 text-[#1a1a1a]/50">
-              <RefreshCw className="w-3.5 h-3.5 text-[#DD2C6C]" />
-              <span className="text-xs font-medium">15+ Uses</span>
-            </div>
-            <div className="w-1 h-1 rounded-full bg-[#DD2C6C]/30" />
-            <div className="flex items-center gap-1.5 text-[#1a1a1a]/50">
-              <Leaf className="w-3.5 h-3.5 text-[#DD2C6C]" />
-              <span className="text-xs font-medium">Gentle</span>
-            </div>
-            <div className="w-1 h-1 rounded-full bg-[#DD2C6C]/30" />
-            <div className="flex items-center gap-1.5 text-[#1a1a1a]/50">
-              <Scissors className="w-3.5 h-3.5 text-[#DD2C6C]" />
-              <span className="text-xs font-medium">Custom</span>
-            </div>
+        <Button
+          size="lg"
+          className="w-full bg-[#DD2C6C] hover:bg-[#c42460] text-white rounded-full font-bold py-6 shadow-lg shadow-[#DD2C6C]/30"
+          asChild
+        >
+          <Link to="/products">
+            Shop Now <ArrowRight className="ml-2 h-5 w-5" />
+          </Link>
+        </Button>
+      </div>
+
+      {/* Stats bar — desktop only */}
+      <div className="hidden md:block absolute bottom-0 left-0 right-0 border-t border-white/10">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-4 divide-x divide-white/10">
+            {stats.map(({ value, label }) => (
+              <div key={label} className="flex items-center justify-center gap-3 py-4">
+                <span className="text-2xl font-black text-[#DD2C6C]">{value}</span>
+                <span className="text-white/40 text-sm">{label}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-      <style>{`
-        @keyframes fade-scale {
-          0% { opacity: 0; transform: scale(1.05); }
-          100% { opacity: 1; transform: scale(1); }
-        }
-        .animate-fade-scale {
-          animation: fade-scale 0.4s ease-out;
-        }
-      `}</style>
     </section>
   );
 };

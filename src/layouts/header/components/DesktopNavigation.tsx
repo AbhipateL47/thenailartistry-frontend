@@ -29,7 +29,7 @@ export const DesktopNavigation = ({
             >
               <Link
                 to={link.href}
-                className="flex items-center gap-1 text-sm font-medium text-gray-900 hover:text-[#DD2C6C] transition-colors uppercase tracking-wide relative group"
+                className="flex items-center gap-1 text-sm font-medium text-white/70 hover:text-white transition-colors uppercase tracking-wide relative group"
               >
                 {link.label}
                 <ChevronDown className="h-3 w-3" />
@@ -51,7 +51,7 @@ export const DesktopNavigation = ({
           <Link
             key={link.href}
             to={link.href}
-            className="text-sm font-medium text-gray-900 hover:text-[#DD2C6C] transition-colors uppercase tracking-wide"
+            className="text-sm font-medium text-white/70 hover:text-white transition-colors uppercase tracking-wide"
           >
             {link.label}
           </Link>

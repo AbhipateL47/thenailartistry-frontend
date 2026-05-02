@@ -79,7 +79,7 @@ export const HeaderActions = ({ variant = 'desktop', onCartClick }: HeaderAction
           className="relative h-10 w-10"
           onClick={handleCartClick}
         >
-          <ShoppingCart className="h-5 w-5 text-gray-700" />
+          <ShoppingCart className="h-5 w-5 text-white/80" />
           {totalItems > 0 && (
             <span 
               className="absolute -top-1 -right-1 bg-[#DD2C6C] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium"
@@ -102,7 +102,7 @@ export const HeaderActions = ({ variant = 'desktop', onCartClick }: HeaderAction
           placeholder="I'm looking for..."
           value={searchValue}
           onChange={handleSearchChange}
-          className="w-48 xl:w-64 pl-9 pr-4 h-9 rounded-full border-gray-300 text-sm focus:border-[#DD2C6C] focus:ring-1 focus:ring-[#DD2C6C]"
+          className="w-48 xl:w-64 pl-9 pr-4 h-9 rounded-full bg-white/10 border-white/20 text-white placeholder:text-white/40 text-sm focus:border-[#DD2C6C] focus:ring-1 focus:ring-[#DD2C6C]"
         />
       </form>
 
@@ -110,7 +110,7 @@ export const HeaderActions = ({ variant = 'desktop', onCartClick }: HeaderAction
       <Button
         variant="ghost"
         size="icon"
-        className="relative h-9 w-9 hover:bg-gray-100 rounded-full overflow-hidden"
+        className="relative h-9 w-9 hover:bg-white/10 rounded-full overflow-hidden"
         asChild
       >
         <Link to={isAuthenticated ? "/profile" : "/login"}>
@@ -121,7 +121,7 @@ export const HeaderActions = ({ variant = 'desktop', onCartClick }: HeaderAction
               className="h-7 w-7 rounded-full object-cover"
             />
           ) : (
-            <User className="h-5 w-5 text-gray-700" />
+            <User className="h-5 w-5 text-white/80" />
           )}
         </Link>
       </Button>
@@ -130,11 +130,11 @@ export const HeaderActions = ({ variant = 'desktop', onCartClick }: HeaderAction
       <Button
         variant="ghost"
         size="icon"
-        className="relative h-9 w-9 hover:bg-gray-100 rounded-full"
+        className="relative h-9 w-9 hover:bg-white/10 rounded-full"
         asChild
       >
         <Link to="/wishlist">
-          <Heart className="h-5 w-5 text-gray-700" />
+          <Heart className="h-5 w-5 text-white/80" />
           {wishlistCount > 0 && (
             <span 
               className="absolute -top-0.5 -right-0.5 bg-[#DD2C6C] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-semibold"
@@ -149,10 +149,10 @@ export const HeaderActions = ({ variant = 'desktop', onCartClick }: HeaderAction
       <Button
         variant="ghost"
         size="icon"
-        className="relative h-9 w-9 hover:bg-gray-100 rounded-full"
+        className="relative h-9 w-9 hover:bg-white/10 rounded-full"
         onClick={handleCartClick}
       >
-        <ShoppingCart className="h-5 w-5 text-gray-700" />
+        <ShoppingCart className="h-5 w-5 text-white/80" />
         {totalItems > 0 && (
           <span 
             className="absolute -top-0.5 -right-0.5 bg-[#DD2C6C] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-semibold"

@@ -62,7 +62,7 @@ export const FeaturedProductsSection = ({
 
   if (isLoading) {
     return (
-      <section className="py-16 md:py-20">
+      <section className="py-16 md:py-20 bg-[#0D0D0D]">
         <div className="container mx-auto px-4">
           <div className="flex items-end justify-between mb-8">
             <div>
@@ -88,25 +88,20 @@ export const FeaturedProductsSection = ({
   if (!products || products.length === 0) return null;
 
   return (
-    <section className="relative py-16 md:py-20 overflow-hidden">
-      {/* Subtle background sparkles */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-12 left-8 w-2 h-2 bg-pink-300 rounded-full opacity-50 animate-pulse" />
-        <div className="absolute top-1/3 right-12 w-1.5 h-1.5 bg-rose-300 rounded-full opacity-40 animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute bottom-16 left-1/4 w-2.5 h-2.5 bg-pink-400 rounded-full opacity-30 animate-pulse" style={{ animationDelay: '2s' }} />
-      </div>
-
+    <section className="relative py-16 md:py-24 overflow-hidden bg-[#0D0D0D]">
       <div className="container mx-auto px-4 relative z-10">
         {/* Section header */}
-        <div className="flex items-end justify-between mb-8">
+        <div className="flex items-end justify-between mb-10">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#1a1a1a] mb-1">
-              Our Most Loved Sets ✨
+            <p className="text-[#DD2C6C] text-xs font-semibold tracking-[0.2em] uppercase mb-2">
+              Trending Now
+            </p>
+            <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">
+              Most Loved Sets
             </h2>
-            <p className="text-sm text-muted-foreground">Fresh, trending, obsession-worthy</p>
           </div>
-          <Button variant="outline" size="sm" asChild className="hidden sm:inline-flex">
-            <Link to="/products">View All</Link>
+          <Button variant="outline" size="sm" asChild className="hidden sm:inline-flex border-white/20 text-white/70 hover:bg-white/10 hover:text-white hover:border-white/40 bg-transparent">
+            <Link to="/products">View All →</Link>
           </Button>
         </div>
 
@@ -132,11 +127,11 @@ export const FeaturedProductsSection = ({
           </CarouselContent>
 
           <CarouselPrevious
-            className="hidden md:flex -left-5 h-9 w-9 border-gray-200 bg-white shadow-md hover:bg-pink-50 hover:border-[#DD2C6C]"
+            className="hidden md:flex -left-5 h-9 w-9 border-white/20 bg-white/10 text-white hover:bg-[#DD2C6C] hover:border-[#DD2C6C]"
             aria-label="Previous products"
           />
           <CarouselNext
-            className="hidden md:flex -right-5 h-9 w-9 border-gray-200 bg-white shadow-md hover:bg-pink-50 hover:border-[#DD2C6C]"
+            className="hidden md:flex -right-5 h-9 w-9 border-white/20 bg-white/10 text-white hover:bg-[#DD2C6C] hover:border-[#DD2C6C]"
             aria-label="Next products"
           />
         </Carousel>
@@ -151,7 +146,7 @@ export const FeaturedProductsSection = ({
                 aria-label={`Go to slide ${i + 1}`}
                 className={cn(
                   'h-2 rounded-full transition-all duration-300',
-                  i === activeIndex ? 'w-8 bg-[#DD2C6C]' : 'w-2 bg-gray-300 hover:bg-gray-400'
+                  i === activeIndex ? 'w-8 bg-[#DD2C6C]' : 'w-2 bg-white/20 hover:bg-white/40'
                 )}
               />
             ))}
@@ -160,7 +155,7 @@ export const FeaturedProductsSection = ({
 
         {/* Mobile "View All" */}
         <div className="mt-6 text-center sm:hidden">
-          <Button variant="outline" asChild className="w-full max-w-xs">
+          <Button variant="outline" asChild className="w-full max-w-xs border-white/20 text-white/70 hover:bg-white/10 hover:text-white bg-transparent">
             <Link to="/products">View All Products</Link>
           </Button>
         </div>

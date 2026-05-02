@@ -1,97 +1,104 @@
 import { Button } from '@/components/ui/button';
-import { Mail, Sparkles } from 'lucide-react';
+import { Mail, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
+
+const benefits = [
+  'Early access to new drops',
+  'Exclusive discount codes',
+  'Nail art tips & tutorials',
+];
 
 export const NewsletterSection = () => {
   const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    
     setIsSubmitting(true);
-    // TODO: Implement newsletter subscription API
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setEmail('');
-      // Show success toast
-    }, 1000);
+    await new Promise((r) => setTimeout(r, 800));
+    setIsSubmitting(false);
+    setSubmitted(true);
+    setEmail('');
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-[#FDF8F8] via-pink-50/50 to-purple-50/30 relative overflow-hidden">
-      {/* Decorative Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 right-10 w-32 h-32 bg-[#DD2C6C]/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 left-10 w-40 h-40 bg-purple-200/20 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-pink-100/30 rounded-full blur-3xl"></div>
-      </div>
+    <section className="relative bg-[#111111] overflow-hidden py-20 md:py-28">
+      {/* Ambient glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#DD2C6C]/10 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="container mx-auto px-4 relative z-10">
-        {/* Section Header */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 text-[#DD2C6C] text-sm font-semibold tracking-wider uppercase mb-3">
-            <Sparkles className="w-4 h-4" />
-            <span>Stay Connected</span>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Left — copy */}
+          <div className="space-y-6">
+            <div>
+              <p className="text-[#DD2C6C] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+                Join the Community
+              </p>
+              <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">
+                Get first access to<br />
+                <span className="text-[#DD2C6C]">new designs.</span>
+              </h2>
+            </div>
+            <p className="text-white/50 text-base leading-relaxed">
+              Join 50,000+ nail lovers getting exclusive drops, styling ideas, and offers straight to their inbox.
+            </p>
+            <ul className="space-y-2.5">
+              {benefits.map((b) => (
+                <li key={b} className="flex items-center gap-3 text-sm text-white/60">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#DD2C6C] flex-shrink-0" />
+                  {b}
+                </li>
+              ))}
+            </ul>
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4">
-            Join Our Nail Art Community
-          </h2>
-          <p className="text-[#1a1a1a]/70 max-w-2xl mx-auto text-base md:text-lg">
-            Get exclusive nail art inspiration, early access to new designs, and special offers
-            delivered straight to your inbox
-          </p>
-        </div>
 
-        {/* Newsletter Form */}
-        <div className="max-w-2xl mx-auto">
-          <form onSubmit={handleSubmit} className="relative">
-            <div className="flex flex-col sm:flex-row gap-3 bg-white rounded-2xl p-2 shadow-lg border border-[#DD2C6C]/10">
-              <div className="flex-1 relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1a1a1a]/40" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email address..."
-                  className="w-full pl-12 pr-4 py-4 rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-[#DD2C6C]/20 text-[#1a1a1a] placeholder:text-[#1a1a1a]/40 bg-transparent"
-                  required
-                />
+          {/* Right — form */}
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8">
+            {submitted ? (
+              <div className="text-center py-6">
+                <div className="w-14 h-14 rounded-full bg-[#DD2C6C]/20 border border-[#DD2C6C]/40 flex items-center justify-center mx-auto mb-4">
+                  <Mail className="h-6 w-6 text-[#DD2C6C]" />
+                </div>
+                <h3 className="text-white font-bold text-lg mb-2">You're in! 🎉</h3>
+                <p className="text-white/50 text-sm">Check your inbox for a welcome surprise.</p>
               </div>
-              <Button
-                type="submit"
-                size="lg"
-                disabled={isSubmitting || !email}
-                className="bg-[#DD2C6C] hover:bg-[#DD2C6C]/90 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 whitespace-nowrap"
-              >
-                {isSubmitting ? 'Subscribing...' : 'Subscribe'}
-              </Button>
-            </div>
-          </form>
-
-          {/* Benefits List */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-[#1a1a1a]/60">
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#DD2C6C]"></div>
-              <span>Weekly inspiration</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#DD2C6C]"></div>
-              <span>Exclusive offers</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#DD2C6C]"></div>
-              <span>New design alerts</span>
-            </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="text-white/60 text-sm font-medium mb-2 block">Email address</label>
+                  <div className="relative">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30 pointer-events-none" />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@example.com"
+                      required
+                      className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#DD2C6C] focus:ring-1 focus:ring-[#DD2C6C] transition-all"
+                    />
+                  </div>
+                </div>
+                <Button
+                  type="submit"
+                  size="lg"
+                  disabled={isSubmitting || !email}
+                  className="w-full bg-[#DD2C6C] hover:bg-[#c42460] text-white rounded-xl py-6 font-bold shadow-lg shadow-[#DD2C6C]/25 hover:shadow-[#DD2C6C]/40 transition-all group disabled:opacity-50"
+                >
+                  {isSubmitting ? 'Subscribing...' : (
+                    <>
+                      Subscribe Now
+                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
+                </Button>
+                <p className="text-white/25 text-xs text-center">
+                  No spam, ever. Unsubscribe anytime.
+                </p>
+              </form>
+            )}
           </div>
-        </div>
-
-        {/* Bottom accent line */}
-        <div className="flex items-center justify-center gap-2 mt-12">
-          <div className="w-12 h-px bg-[#DD2C6C]/20" />
-          <div className="w-2 h-2 rounded-full bg-[#DD2C6C]/30" />
-          <div className="w-12 h-px bg-[#DD2C6C]/20" />
         </div>
       </div>
     </section>

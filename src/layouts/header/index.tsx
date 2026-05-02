@@ -83,7 +83,7 @@ export const Header = () => {
   }, [isMouseOverShop, isMouseOverSubmenu, shopSubmenuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200">
+    <header className="sticky top-0 z-50 w-full bg-[#0D0D0D] border-b border-white/10">
       {/* Top banner - Marquee */}
       <div
         className={`transition-all duration-300 overflow-hidden ${
