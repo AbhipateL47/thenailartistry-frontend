@@ -32,7 +32,7 @@ export function useRecentlyViewed(currentProduct?: Product): Product[] {
     if (!currentProduct) return;
     addToStorage(currentProduct);
     setRecentProducts(getStoredProducts().filter((p) => p._id !== currentProduct._id));
-  }, [currentProduct?._id]);
+  }, [currentProduct]); // intentionally use full object — stable ref from TanStack Query
 
   return recentProducts;
 }
