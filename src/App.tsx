@@ -23,6 +23,7 @@ import OrderConfirmation from "./features/orders/pages/OrderConfirmation";
 import TrackOrder from "./features/orders/pages/TrackOrder";
 import ProfileOrderDetail from "./features/orders/pages/ProfileOrderDetail";
 import { Navigate } from "react-router-dom";
+import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Tutorial from "./pages/Tutorial";
 import Profile from "./features/profile/pages/Profile";
@@ -43,7 +44,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
   
   // Known route patterns (base paths that should show footer)
   const knownRoutePatterns = [
-    '/products', '/cart', '/checkout', '/contact', '/tutorial',
+    '/products', '/cart', '/checkout', '/contact', '/tutorial', '/about',
     '/shipping', '/shipping-and-returns', '/terms', '/terms-and-conditions',
     '/privacy', '/privacy-policy', '/profile', '/wishlist',
     '/order-confirmation', '/orders', '/reviews', '/'
@@ -99,6 +100,7 @@ const App = () => (
                     <Route path="/orders/track" element={<TrackOrder />} />
                     <Route path="/orders/my" element={<Navigate to="/profile/orders" replace />} />
                     <Route path="/orders" element={<Navigate to="/profile/orders" replace />} />
+                    <Route path="/about" element={<About />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/tutorial" element={<Tutorial />} />
                     <Route path="/shipping" element={<ShippingAndReturn />} />

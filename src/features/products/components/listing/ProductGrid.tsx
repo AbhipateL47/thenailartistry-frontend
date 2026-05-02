@@ -113,19 +113,19 @@ export const ProductGrid = ({
         {/* Sort Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="hidden sm:flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900 transition-colors">
+            <button className="hidden sm:flex items-center gap-2 text-sm text-white/60 hover:text-white/90 transition-colors">
               <span>{currentSort.label}</span>
               <ChevronDown className="h-4 w-4" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48 bg-white shadow-lg border border-gray-200">
+          <DropdownMenuContent align="end" className="w-48 bg-[#1a1a1a] border border-white/10">
             {sortOptions.map((option) => (
               <DropdownMenuItem
                 key={option.value}
                 onClick={() => onSortChange?.(option.value)}
                 className={cn(
-                  'cursor-pointer',
-                  sortBy === option.value && 'bg-gray-100 font-medium'
+                  'cursor-pointer text-white/70 hover:text-white focus:text-white focus:bg-white/10',
+                  sortBy === option.value && 'bg-white/10 text-white font-medium'
                 )}
               >
                 {option.label}
@@ -139,7 +139,7 @@ export const ProductGrid = ({
       {!isLoading && products.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <SearchX className="h-16 w-16 text-muted-foreground/50 mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No products found</h3>
+          <h3 className="text-lg font-semibold text-white mb-2">No products found</h3>
           <p className="text-sm text-muted-foreground mb-6 max-w-md">
             We couldn't find any products matching your filters. Try removing some filters or clear all to see more products.
           </p>

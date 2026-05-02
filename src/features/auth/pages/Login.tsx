@@ -56,21 +56,21 @@ const Login = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left side - Form */}
-      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-white">
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-[#0D0D0D]">
         <div className="w-full max-w-md space-y-8">
           {/* Logo */}
           <div className="flex justify-center">
             <Link to="/">
-              <Logo className="h-16" />
+              <Logo className="h-16" variant="dark" />
             </Link>
           </div>
 
           {/* Header */}
           <div className="text-center">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            <h1 className="text-3xl font-bold tracking-tight text-white">
               Welcome back
             </h1>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-white/50">
               Sign in to your account to continue
             </p>
           </div>
@@ -79,16 +79,16 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email */}
             <div className="space-y-2">
-              <Label htmlFor="email">Email address</Label>
+              <Label htmlFor="email" className="text-white/70">Email address</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-white/30" />
                 <Input
                   id="email"
                   type="email"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className={`pl-10 h-12 ${errors.email ? 'border-red-500 focus:ring-red-500' : ''}`}
+                  className={`pl-10 h-12 bg-white/5 border-white/15 text-white placeholder:text-white/30 focus:border-[#DD2C6C] ${errors.email ? 'border-red-500 focus:ring-red-500' : ''}`}
                 />
               </div>
               {errors.email && (
@@ -99,7 +99,7 @@ const Login = () => {
             {/* Password */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-white/70">Password</Label>
                 <Link
                   to="/forgot-password"
                   className="text-sm font-medium text-[#DD2C6C] hover:text-[#c4245f]"
@@ -108,19 +108,19 @@ const Login = () => {
                 </Link>
               </div>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-white/30" />
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={`pl-10 pr-10 h-12 ${errors.password ? 'border-red-500 focus:ring-red-500' : ''}`}
+                  className={`pl-10 pr-10 h-12 bg-white/5 border-white/15 text-white placeholder:text-white/30 focus:border-[#DD2C6C] ${errors.password ? 'border-red-500 focus:ring-red-500' : ''}`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -150,10 +150,10 @@ const Login = () => {
           {/* Divider */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
+              <div className="w-full border-t border-white/10" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">or</span>
+              <span className="px-4 bg-[#0D0D0D] text-white/40">or</span>
             </div>
           </div>
 
@@ -162,7 +162,7 @@ const Login = () => {
             <Button
               type="button"
               variant="outline"
-              className="w-full h-12 font-medium"
+              className="w-full h-12 font-medium bg-white/5 border-white/15 text-white/70 hover:bg-white/10 hover:text-white"
               onClick={() => {/* TODO: Google OAuth */}}
             >
               <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
@@ -188,7 +188,7 @@ const Login = () => {
           </div>
 
           {/* Register Link */}
-          <p className="text-center text-sm text-gray-600">
+          <p className="text-center text-sm text-white/50">
             Don't have an account?{' '}
             <Link
               to="/register"

@@ -135,21 +135,21 @@ const Register = () => {
       </div>
 
       {/* Right side - Form */}
-      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-white overflow-y-auto py-8">
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-[#0D0D0D] overflow-y-auto py-8">
         <div className="w-full max-w-md space-y-6">
           {/* Logo */}
           <div className="flex justify-center">
             <Link to="/">
-              <Logo className="h-16" />
+              <Logo className="h-16" variant="dark" />
             </Link>
           </div>
 
           {/* Header */}
           <div className="text-center">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            <h1 className="text-3xl font-bold tracking-tight text-white">
               Create account
             </h1>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-white/50">
               Join us and start your nail journey
             </p>
           </div>
@@ -158,9 +158,9 @@ const Register = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Name */}
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name" className="text-white/70">Full Name</Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-white/30" />
                 <Input
                   id="name"
                   name="name"
@@ -168,7 +168,7 @@ const Register = () => {
                   placeholder="John Doe"
                   value={formData.name}
                   onChange={handleChange}
-                  className={`pl-10 h-12 ${errors.name ? 'border-red-500' : ''}`}
+                  className={`pl-10 h-12 bg-white/5 border-white/15 text-white placeholder:text-white/30 focus:border-[#DD2C6C] ${errors.name ? 'border-red-500' : ''}`}
                 />
               </div>
               {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
@@ -176,9 +176,9 @@ const Register = () => {
 
             {/* Email */}
             <div className="space-y-2">
-              <Label htmlFor="email">Email address</Label>
+              <Label htmlFor="email" className="text-white/70">Email address</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-white/30" />
                 <Input
                   id="email"
                   name="email"
@@ -186,7 +186,7 @@ const Register = () => {
                   placeholder="you@example.com"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`pl-10 h-12 ${errors.email ? 'border-red-500' : ''}`}
+                  className={`pl-10 h-12 bg-white/5 border-white/15 text-white placeholder:text-white/30 focus:border-[#DD2C6C] ${errors.email ? 'border-red-500' : ''}`}
                 />
               </div>
               {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
@@ -194,9 +194,9 @@ const Register = () => {
 
             {/* Phone */}
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number (Optional)</Label>
+              <Label htmlFor="phone" className="text-white/70">Phone Number (Optional)</Label>
               <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-white/30" />
                 <Input
                   id="phone"
                   name="phone"
@@ -204,7 +204,7 @@ const Register = () => {
                   placeholder="9876543210"
                   value={formData.phone}
                   onChange={handleChange}
-                  className={`pl-10 h-12 ${errors.phone ? 'border-red-500' : ''}`}
+                  className={`pl-10 h-12 bg-white/5 border-white/15 text-white placeholder:text-white/30 focus:border-[#DD2C6C] ${errors.phone ? 'border-red-500' : ''}`}
                 />
               </div>
               {errors.phone && <p className="text-sm text-red-500">{errors.phone}</p>}
@@ -212,9 +212,9 @@ const Register = () => {
 
             {/* Password */}
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-white/70">Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-white/30" />
                 <Input
                   id="password"
                   name="password"
@@ -222,18 +222,18 @@ const Register = () => {
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`pl-10 pr-10 h-12 ${errors.password ? 'border-red-500' : ''}`}
+                  className={`pl-10 pr-10 h-12 bg-white/5 border-white/15 text-white placeholder:text-white/30 focus:border-[#DD2C6C] ${errors.password ? 'border-red-500' : ''}`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
               {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
-              
+
               {/* Password Requirements */}
               {formData.password && (
                 <div className="space-y-1 mt-2">
@@ -241,7 +241,7 @@ const Register = () => {
                     <div
                       key={index}
                       className={`flex items-center gap-2 text-xs ${
-                        req.met ? 'text-green-600' : 'text-gray-400'
+                        req.met ? 'text-green-400' : 'text-white/30'
                       }`}
                     >
                       <Check className={`h-3 w-3 ${req.met ? 'opacity-100' : 'opacity-30'}`} />
@@ -254,9 +254,9 @@ const Register = () => {
 
             {/* Confirm Password */}
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword" className="text-white/70">Confirm Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-white/30" />
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -264,12 +264,12 @@ const Register = () => {
                   placeholder="••••••••"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className={`pl-10 pr-10 h-12 ${errors.confirmPassword ? 'border-red-500' : ''}`}
+                  className={`pl-10 pr-10 h-12 bg-white/5 border-white/15 text-white placeholder:text-white/30 focus:border-[#DD2C6C] ${errors.confirmPassword ? 'border-red-500' : ''}`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70"
                 >
                   {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -280,7 +280,7 @@ const Register = () => {
             </div>
 
             {/* Terms */}
-            <p className="text-xs text-gray-500 text-center">
+            <p className="text-xs text-white/40 text-center">
               By creating an account, you agree to our{' '}
               <Link to="/terms" className="text-[#DD2C6C] hover:underline">
                 Terms of Service
@@ -309,7 +309,7 @@ const Register = () => {
           </form>
 
           {/* Login Link */}
-          <p className="text-center text-sm text-gray-600">
+          <p className="text-center text-sm text-white/50">
             Already have an account?{' '}
             <Link
               to="/login"

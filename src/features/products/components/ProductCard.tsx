@@ -70,7 +70,7 @@ export const ProductCard = ({
         className="group relative bg-transparent overflow-hidden transition-all duration-300 animate-fade-in flex gap-4 p-2"
       >
         {/* Image */}
-        <div className="relative overflow-hidden w-32 h-32 flex-shrink-0 bg-muted rounded-lg border border-gray-200">
+        <div className="relative overflow-hidden w-32 h-32 flex-shrink-0 bg-white/5 rounded-lg border border-white/10">
           <img
             src={product.primaryImage}
             alt={product.name}
@@ -156,7 +156,7 @@ export const ProductCard = ({
     <div className="group relative bg-transparent overflow-hidden transition-all duration-300 animate-fade-in">
       <Link to={`/products/${product.slug}`} className="block">
         {/* Image container */}
-        <div className="relative aspect-square overflow-hidden bg-muted rounded-lg border border-gray-200">
+        <div className="relative aspect-square overflow-hidden bg-white/5 rounded-lg border border-white/10">
           {/* Primary image */}
           <img
             src={product.primaryImage}
@@ -189,8 +189,8 @@ export const ProductCard = ({
 
           {/* Out-of-stock overlay */}
           {!inStock && (
-            <div className="absolute inset-0 bg-white/60 flex items-center justify-center z-10">
-              <Badge variant="outline" className="bg-white text-xs font-medium">
+            <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-10">
+              <Badge variant="outline" className="bg-black/80 border-white/30 text-white text-xs font-medium">
                 Out of Stock
               </Badge>
             </div>

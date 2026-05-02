@@ -22,14 +22,15 @@ export interface ShopCategories {
 
 export const navLinks: NavLink[] = [
   { href: '/', label: 'HOME' },
-  { 
-    href: '/products', 
+  {
+    href: '/products',
     label: 'SHOP',
     hasDropdown: true,
   },
+  { href: '/products?category=bestsellers', label: 'BEST SELLERS' },
   { href: '/products?isOnSale=true', label: 'SALE' },
-  { href: '/products?isFeatured=true', label: 'FEATURED' },
   { href: '/tutorial', label: 'TUTORIAL' },
+  { href: '/about', label: 'ABOUT US' },
   { href: '/contact', label: 'CONTACT US' },
   { href: '/profile', label: 'PROFILE', mobileOnly: true },
   { href: '/wishlist', label: 'WISHLIST', mobileOnly: true },
