@@ -1,6 +1,7 @@
-import { X, ShoppingBag } from 'lucide-react';
+import { X, ShoppingBag, CheckCircle2, Truck } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import { CartItem } from './CartItem';
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '@/shared/utils/formatCurrency';
@@ -9,6 +10,8 @@ import {
   SheetContent,
   SheetClose,
 } from '@/components/ui/sheet';
+
+const FREE_SHIPPING_THRESHOLD = 799;
 
 export const CartDrawer = () => {
   const { items, isDrawerOpen, closeDrawer, subtotal } = useCart();
@@ -54,6 +57,31 @@ export const CartDrawer = () => {
 
             {/* Footer - Fixed at bottom */}
             <div className="bg-white border-t border-gray-200 p-6 space-y-4 flex-shrink-0">
+              {/* Free Shipping Progress */}
+              {subtotal < FREE_SHIPPING_THRESHOLD ? (
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                    <Truck className="h-3.5 w-3.5 text-[#DD2C6C]" />
+                    <span>
+                      Add{' '}
+                      <span className="font-semibold text-[#DD2C6C]">
+                        {formatCurrency(FREE_SHIPPING_THRESHOLD - subtotal)}
+                      </span>{' '}
+                      more for <span className="font-semibold">FREE shipping</span>
+                    </span>
+                  </div>
+                  <Progress
+                    value={Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100)}
+                    className="h-1.5 bg-gray-100 [&>div]:bg-[#DD2C6C]"
+                  />
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5 text-xs text-green-700 bg-green-50 border border-green-100 rounded-md px-3 py-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
+                  <span className="font-medium">You've unlocked free shipping!</span>
+                </div>
+              )}
+
               {/* Subtotal */}
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-gray-900">Subtotal</span>

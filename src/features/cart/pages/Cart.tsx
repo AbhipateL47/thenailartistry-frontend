@@ -1,16 +1,29 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Minus, Plus, Trash2 } from 'lucide-react';
+import { ShoppingBag, Minus, Plus, Trash2, Sparkles, Tag } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/shared/utils/formatCurrency';
 import { Separator } from '@/components/ui/separator';
 import { Breadcrumbs } from '@/shared/components/Breadcrumbs';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
+import { useQuery } from '@tanstack/react-query';
+import { productService } from '@/features/products/services/product.service';
+import { ProductCard } from '@/features/products/components/ProductCard';
+import { Progress } from '@/components/ui/progress';
+
+const FREE_SHIPPING_THRESHOLD = 799;
 
 export default function Cart() {
   usePageTitle('Shopping Cart - Review Your Items');
   const { items, updateQuantity, removeItem, subtotal } = useCart();
+
+  const { data: featuredProducts = [] } = useQuery({
+    queryKey: ['featuredProducts-cart-empty'],
+    queryFn: () => productService.getFeaturedProducts(4),
+    staleTime: 5 * 60 * 1000,
+    enabled: items.length === 0,
+  });
 
   // Log page load
   useEffect(() => {
@@ -19,16 +32,46 @@ export default function Cart() {
 
   if (items.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-2xl mx-auto text-center">
-          <ShoppingBag className="h-24 w-24 text-muted-foreground mx-auto mb-6" />
-          <h1 className="text-3xl font-bold mb-4">Your Cart is Empty</h1>
-          <p className="text-muted-foreground mb-8">
-            Looks like you haven't added any items to your cart yet.
-          </p>
-          <Button size="lg" asChild>
-            <Link to="/products">Start Shopping</Link>
-          </Button>
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-3xl mx-auto">
+          {/* Empty state header */}
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[#FFF5F8] mb-4">
+              <ShoppingBag className="h-10 w-10 text-[#DD2C6C]" />
+            </div>
+            <h1 className="text-2xl font-bold mb-2">Your cart is empty</h1>
+            <p className="text-muted-foreground mb-6">
+              Browse our most-loved collections and find something you'll obsess over.
+            </p>
+            <div className="flex items-center justify-center gap-3 flex-wrap">
+              <Button size="lg" asChild className="bg-[#DD2C6C] hover:bg-[#c42460] text-white">
+                <Link to="/products">
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Shop All
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <Link to="/products?isOnSale=true">
+                  <Tag className="h-4 w-4 mr-2" />
+                  View Sale
+                </Link>
+              </Button>
+            </div>
+          </div>
+
+          {/* Featured products grid */}
+          {featuredProducts.length > 0 && (
+            <div>
+              <h2 className="text-lg font-semibold mb-4 text-center text-muted-foreground">
+                You might love these
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {featuredProducts.slice(0, 4).map((product) => (
+                  <ProductCard key={product._id} product={product} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -125,8 +168,29 @@ export default function Cart() {
         {/* Order Summary */}
         <div className="md:col-span-1">
           <div className="bg-muted/30 rounded-lg p-6 sticky top-24 space-y-6">
-            <h2 className="text-xl font-bold">Subtotal</h2>
-            
+            <h2 className="text-xl font-bold">Order Summary</h2>
+
+            {/* Free shipping progress */}
+            {subtotal < FREE_SHIPPING_THRESHOLD ? (
+              <div className="space-y-1.5">
+                <p className="text-xs text-gray-600">
+                  Add{' '}
+                  <span className="font-semibold text-[#DD2C6C]">
+                    {formatCurrency(FREE_SHIPPING_THRESHOLD - subtotal)}
+                  </span>{' '}
+                  more for <span className="font-semibold">FREE shipping</span>
+                </p>
+                <Progress
+                  value={(subtotal / FREE_SHIPPING_THRESHOLD) * 100}
+                  className="h-1.5 bg-gray-200 [&>div]:bg-[#DD2C6C]"
+                />
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 text-xs text-green-700 bg-green-50 border border-green-100 rounded-md px-3 py-2">
+                <span className="font-medium">🎉 Free shipping unlocked!</span>
+              </div>
+            )}
+
             <div className="space-y-3">
               <div className="flex items-center justify-between text-lg">
                 <span className="font-semibold">Subtotal</span>

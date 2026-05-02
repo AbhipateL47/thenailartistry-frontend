@@ -16,7 +16,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Breadcrumbs } from '@/shared/components/Breadcrumbs';
 import { formatCurrency } from '@/shared/utils/formatCurrency';
 import { Separator } from '@/components/ui/separator';
-import { Loader2, MapPin, Tag, Search, HelpCircle, ShoppingBag, CreditCard, Lock, ExternalLink } from 'lucide-react';
+import { Loader2, MapPin, Tag, Search, HelpCircle, ShoppingBag, CreditCard, Lock, ExternalLink, ShieldCheck } from 'lucide-react';
 import { toast } from '@/shared/utils/toast';
 import { useForm, Controller } from 'react-hook-form';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
@@ -809,6 +809,22 @@ export default function Checkout() {
               {/* Payment Section */}
               <section className="bg-white border border-gray-200 rounded-lg p-6">
                 <h2 className="text-lg font-semibold mb-2">Payment</h2>
+
+                {/* Trust bar */}
+                <div className="flex items-center justify-center gap-4 py-2.5 px-3 mb-4 bg-green-50 border border-green-100 rounded-lg text-xs text-green-700 flex-wrap">
+                  <span className="flex items-center gap-1.5">
+                    <Lock className="h-3.5 w-3.5" /> SSL Secured
+                  </span>
+                  <span className="text-green-300">·</span>
+                  <span className="flex items-center gap-1.5">
+                    <CreditCard className="h-3.5 w-3.5" /> Razorpay Protected
+                  </span>
+                  <span className="text-green-300">·</span>
+                  <span className="flex items-center gap-1.5">
+                    <ShieldCheck className="h-3.5 w-3.5" /> 100% Safe
+                  </span>
+                </div>
+
                 <p className="text-sm text-gray-500 mb-4">All transactions are secure and encrypted.</p>
                 <Controller
                   name="paymentMethod"
