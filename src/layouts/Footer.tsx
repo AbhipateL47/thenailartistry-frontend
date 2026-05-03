@@ -25,7 +25,7 @@ export const Footer = () => {
         <div className="flex animate-marquee-seamless whitespace-nowrap select-none">
           {[0, 1].map((copy) => (
             <div key={copy} className="flex items-center flex-shrink-0">
-              {['The Nail Artistry', '✦', 'Press-On Nails', '✦', 'Salon Quality', '✦', 'At Home', '✦'].map((item, i) => (
+              {[' on', '✦', 'The Nail Artistry', '✦', 'Press-On Nails', '✦', 'Salon Quality', '✦', 'At Home', '✦'].map((item, i) => (
                 <span
                   key={i}
                   className="inline-block font-black uppercase px-6"

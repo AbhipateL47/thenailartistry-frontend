@@ -13,6 +13,7 @@ import { CartDrawer } from "@/features/cart/components/CartDrawer";
 import { ScrollToTop } from "@/shared/components/ScrollToTop";
 import { GlobalLoginModal } from "@/features/auth/components/GlobalLoginModal";
 import { MobileBottomNav } from "@/shared/components/MobileBottomNav";
+import { ScrollToTopButton } from "@/shared/components/ScrollToTopButton";
 import Home from "./pages/Home";
 import Products from "./features/products/pages/Products";
 import ProductDetail from "./features/products/pages/ProductDetail";
@@ -73,6 +74,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
       {!shouldHideFooter && <Footer />}
       <CartDrawer />
       <MobileBottomNav />
+      <ScrollToTopButton />
     </div>
   );
 };
