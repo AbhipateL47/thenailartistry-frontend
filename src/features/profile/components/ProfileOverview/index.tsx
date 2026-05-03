@@ -48,18 +48,18 @@ export const ProfileOverview = ({ user, onProfileUpdate }: ProfileOverviewProps)
     <div className="space-y-8 animate-fade-in">
       {/* Welcome Section */}
       <div>
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+        <h1 className="text-2xl md:text-3xl font-bold text-white">
           Welcome back, {user.name?.split(' ')[0] || 'there'}! 👋
         </h1>
-        <p className="text-gray-500 mt-2">
+        <p className="text-white/50 mt-2">
           Manage your account settings and preferences here.
         </p>
       </div>
 
       {/* Profile Info Card */}
-      <div className="bg-gradient-to-r from-gray-50 to-gray-100/50 rounded-2xl p-6">
+      <div className="bg-white/5 rounded-2xl p-4 md:p-6">
         <div className="flex items-start justify-between mb-6">
-          <h3 className="text-lg font-semibold text-gray-900">Profile Information</h3>
+          <h3 className="text-lg font-semibold text-white">Profile Information</h3>
           {!isEditing ? (
             <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsEditing(true)}>
               <Edit2 className="w-4 h-4" />
@@ -80,7 +80,7 @@ export const ProfileOverview = ({ user, onProfileUpdate }: ProfileOverviewProps)
         {isEditing ? (
           <div className="grid sm:grid-cols-2 gap-6">
             <div>
-              <Label htmlFor="name" className="text-sm text-gray-500 mb-1">Full Name</Label>
+              <Label htmlFor="name" className="text-sm text-white/50 mb-1">Full Name</Label>
               <Input
                 id="name"
                 value={formData.name}
@@ -90,12 +90,12 @@ export const ProfileOverview = ({ user, onProfileUpdate }: ProfileOverviewProps)
               />
             </div>
             <div>
-              <Label className="text-sm text-gray-500 mb-1">Email Address</Label>
-              <Input value={user.email} disabled className="mt-1 bg-gray-100" />
-              <p className="text-xs text-gray-400 mt-1">Email cannot be changed</p>
+              <Label className="text-sm text-white/50 mb-1">Email Address</Label>
+              <Input value={user.email} disabled className="mt-1 bg-white/10" />
+              <p className="text-xs text-white/30 mt-1">Email cannot be changed</p>
             </div>
             <div>
-              <Label htmlFor="phone" className="text-sm text-gray-500 mb-1">Phone Number</Label>
+              <Label htmlFor="phone" className="text-sm text-white/50 mb-1">Phone Number</Label>
               <Input
                 id="phone"
                 value={formData.phone}
@@ -105,27 +105,27 @@ export const ProfileOverview = ({ user, onProfileUpdate }: ProfileOverviewProps)
               />
             </div>
             <div>
-              <Label className="text-sm text-gray-500 mb-1">Account Type</Label>
-              <Input value={user.role} disabled className="mt-1 bg-gray-100 capitalize" />
+              <Label className="text-sm text-white/50 mb-1">Account Type</Label>
+              <Input value={user.role} disabled className="mt-1 bg-white/10 capitalize" />
             </div>
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 gap-6">
             <div>
-              <p className="text-sm text-gray-500 mb-1">Full Name</p>
-              <p className="font-medium text-gray-900">{user.name || 'Not set'}</p>
+              <p className="text-sm text-white/50 mb-1">Full Name</p>
+              <p className="font-medium text-white">{user.name || 'Not set'}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 mb-1">Email Address</p>
-              <p className="font-medium text-gray-900">{user.email}</p>
+              <p className="text-sm text-white/50 mb-1">Email Address</p>
+              <p className="font-medium text-white">{user.email}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 mb-1">Phone Number</p>
-              <p className="font-medium text-gray-900">{user.phone || 'Not set'}</p>
+              <p className="text-sm text-white/50 mb-1">Phone Number</p>
+              <p className="font-medium text-white">{user.phone || 'Not set'}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 mb-1">Account Type</p>
-              <p className="font-medium text-gray-900 capitalize">{user.role}</p>
+              <p className="text-sm text-white/50 mb-1">Account Type</p>
+              <p className="font-medium text-white capitalize">{user.role}</p>
             </div>
           </div>
         )}
@@ -133,22 +133,22 @@ export const ProfileOverview = ({ user, onProfileUpdate }: ProfileOverviewProps)
 
       {/* Quick Links */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
         <div className="grid sm:grid-cols-2 gap-4">
           {quickLinks.map((link, index) => (
             <Link
               key={index}
               to={link.href}
-              className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-[#DD2C6C]/30 hover:bg-[#DD2C6C]/5 transition-all group"
+              className="flex items-center gap-4 p-4 rounded-xl border border-white/10 hover:border-[#DD2C6C]/30 hover:bg-[#DD2C6C]/5 transition-all group"
             >
               <div className="w-12 h-12 rounded-xl bg-[#DD2C6C]/10 flex items-center justify-center group-hover:bg-[#DD2C6C]/20 transition-colors">
                 <link.icon className="w-6 h-6 text-[#DD2C6C]" />
               </div>
               <div className="flex-1">
-                <p className="font-medium text-gray-900">{link.label}</p>
-                <p className="text-sm text-gray-500">{link.desc}</p>
+                <p className="font-medium text-white">{link.label}</p>
+                <p className="text-sm text-white/50">{link.desc}</p>
               </div>
-              <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-[#DD2C6C] transition-colors" />
+              <ChevronRight className="w-5 h-5 text-white/40 group-hover:text-[#DD2C6C] transition-colors" />
             </Link>
           ))}
         </div>

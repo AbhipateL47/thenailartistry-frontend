@@ -13,18 +13,18 @@ interface OrderActionsProps {
 
 export function OrderActions({ order, orderStatus, canCancel, isCancelling, onCancelClick }: OrderActionsProps) {
   return (
-    <div className="bg-white border border-gray-200/60 rounded-xl p-6">
+    <div className="bg-[#111111] border border-white/10 rounded-xl p-4 md:p-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-1">Need Help?</h2>
-          <p className="text-sm text-gray-500">Contact our support team for assistance</p>
+          <h2 className="text-lg font-semibold text-white mb-1">Need Help?</h2>
+          <p className="text-sm text-white/50">Contact our support team for assistance</p>
         </div>
         <div className="flex flex-wrap gap-3 w-full sm:w-auto">
           {canCancel && (
             <Button 
               variant="outline" 
               size="sm" 
-              className="border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700"
+              className="border-red-500/30 text-red-400 hover:bg-red-500/10 hover:text-red-300"
               onClick={onCancelClick}
               disabled={isCancelling}
             >
@@ -44,7 +44,7 @@ export function OrderActions({ order, orderStatus, canCancel, isCancelling, onCa
               </Link>
             </Button>
           )}
-          <Button variant="outline" size="sm" className="border-gray-300" asChild>
+          <Button variant="outline" size="sm" className="border-white/20" asChild>
             <a href={`mailto:support@thenailartistry.store?subject=Order ${order.orderNumber}`}>
               <MessageCircle className="h-4 w-4 mr-2" />
               Contact Support

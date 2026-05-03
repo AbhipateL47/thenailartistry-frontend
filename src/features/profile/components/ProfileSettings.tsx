@@ -98,26 +98,26 @@ export const ProfileSettings = () => {
   return (
     <div className="animate-fade-in">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900">Settings</h2>
-        <p className="text-gray-500 mt-1">Manage your account security and preferences</p>
+        <h2 className="text-2xl font-bold text-white">Settings</h2>
+        <p className="text-white/50 mt-1">Manage your account security and preferences</p>
       </div>
 
       <div className="space-y-8">
         {/* Change Password Section */}
-        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-          <div className="p-6 border-b border-gray-100 bg-gray-50">
+        <div className="bg-white/5 rounded-2xl border border-white/10 overflow-hidden">
+          <div className="p-4 md:p-6 border-b border-white/10">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-[#DD2C6C]/10 flex items-center justify-center">
                 <Lock className="w-5 h-5 text-[#DD2C6C]" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">Change Password</h3>
-                <p className="text-sm text-gray-500">Update your password regularly for security</p>
+                <h3 className="font-semibold text-white">Change Password</h3>
+                <p className="text-sm text-white/50">Update your password regularly for security</p>
               </div>
             </div>
           </div>
           
-          <div className="p-6 space-y-5">
+          <div className="p-4 md:p-6 space-y-4">
             <div className="space-y-2">
               <Label htmlFor="currentPassword">Current Password</Label>
               <div className="relative">
@@ -134,7 +134,7 @@ export const ProfileSettings = () => {
                 <button
                   type="button"
                   onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70"
                 >
                   {showCurrentPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -157,7 +157,7 @@ export const ProfileSettings = () => {
                 <button
                   type="button"
                   onClick={() => setShowNewPassword(!showNewPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70"
                 >
                   {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -180,7 +180,7 @@ export const ProfileSettings = () => {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70"
                 >
                   {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -189,14 +189,14 @@ export const ProfileSettings = () => {
 
             {/* Password Requirements */}
             {passwordData.newPassword && (
-              <div className="p-4 bg-gray-50 rounded-xl space-y-2">
-                <p className="text-sm font-medium text-gray-700 mb-2">Password Requirements</p>
+              <div className="p-4 bg-white/5 rounded-xl space-y-2">
+                <p className="text-sm font-medium text-white/70 mb-2">Password Requirements</p>
                 {passwordRequirements.map((req, index) => (
                   <div
                     key={index}
                     className={cn(
                       'flex items-center gap-2 text-sm',
-                      req.met ? 'text-green-600' : 'text-gray-400'
+                      req.met ? 'text-green-400' : 'text-white/30'
                     )}
                   >
                     <Check className={cn('w-4 h-4', req.met ? 'opacity-100' : 'opacity-30')} />
@@ -227,24 +227,24 @@ export const ProfileSettings = () => {
         </div>
 
         {/* Account Actions */}
-        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-          <div className="p-6 border-b border-gray-100 bg-gray-50">
+        <div className="bg-[#111111] rounded-2xl border border-white/10 overflow-hidden">
+          <div className="p-6 border-b border-white/10 bg-white/5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
-                <AlertTriangle className="w-5 h-5 text-red-500" />
+              <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center">
+                <AlertTriangle className="w-5 h-5 text-red-400" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">Account Actions</h3>
-                <p className="text-sm text-gray-500">Manage your account access</p>
+                <h3 className="font-semibold text-white">Account Actions</h3>
+                <p className="text-sm text-white/50">Manage your account access</p>
               </div>
             </div>
           </div>
           
-          <div className="p-6 space-y-4">
-            <div className="flex items-center justify-between p-4 bg-red-50 rounded-xl border border-red-100">
+          <div className="p-4 md:p-6 space-y-4">
+            <div className="flex items-center justify-between p-4 bg-red-500/10 rounded-xl border border-red-500/20">
               <div>
-                <p className="font-medium text-red-900">Sign Out</p>
-                <p className="text-sm text-red-700">Sign out from your account on this device</p>
+                <p className="font-medium text-red-400">Sign Out</p>
+                <p className="text-sm text-red-400/70">Sign out from your account on this device</p>
               </div>
               <Button
                 variant="destructive"
@@ -256,10 +256,10 @@ export const ProfileSettings = () => {
               </Button>
             </div>
 
-            <div className="flex items-center justify-between p-4 bg-red-50 rounded-xl border border-red-200">
+            <div className="flex items-center justify-between p-4 bg-red-500/10 rounded-xl border border-red-500/20">
               <div>
-                <p className="font-medium text-red-900">Delete Account</p>
-                <p className="text-sm text-red-700">Permanently delete your account and all data</p>
+                <p className="font-medium text-red-400">Delete Account</p>
+                <p className="text-sm text-red-400/70">Permanently delete your account and all data</p>
               </div>
               <Button
                 variant="destructive"
@@ -317,7 +317,7 @@ export const ProfileSettings = () => {
                 <button
                   type="button"
                   onClick={() => setShowDeletePassword(!showDeletePassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70"
                 >
                   {showDeletePassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>

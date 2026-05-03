@@ -28,7 +28,7 @@ export const ShopDropdown = ({ isOpen, onMouseEnter, onMouseLeave, onLinkClick }
 
   return (
     <div
-      className="absolute top-full left-0 mt-0 w-[860px] max-w-[calc(100vw-2rem)] bg-[#0D0D0D] border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)] rounded-2xl overflow-hidden z-50"
+      className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[860px] max-w-[calc(100vw-2rem)] bg-[#0D0D0D] border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)] rounded-2xl overflow-hidden z-50"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >

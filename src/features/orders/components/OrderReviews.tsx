@@ -14,9 +14,9 @@ export function OrderReviews({ order, isDelivered, userReviews, onReviewClick }:
   if (!isDelivered || !order.items || order.items.length === 0) return null;
 
   return (
-    <div className="bg-white border border-gray-200/60 rounded-xl p-6 md:p-8">
-      <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
-        <Star className="h-5 w-5 text-gray-500" />
+    <div className="bg-[#111111] border border-white/10 rounded-xl p-4 md:p-8">
+      <h2 className="text-lg md:text-xl font-semibold text-white mb-4 md:mb-6 flex items-center gap-2">
+        <Star className="h-5 w-5 text-white/50" />
         Rate Your Purchase
       </h2>
       <div className="space-y-4">
@@ -26,7 +26,7 @@ export function OrderReviews({ order, isDelivered, userReviews, onReviewClick }:
           const hasReviewed = !!existingReview;
 
           return (
-            <div key={productId || index} className="flex items-center justify-between p-4 border border-gray-200/60 rounded-lg hover:border-gray-300 transition-colors">
+            <div key={productId || index} className="flex items-center justify-between p-4 border border-white/10 rounded-lg hover:border-white/20 transition-colors">
               <div className="flex items-center gap-4 flex-1 min-w-0">
                 <img
                   src={item.image || '/placeholder-product.jpg'}
@@ -37,7 +37,7 @@ export function OrderReviews({ order, isDelivered, userReviews, onReviewClick }:
                   }}
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-gray-900 truncate">{item.title || 'Product'}</p>
+                  <p className="font-medium text-white truncate">{item.title || 'Product'}</p>
                   {hasReviewed && existingReview && (
                     <div className="mt-1.5 space-y-1">
                       <div className="flex items-center gap-1">
@@ -47,14 +47,14 @@ export function OrderReviews({ order, isDelivered, userReviews, onReviewClick }:
                             className={`h-3.5 w-3.5 ${
                               i < existingReview.rating
                                 ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300'
+                                : 'text-white/20'
                             }`}
                           />
                         ))}
-                        <span className="text-xs text-gray-500 ml-1.5">Reviewed</span>
+                        <span className="text-xs text-white/50 ml-1.5">Reviewed</span>
                       </div>
                       {existingReview.body && (
-                        <p className="text-xs text-gray-600 line-clamp-2">{existingReview.body}</p>
+                        <p className="text-xs text-white/60 line-clamp-2">{existingReview.body}</p>
                       )}
                     </div>
                   )}
@@ -63,7 +63,7 @@ export function OrderReviews({ order, isDelivered, userReviews, onReviewClick }:
               <Button
                 variant={hasReviewed ? 'outline' : 'default'}
                 size="sm"
-                className={hasReviewed ? 'border-gray-300' : 'bg-[#DD2C6C] hover:bg-[#c4245f] text-white'}
+                className={hasReviewed ? 'border-white/20' : 'bg-[#DD2C6C] hover:bg-[#c4245f] text-white'}
                 onClick={() => onReviewClick(productId)}
               >
                 {hasReviewed ? 'Edit Review' : 'Write Review'}

@@ -10,10 +10,10 @@ interface OrderTimelineProps {
 
 export function OrderTimeline({ order, currentStatusIndex, isCancelled }: OrderTimelineProps) {
   return (
-    <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-200/60 rounded-xl p-6 md:p-8">
+    <div className="bg-[#111111] border border-white/10 rounded-xl p-4 md:p-8">
       {isCancelled && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <div className="flex items-center gap-2 text-red-800">
+        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+          <div className="flex items-center gap-2 text-red-400">
             <XCircle className="h-5 w-5" />
             <p className="font-semibold">This order has been cancelled</p>
           </div>
@@ -23,7 +23,7 @@ export function OrderTimeline({ order, currentStatusIndex, isCancelled }: OrderT
       <div className="hidden md:block">
         <div className="relative">
           {/* Progress line */}
-          <div className="absolute top-8 left-0 right-0 h-0.5 bg-gray-200">
+          <div className="absolute top-8 left-0 right-0 h-0.5 bg-white/10">
             <div 
               className={`h-full transition-all duration-500 ${
                 isCancelled ? 'bg-red-300' : 'bg-gradient-to-r from-[#DD2C6C] to-[#c4245f]'
@@ -54,18 +54,18 @@ export function OrderTimeline({ order, currentStatusIndex, isCancelled }: OrderT
                           : isCancelled
                             ? 'bg-red-300 text-white shadow-md'
                             : 'bg-green-500 text-white shadow-md'
-                        : 'bg-gray-200 text-gray-400'
+                        : 'bg-white/10 text-white/30'
                     }`}
                   >
                     <StepIcon className="h-7 w-7" />
                   </div>
                   <p
                     className={`text-sm font-semibold text-center ${
-                      isCompleted 
-                        ? isCurrent 
-                          ? 'text-[#DD2C6C]' 
-                          : 'text-gray-700'
-                        : 'text-gray-400'
+                      isCompleted
+                        ? isCurrent
+                          ? 'text-[#DD2C6C]'
+                          : 'text-white/70'
+                        : 'text-white/30'
                     }`}
                   >
                     {step.label}
@@ -81,7 +81,7 @@ export function OrderTimeline({ order, currentStatusIndex, isCancelled }: OrderT
       <div className="md:hidden">
         <div className="relative">
           {/* Timeline line */}
-          <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200">
+          <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-white/10">
             <div 
               className={`w-full transition-all duration-500 ${
                 isCancelled ? 'bg-red-300' : 'bg-gradient-to-b from-[#DD2C6C] to-[#c4245f]'
@@ -112,7 +112,7 @@ export function OrderTimeline({ order, currentStatusIndex, isCancelled }: OrderT
                           : isCancelled
                             ? 'bg-red-300 text-white'
                             : 'bg-green-500 text-white'
-                        : 'bg-gray-200 text-gray-400'
+                        : 'bg-white/10 text-white/30'
                     }`}
                   >
                     <StepIcon className="h-5 w-5" />
@@ -120,11 +120,11 @@ export function OrderTimeline({ order, currentStatusIndex, isCancelled }: OrderT
                   <div className="flex-1 pt-1.5">
                     <p
                       className={`font-semibold ${
-                        isCompleted 
-                          ? isCurrent 
-                            ? 'text-primary' 
-                            : 'text-gray-900'
-                          : 'text-gray-400'
+                        isCompleted
+                          ? isCurrent
+                            ? 'text-[#DD2C6C]'
+                            : 'text-white'
+                          : 'text-white/30'
                       }`}
                     >
                       {step.label}

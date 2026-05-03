@@ -8,15 +8,15 @@ interface OrderItemsProps {
 
 export function OrderItems({ order }: OrderItemsProps) {
   return (
-    <div className="bg-white border border-gray-200/60 rounded-xl p-6 md:p-8">
-      <h2 className="text-xl font-semibold text-gray-900 mb-6">Items Purchased</h2>
+    <div className="bg-[#111111] border border-white/10 rounded-xl p-4 md:p-8">
+      <h2 className="text-lg md:text-xl font-semibold text-white mb-4 md:mb-6">Items Purchased</h2>
       {order.items && order.items.length > 0 ? (
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           {order.items.map((item: any, index: number) => {
             const productId = item.productId;
 
             return (
-              <div key={item.productId || index} className={`flex gap-5 ${index < order.items.length - 1 ? 'pb-6 border-b border-gray-100' : ''}`}>
+              <div key={item.productId || index} className={`flex gap-3 md:gap-5 ${index < order.items.length - 1 ? 'pb-4 md:pb-6 border-b border-white/10' : ''}`}>
                 <Link
                   to={`/products/${productId}`}
                   target="_blank"
@@ -25,7 +25,7 @@ export function OrderItems({ order }: OrderItemsProps) {
                   <img
                     src={item.image || '/placeholder-product.jpg'}
                     alt={item.title || 'Product'}
-                    className="w-24 h-24 md:w-32 md:h-32 rounded-lg object-cover hover:opacity-90 transition-opacity shadow-sm"
+                    className="w-20 h-20 md:w-28 md:h-28 rounded-lg object-cover hover:opacity-90 transition-opacity shadow-sm"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/placeholder-product.jpg';
                     }}
@@ -36,20 +36,20 @@ export function OrderItems({ order }: OrderItemsProps) {
                     <Link
                       to={`/products/${productId}`}
                       target="_blank"
-                      className="font-semibold text-lg text-gray-900 hover:text-primary transition-colors block mb-1.5"
+                      className="font-semibold text-base md:text-lg text-white hover:text-[#DD2C6C] transition-colors block mb-1"
                     >
                       {item.title || 'Product'}
                     </Link>
                     {item.variantSku && (
-                      <p className="text-sm text-gray-500 mb-3">
+                      <p className="text-sm text-white/50 mb-3">
                         {item.variantSku}
                       </p>
                     )}
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-white/50">
                       Quantity: {item.qty || item.quantity || 1} × {formatCurrency(item.unitPrice || item.price || 0)}
                     </p>
                   </div>
-                  <p className="font-semibold text-lg text-gray-900 mt-2">
+                  <p className="font-semibold text-lg text-white mt-2">
                     {formatCurrency(item.totalPrice || ((item.unitPrice || item.price || 0) * (item.qty || item.quantity || 1)))}
                   </p>
                 </div>
@@ -58,7 +58,7 @@ export function OrderItems({ order }: OrderItemsProps) {
           })}
         </div>
       ) : (
-        <p className="text-sm text-gray-500">No items found in this order.</p>
+        <p className="text-sm text-white/50">No items found in this order.</p>
       )}
     </div>
   );

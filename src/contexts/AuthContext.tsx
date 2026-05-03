@@ -10,7 +10,8 @@ interface AuthContextType {
   register: (credentials: RegisterCredentials) => Promise<boolean>;
   logout: () => void;
   refreshUser: () => Promise<void>;
-  updateWishlistCount: (delta: number) => void; // Update count locally without API call
+  updateWishlistCount: (delta: number) => void;
+  setWishlistCount: (count: number) => void;
   isLoginModalOpen: boolean;
   openLoginModal: () => void;
   closeLoginModal: () => void;
@@ -109,7 +110,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Update wishlistCount locally without API call
   const updateWishlistCount = (delta: number) => {
     setUser((prevUser) => {
       if (!prevUser) return prevUser;
@@ -117,6 +117,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         ...prevUser,
         wishlistCount: Math.max(0, (prevUser.wishlistCount || 0) + delta),
       };
+    });
+  };
+
+  const setWishlistCount = (count: number) => {
+    setUser((prevUser) => {
+      if (!prevUser) return prevUser;
+      return { ...prevUser, wishlistCount: Math.max(0, count) };
     });
   };
 
@@ -139,6 +146,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         logout,
         refreshUser,
         updateWishlistCount,
+        setWishlistCount,
         isLoginModalOpen,
         openLoginModal,
         closeLoginModal,

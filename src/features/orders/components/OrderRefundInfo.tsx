@@ -11,14 +11,14 @@ export function OrderRefundInfo({ order, orderStatus }: OrderRefundInfoProps) {
   if (orderStatus !== 'CANCELLED' || !order.refundStatus) return null;
 
   return (
-    <div className="bg-white border border-gray-200/60 rounded-xl p-6 md:p-8">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-        <RotateCcw className="h-5 w-5 text-gray-500" />
+    <div className="bg-[#111111] border border-white/10 rounded-xl p-4 md:p-8">
+      <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <RotateCcw className="h-5 w-5 text-white/50" />
         Refund Information
       </h2>
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-600">Refund Status</span>
+          <span className="text-sm text-white/60">Refund Status</span>
           <Badge 
             variant="outline" 
             className={`${
@@ -37,10 +37,10 @@ export function OrderRefundInfo({ order, orderStatus }: OrderRefundInfoProps) {
             {order.refundStatus === 'FAILED' && 'Refund failed'}
           </Badge>
         </div>
-        <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+        <div className="mt-4 p-4 bg-white/5 border border-white/10 rounded-lg">
           <div className="flex items-start gap-2">
-            <AlertCircle className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
-            <p className="text-sm text-gray-600">
+            <AlertCircle className="h-4 w-4 text-white/40 mt-0.5 flex-shrink-0" />
+            <p className="text-sm text-white/60">
               Refunds may take 5–7 business days to reflect in your account.
             </p>
           </div>

@@ -109,37 +109,37 @@ export const ProfileNotifications = () => {
   return (
     <div className="animate-fade-in">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900">Notifications</h2>
-        <p className="text-gray-500 mt-1">Manage your notification preferences</p>
+        <h2 className="text-2xl font-bold text-white">Notifications</h2>
+        <p className="text-white/50 mt-1">Manage your notification preferences</p>
       </div>
 
       <div className="space-y-10">
         {sections.map((section) => (
           <div key={section.title}>
             <div className="mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">{section.title}</h3>
-              <p className="text-sm text-gray-500">{section.description}</p>
+              <h3 className="text-lg font-semibold text-white">{section.title}</h3>
+              <p className="text-sm text-white/50">{section.description}</p>
             </div>
             <div className="space-y-3">
               {section.items.map((item) => (
                 <div
                   key={item.key}
                   className={cn(
-                    'flex items-center justify-between p-5 rounded-2xl border-2 transition-all',
+                    'flex items-center justify-between gap-3 p-4 rounded-xl border-2 transition-all',
                     prefs[item.key]
                       ? 'border-[#DD2C6C]/30 bg-[#DD2C6C]/5'
-                      : 'border-gray-200 bg-white hover:border-gray-300'
+                      : 'border-white/10 bg-transparent hover:border-white/20'
                   )}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className={cn('w-12 h-12 rounded-xl flex items-center justify-center', item.color)}>
-                      <item.icon className="w-6 h-6 text-white" />
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0', item.color)}>
+                      <item.icon className="w-4 h-4 text-white" />
                     </div>
-                    <div>
-                      <Label htmlFor={item.key} className="cursor-pointer font-semibold text-gray-900">
+                    <div className="min-w-0">
+                      <Label htmlFor={item.key} className="cursor-pointer font-semibold text-white text-sm">
                         {item.label}
                       </Label>
-                      <p className="text-sm text-gray-500 mt-0.5">{item.description}</p>
+                      <p className="text-xs text-white/50 mt-0.5 truncate">{item.description}</p>
                     </div>
                   </div>
                   <Switch
@@ -157,12 +157,12 @@ export const ProfileNotifications = () => {
       </div>
 
       {/* Info Note */}
-      <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-100">
+      <div className="mt-8 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
         <div className="flex items-start gap-3">
-          <Bell className="w-5 h-5 text-blue-600 mt-0.5" />
+          <Bell className="w-5 h-5 text-blue-400 mt-0.5" />
           <div>
-            <p className="font-medium text-blue-900">Stay in the loop</p>
-            <p className="text-sm text-blue-700 mt-1">
+            <p className="font-medium text-blue-300">Stay in the loop</p>
+            <p className="text-sm text-blue-400/80 mt-1">
               We'll only send you notifications that matter. You can change these settings anytime.
             </p>
           </div>

@@ -16,24 +16,24 @@ export function OrderHeader({ order, copiedOrderNumber, onCopyOrderNumber }: Ord
   const StatusIcon = statusInfo.icon;
 
   return (
-    <div className="bg-white border-b border-gray-200 pb-5">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Order #{order.orderNumber}</h1>
+    <div className="border-b border-white/10 pb-4 md:pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+            <h1 className="text-lg md:text-2xl font-semibold text-white">Order #{order.orderNumber}</h1>
             <button
               onClick={onCopyOrderNumber}
-              className="p-1.5 rounded-md hover:bg-gray-100 transition-colors text-gray-400 hover:text-gray-600"
+              className="p-1.5 rounded-md hover:bg-white/10 transition-colors text-white/40 hover:text-white/70 flex-shrink-0"
               title="Copy order number"
             >
               {copiedOrderNumber ? (
-                <Check className="h-4 w-4 text-green-600" />
+                <Check className="h-4 w-4 text-green-400" />
               ) : (
                 <Copy className="h-4 w-4" />
               )}
             </button>
           </div>
-          <div className="flex items-center gap-4 text-sm text-gray-500">
+          <div className="flex items-center gap-2 text-xs md:text-sm text-white/40">
             <div className="flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />
               <span>

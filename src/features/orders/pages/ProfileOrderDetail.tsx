@@ -196,13 +196,13 @@ export default function ProfileOrderDetail() {
     switch (status?.toLowerCase()) {
       case 'paid':
       case 'success':
-        return 'text-green-600';
+        return 'text-green-400';
       case 'failed':
-        return 'text-red-600';
+        return 'text-red-400';
       case 'pending':
-        return 'text-yellow-600';
+        return 'text-yellow-400';
       default:
-        return 'text-gray-600';
+        return 'text-white/50';
     }
   };
 
@@ -249,7 +249,7 @@ export default function ProfileOrderDetail() {
         { label: `Order ${order.orderNumber}` }
       ]} />
 
-      <div className="max-w-5xl mx-auto space-y-8">
+      <div className="max-w-5xl mx-auto space-y-4 md:space-y-8">
         <OrderHeader 
           order={order} 
           copiedOrderNumber={copiedOrderNumber}
@@ -303,7 +303,7 @@ export default function ProfileOrderDetail() {
 
         {/* Back Button */}
         <div className="flex justify-center pt-4">
-          <Button variant="ghost" onClick={() => navigate('/profile/orders')} className="text-gray-600 hover:text-gray-900">
+          <Button variant="ghost" onClick={() => navigate('/profile/orders')} className="text-white/50 hover:text-white">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Orders
           </Button>

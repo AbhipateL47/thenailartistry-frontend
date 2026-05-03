@@ -19,7 +19,7 @@ interface WishlistContextType {
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
 export const WishlistProvider = ({ children }: { children: ReactNode }) => {
-  const { user, isAuthenticated, updateWishlistCount } = useAuth();
+  const { user, isAuthenticated, updateWishlistCount, setWishlistCount } = useAuth();
 
   // Simple state for wishlist - no cache, just plain state
   const [wishlist, setWishlist] = useState<Product[]>([]);
@@ -43,15 +43,15 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
   // Use API wishlist if authenticated, otherwise use guest wishlist
   const currentWishlist = isAuthenticated ? wishlist : guestWishlist;
 
-  // Function to manually fetch wishlist (called from Wishlist page or on auth)
   const fetchWishlist = async () => {
     if (isAuthenticated && user?.id) {
       setIsLoading(true);
       try {
-        // Simple fetch - no cache, just get data and set it
         const data = await wishlistService.getWishlist();
         setWishlist(data);
         setHasFetched(true);
+        // Sync badge count to the real server count — resets any accumulated drift
+        setWishlistCount(data.length);
       } catch (error) {
         console.error('Failed to fetch wishlist:', error);
         setWishlist([]);
@@ -59,7 +59,6 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(false);
       }
     }
-    // Guest users don't need fetch as they use localStorage
   };
 
   // Fetch wishlist when user becomes authenticated (for product pages to show correct wishlist state)
@@ -103,21 +102,16 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
     },
   });
 
-  // Toggle wishlist mutation - only make toggle API call, update count locally
   const toggleMutation = useMutation({
-    mutationFn: ({ productId, product }: { productId: string; product: Product }) => 
+    mutationFn: ({ productId, product }: { productId: string; product: Product }) =>
       wishlistService.toggleWishlist(productId),
     onSuccess: (data, { productId, product }) => {
-      // Check if it was added or removed based on current state
-      const isCurrentlyInWishlist = wishlist.some(p => p._id === productId);
-      
-      if (isCurrentlyInWishlist) {
-        // Was removed - filter it out
+      // Use the server's response to determine what happened — don't guess from local state
+      if (data.action === 'removed') {
         setWishlist((old) => old.filter(p => p._id !== productId));
         updateWishlistCount(-1);
       } else {
-        // Was added - add to state so icon updates immediately
-        setWishlist((old) => [...old, product]);
+        setWishlist((old) => old.some(p => p._id === productId) ? old : [...old, product]);
         updateWishlistCount(1);
       }
       toast.success(data.message);

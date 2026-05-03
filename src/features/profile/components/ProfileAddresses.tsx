@@ -133,7 +133,7 @@ export const ProfileAddresses = () => {
   return (
     <div className="animate-fade-in">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">My Addresses</h2>
+        <h2 className="text-2xl font-bold text-white">My Addresses</h2>
         <Button onClick={handleAdd} className="bg-[#DD2C6C] hover:bg-[#c4245f] gap-2">
           <Plus className="w-4 h-4" />
           Add Address
@@ -145,8 +145,8 @@ export const ProfileAddresses = () => {
           <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-[#DD2C6C]/10 to-[#DD2C6C]/5 rounded-full flex items-center justify-center">
             <MapPin className="w-12 h-12 text-[#DD2C6C]" />
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">No addresses saved</h3>
-          <p className="text-gray-500 mb-6">Add your first address for faster checkout</p>
+          <h3 className="text-xl font-semibold text-white mb-2">No addresses saved</h3>
+          <p className="text-white/50 mb-6">Add your first address for faster checkout</p>
           <Button onClick={handleAdd} className="bg-[#DD2C6C] hover:bg-[#c4245f]">
             Add Your First Address
           </Button>
@@ -163,7 +163,7 @@ export const ProfileAddresses = () => {
                   'relative p-5 rounded-2xl border-2 transition-all',
                   address.isDefault
                     ? 'border-[#DD2C6C] bg-[#DD2C6C]/5'
-                    : 'border-gray-200 hover:border-gray-300 bg-white'
+                    : 'border-white/10 hover:border-white/20 bg-[#0D0D0D]'
                 )}
               >
                 {address.isDefault && (
@@ -175,12 +175,12 @@ export const ProfileAddresses = () => {
 
                 <div className="flex items-start justify-between mb-4 mt-1">
                   <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
-                      <LabelIcon className="w-5 h-5 text-gray-600" />
+                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                      <LabelIcon className="w-5 h-5 text-white/60" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900">{address.label}</h4>
-                      <p className="text-sm text-gray-500">{address.name}</p>
+                      <h4 className="font-semibold text-white">{address.label}</h4>
+                      <p className="text-sm text-white/50">{address.name}</p>
                     </div>
                   </div>
                   <div className="flex gap-1">
@@ -203,11 +203,11 @@ export const ProfileAddresses = () => {
                   </div>
                 </div>
 
-                <div className="space-y-1 text-sm text-gray-600">
+                <div className="space-y-1 text-sm text-white/60">
                   <p>{address.line1}</p>
                   {address.line2 && <p>{address.line2}</p>}
                   <p>{address.city}, {address.state} {address.postalCode}</p>
-                  {address.phone && <p className="text-gray-500 mt-2">📞 {address.phone}</p>}
+                  {address.phone && <p className="text-white/50 mt-2">📞 {address.phone}</p>}
                 </div>
               </div>
             );
@@ -217,7 +217,7 @@ export const ProfileAddresses = () => {
 
       {/* Add/Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-lg max-h-[90dvh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-xl">
               {editingAddress ? 'Edit Address' : 'Add New Address'}
@@ -237,7 +237,7 @@ export const ProfileAddresses = () => {
                       'flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-all',
                       formData.label === label.value
                         ? 'border-[#DD2C6C] bg-[#DD2C6C]/10 text-[#DD2C6C]'
-                        : 'border-gray-200 hover:border-gray-300'
+                        : 'border-white/15 text-white/60 hover:border-white/30'
                     )}
                   >
                     <label.icon className="w-4 h-4" />
