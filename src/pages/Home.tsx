@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { HeroSection } from '@/features/home/components/HeroSectionV5';
 import { SaleBannerSection } from '@/features/home/components/SaleBannerSection';
 import { FeaturesSection } from '@/features/home/components/FeaturesSection';
@@ -59,9 +59,6 @@ export default function Home() {
   usePageTitle('The Nail Artistry - Premium Press-On Nails | Reusable & Salon Quality');
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
-  useEffect(() => {
-    console.log('📄 Home Page Loaded');
-  }, []);
 
   const { data: featuredProducts = [], isLoading: isLoadingFeatured } = useQuery({
     queryKey: ['featuredProducts'],

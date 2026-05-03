@@ -83,7 +83,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       userIdRef.current = user.id;
 
       try {
-        console.log('🔄 [CART LOAD] Loading cart from backend...');
         const response = await cartService.getCart();
         if (response.success && response.data.items) {
           // Convert backend format to frontend format
@@ -97,7 +96,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             quantity: item.quantity,
             variantSku: item.variantSku,
           }));
-          console.log('✅ [CART LOAD] Loaded', backendItems.length, 'items from backend');
           setItems(backendItems);
           // Also save to localStorage for consistency
           localStorage.setItem('cart', JSON.stringify(backendItems));

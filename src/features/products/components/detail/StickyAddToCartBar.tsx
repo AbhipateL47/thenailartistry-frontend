@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ShoppingBag } from 'lucide-react';
+import { ShoppingBag, Minus, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/shared/utils/formatCurrency';
 import { Product, productService } from '@/features/products/services/product.service';
@@ -12,7 +12,7 @@ interface StickyAddToCartBarProps {
 
 export const StickyAddToCartBar = ({ product }: StickyAddToCartBarProps) => {
   const [isVisible, setIsVisible] = useState(false);
-  const { addItem, openDrawer } = useCart();
+  const { addItem, items, updateQuantity, removeItem } = useCart();
 
   const basePrice = productService.getLowestPrice(product);
   const isOnSale = product.isOnSale === true && typeof product.salePercent === 'number' && product.salePercent > 0;
@@ -20,6 +20,9 @@ export const StickyAddToCartBar = ({ product }: StickyAddToCartBarProps) => {
     ? Math.round(basePrice - (basePrice * product.salePercent) / 100)
     : basePrice;
   const inStock = productService.isInStock(product);
+
+  const cartItem = items.find((i) => i.productId === product._id);
+  const qty = cartItem?.quantity ?? 0;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,14 +41,27 @@ export const StickyAddToCartBar = ({ product }: StickyAddToCartBarProps) => {
       price: finalPrice,
       image: product.primaryImage,
       quantity: 1,
-      variant: 'Both Hands',
     });
-    openDrawer();
+  };
+
+  const handleIncrease = () => {
+    if (cartItem) {
+      updateQuantity(cartItem.id, qty + 1);
+    }
+  };
+
+  const handleDecrease = () => {
+    if (!cartItem) return;
+    if (qty <= 1) {
+      removeItem(cartItem.id);
+    } else {
+      updateQuantity(cartItem.id, qty - 1);
+    }
   };
 
   return (
     <div className={cn(
-      "fixed bottom-0 left-0 right-0 bg-[#111111] border-t border-white/10 shadow-2xl z-50 md:hidden transition-transform duration-300",
+      "fixed bottom-16 left-0 right-0 bg-[#111111] border-t border-white/10 shadow-2xl z-[39] md:hidden transition-transform duration-300",
       isVisible ? "translate-y-0" : "translate-y-full"
     )}>
       <div className="container mx-auto px-4 py-3">
@@ -70,14 +86,32 @@ export const StickyAddToCartBar = ({ product }: StickyAddToCartBarProps) => {
             </div>
           </div>
 
-          <Button
-            onClick={handleAddToCart}
-            disabled={!inStock}
-            className="bg-[#DD2C6C] hover:bg-[#c02560] text-white flex-shrink-0 shadow-lg shadow-[#DD2C6C]/20"
-          >
-            <ShoppingBag className="h-4 w-4 mr-2" />
-            ADD TO CART
-          </Button>
+          {qty > 0 ? (
+            <div className="flex items-center gap-1 flex-shrink-0">
+              <button
+                onClick={handleDecrease}
+                className="w-9 h-9 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white hover:bg-[#DD2C6C] hover:border-[#DD2C6C] transition-colors"
+              >
+                <Minus className="h-3.5 w-3.5" />
+              </button>
+              <span className="w-8 text-center text-white font-bold text-sm">{qty}</span>
+              <button
+                onClick={handleIncrease}
+                className="w-9 h-9 rounded-full bg-[#DD2C6C] border border-[#DD2C6C] flex items-center justify-center text-white hover:bg-[#c02560] transition-colors"
+              >
+                <Plus className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ) : (
+            <Button
+              onClick={handleAddToCart}
+              disabled={!inStock}
+              className="bg-[#DD2C6C] hover:bg-[#c02560] text-white flex-shrink-0 shadow-lg shadow-[#DD2C6C]/20"
+            >
+              <ShoppingBag className="h-4 w-4 mr-2" />
+              ADD TO CART
+            </Button>
+          )}
         </div>
       </div>
     </div>

@@ -130,9 +130,8 @@ export const OTPLoginModal = ({ isOpen, onClose, onSuccess }: OTPLoginModalProps
             isEmail ? identifier : undefined,
             isPhone ? identifier : undefined
           );
-        } catch (linkError) {
-          // Non-critical error, just log it
-          console.log('Could not link guest orders:', linkError);
+        } catch {
+          // Non-critical — guest order linking is best-effort
         }
         
         // Don't sync cart here - just keep the guest cart visible

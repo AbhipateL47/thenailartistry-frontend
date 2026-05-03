@@ -76,10 +76,10 @@ export const SaleBannerSection = () => {
   const currentSale = activeSales[currentIndex];
 
   return (
-    <section className="py-12 md:py-16 bg-gradient-to-br from-[#FDF8F8] to-white">
+    <section className="py-12 md:py-16 bg-[#0D0D0D]">
       <div className="container mx-auto px-4 md:px-5 relative">
         {isLoading ? (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 md:p-12">
+          <div className="bg-[#111111] rounded-2xl border border-white/10 p-8 md:p-12">
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div className="space-y-4">
                 <Skeleton className="h-8 w-3/4" />
@@ -101,13 +101,13 @@ export const SaleBannerSection = () => {
                   onClick={goToPrevious}
                   className={cn(
                     "absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-8 z-10",
-                    "h-10 w-10 md:h-12 md:w-12 rounded-full bg-white shadow-lg border border-gray-200",
-                    "hover:bg-gray-50 hover:shadow-xl transition-all",
+                    "h-10 w-10 md:h-12 md:w-12 rounded-full bg-white/10 border border-white/15",
+                    "hover:bg-[#DD2C6C] hover:border-[#DD2C6C] transition-all",
                     "hidden md:flex items-center justify-center"
                   )}
                   aria-label="Previous sale"
                 >
-                  <ChevronLeft className="h-5 w-5 md:h-6 md:w-6 text-gray-700" />
+                  <ChevronLeft className="h-5 w-5 md:h-6 md:w-6 text-white" />
                 </Button>
 
                 <Button
@@ -116,13 +116,13 @@ export const SaleBannerSection = () => {
                   onClick={goToNext}
                   className={cn(
                     "absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-8 z-10",
-                    "h-10 w-10 md:h-12 md:w-12 rounded-full bg-white shadow-lg border border-gray-200",
-                    "hover:bg-gray-50 hover:shadow-xl transition-all",
+                    "h-10 w-10 md:h-12 md:w-12 rounded-full bg-white/10 border border-white/15",
+                    "hover:bg-[#DD2C6C] hover:border-[#DD2C6C] transition-all",
                     "hidden md:flex items-center justify-center"
                   )}
                   aria-label="Next sale"
                 >
-                  <ChevronRight className="h-5 w-5 md:h-6 md:w-6 text-gray-700" />
+                  <ChevronRight className="h-5 w-5 md:h-6 md:w-6 text-white" />
                 </Button>
               </>
             )}
@@ -130,7 +130,7 @@ export const SaleBannerSection = () => {
             {/* Carousel Container */}
             <div
               ref={carouselRef}
-              className="relative overflow-hidden rounded-2xl bg-white shadow-sm border border-gray-200"
+              className="relative overflow-hidden rounded-2xl bg-[#111111] border border-white/10"
               onTouchStart={onTouchStart}
               onTouchMove={onTouchMove}
               onTouchEnd={onTouchEnd}
@@ -149,12 +149,12 @@ export const SaleBannerSection = () => {
                     {/* Left Content */}
                     <div className="flex flex-col justify-center space-y-4 md:space-y-6 order-2 md:order-1">
                       {/* Heading */}
-                      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#1a1a1a] leading-tight">
+                      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight">
                         {sale.heading}
                       </h2>
 
                       {/* Description */}
-                      <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+                      <p className="text-white/55 text-sm md:text-base leading-relaxed">
                         {sale.description}
                       </p>
 
@@ -184,7 +184,7 @@ export const SaleBannerSection = () => {
                     {/* Right Image */}
                     {/* TODO: Use banners by device/placement when available (sale.banners) */}
                     <div className="order-1 md:order-2 flex items-center justify-center">
-                      <div className="relative w-full h-48 md:h-64 lg:h-80 rounded-lg overflow-hidden bg-gray-100">
+                      <div className="relative w-full h-48 md:h-64 lg:h-80 rounded-lg overflow-hidden bg-white/5">
                         <img
                           src={sale.image}
                           alt={sale.imageAlt || sale.heading}
@@ -209,7 +209,7 @@ export const SaleBannerSection = () => {
                       "h-2 rounded-full transition-all",
                       index === currentIndex
                         ? "w-8 bg-[#DD2C6C]"
-                        : "w-2 bg-gray-300 hover:bg-gray-400"
+                        : "w-2 bg-white/20 hover:bg-white/40"
                     )}
                     aria-label={`Go to slide ${index + 1}`}
                   />

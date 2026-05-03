@@ -6,7 +6,15 @@
       "Bash(git commit -m ' *)",
       "Bash(npx eslint *)",
       "Bash(npm run *)",
-      "Bash(git checkout *)"
+      "Bash(git checkout *)",
+      "Bash(sed -n '18,23p' /Users/meet/Downloads/thenailartistry-frontend-main/src/features/products/pages/Products.tsx)",
+      "Bash(sed -n '23,28p' /Users/meet/Downloads/thenailartistry-frontend-main/src/features/products/pages/ProductDetail.tsx)",
+      "Bash(sed -n '25,30p' /Users/meet/Downloads/thenailartistry-frontend-main/src/features/cart/pages/Cart.tsx)",
+      "Bash(sed -n '64,69p' /Users/meet/Downloads/thenailartistry-frontend-main/src/features/cart/pages/Checkout.tsx)",
+      "Bash(sed -n '47,60p' /Users/meet/Downloads/thenailartistry-frontend-main/src/features/orders/pages/ProfileOrderDetail.tsx)",
+      "Bash(sed -n '130,140p' /Users/meet/Downloads/thenailartistry-frontend-main/src/features/orders/pages/ProfileOrderDetail.tsx)",
+      "Bash(sed -n '50,65p' /Users/meet/Downloads/thenailartistry-frontend-main/src/features/profile/pages/Profile.tsx)",
+      "Bash(sed -n '118,160p' /Users/meet/Downloads/thenailartistry-frontend-main/src/features/profile/pages/Profile.tsx)"
     ]
   }
 }

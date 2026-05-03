@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, Minus, Plus, Trash2, Sparkles, Tag } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
@@ -24,9 +23,6 @@ export default function Cart() {
     enabled: items.length === 0,
   });
 
-  useEffect(() => {
-    console.log('📄 Cart Page Loaded');
-  }, []);
 
   if (items.length === 0) {
     return (

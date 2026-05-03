@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Heart, Lock, RefreshCw, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,7 +17,6 @@ interface ProductInfoProps {
 }
 
 export const ProductInfo = ({ product }: ProductInfoProps) => {
-  const [selectedVariant, setSelectedVariant] = useState<string>('Both Hands');
   const { addItem, openDrawer } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   
@@ -46,7 +44,6 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
       price: finalPrice,
       image: product.primaryImage,
       quantity: 1,
-      variant: selectedVariant,
     });
     // Toast is handled in CartContext.addItem
     openDrawer();
@@ -104,31 +101,6 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
             {formatCurrency(basePrice)}
           </span>
         )}
-      </div>
-
-      {/* Type Selector */}
-      <div>
-        <label className="text-sm font-medium mb-2 block text-white/70">
-          Type: {selectedVariant}
-        </label>
-        <div className="flex gap-2">
-          {['Both Hands', 'Single Hand'].map((variant) => (
-            <Button
-              key={variant}
-              variant={selectedVariant === variant ? 'default' : 'outline'}
-              onClick={() => setSelectedVariant(variant)}
-              size="sm"
-              className={cn(
-                "text-xs px-4 py-1.5 h-auto",
-                selectedVariant === variant
-                  ? "bg-[#DD2C6C] text-white hover:bg-[#c02560] border-[#DD2C6C]"
-                  : "bg-transparent border-white/20 text-white/70 hover:bg-white/10 hover:text-white"
-              )}
-            >
-              {variant}
-            </Button>
-          ))}
-        </div>
       </div>
 
       {/* Action Buttons */}

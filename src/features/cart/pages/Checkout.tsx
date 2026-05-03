@@ -16,7 +16,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Breadcrumbs } from '@/shared/components/Breadcrumbs';
 import { formatCurrency } from '@/shared/utils/formatCurrency';
 import { Separator } from '@/components/ui/separator';
-import { Loader2, MapPin, Tag, Search, HelpCircle, ShoppingBag, CreditCard, Lock, ExternalLink, ShieldCheck } from 'lucide-react';
+import { Loader2, MapPin, Tag, Search, HelpCircle, ShoppingBag, CreditCard, Lock, ShieldCheck } from 'lucide-react';
 import { toast } from '@/shared/utils/toast';
 import { useForm, Controller } from 'react-hook-form';
 import { usePageTitle } from '@/shared/hooks/usePageTitle';
@@ -62,10 +62,6 @@ export default function Checkout() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const [isCartLoading, setIsCartLoading] = useState(false);
 
-  // Log page load
-  useEffect(() => {
-    console.log('📄 Checkout Page Loaded');
-  }, []);
 
   // After order is placed successfully, sync the cart
   // This ensures any remaining items in guest cart are synced to user's account
@@ -923,7 +919,6 @@ export default function Checkout() {
                       />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-white">{item.name}</p>
-                        <p className="text-xs text-white/40 mt-1">Both Hands</p>
                         <p className="text-sm font-semibold text-white mt-2">
                           {formatCurrency(item.price * item.quantity)}
                         </p>

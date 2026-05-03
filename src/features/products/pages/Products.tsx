@@ -16,10 +16,6 @@ export default function Products() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  // Log page load
-  useEffect(() => {
-    console.log('📄 Products Page Loaded');
-  }, []);
 
   // Products state
   const [products, setProducts] = useState<Product[]>([]);

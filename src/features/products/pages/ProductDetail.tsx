@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { productService } from '@/features/products/services/product.service';
@@ -19,11 +19,8 @@ import { useMetaTags } from '@/shared/hooks/useMetaTags';
 export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>(); // This can be either slug or ID, backend handles both
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [galleryInitialIndex, setGalleryInitialIndex] = useState(0);
 
-  // Log page load
-  useEffect(() => {
-    console.log(`📄 Product Detail Page Loaded - Product Slug: ${slug || 'N/A'}`);
-  }, [slug]);
 
   const { data: product, isLoading } = useQuery({
     queryKey: ['product', slug],
@@ -95,7 +92,7 @@ export default function ProductDetail() {
           <div className="order-1">
             <ProductGallery
               product={product}
-              onFullscreenClick={() => setIsGalleryOpen(true)}
+              onFullscreenClick={(index) => { setGalleryInitialIndex(index); setIsGalleryOpen(true); }}
             />
           </div>
 
@@ -132,6 +129,7 @@ export default function ProductDetail() {
           productName={product.name}
           isOpen={isGalleryOpen}
           onClose={() => setIsGalleryOpen(false)}
+          initialIndex={galleryInitialIndex}
         />
       </div>
 

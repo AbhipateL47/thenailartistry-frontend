@@ -45,10 +45,6 @@ export default function ProfileOrderDetail() {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
 
-  // Log page load
-  useEffect(() => {
-    console.log(`📄 Profile Order Detail Page Loaded - Order: ${orderNumber || 'N/A'}`);
-  }, [orderNumber]);
 
   // Fetch user's reviews for products in this order
   const { data: myReviews } = useQuery({
@@ -132,9 +128,7 @@ export default function ProfileOrderDetail() {
     setIsCancelling(true);
     try {
       // Backend now accepts orderNumber (which is unique) directly
-      console.log('Cancelling order with orderNumber:', order.orderNumber);
       const response = await orderService.cancelOrder(order.orderNumber);
-      console.log('Cancel order response:', response);
       toast.success('Order cancelled successfully');
       setShowCancelModal(false);
       

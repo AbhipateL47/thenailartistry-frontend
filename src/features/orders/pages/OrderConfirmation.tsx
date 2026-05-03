@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import { CheckCircle, Package, Truck, MapPin, Phone, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Breadcrumbs } from '@/shared/components/Breadcrumbs';
@@ -14,17 +14,12 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export default function OrderConfirmation() {
   const { orderNumber } = useParams<{ orderNumber: string }>();
-  const navigate = useNavigate();
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState('');
 
-  // Log page load
-  useEffect(() => {
-    console.log(`📄 Order Confirmation Page Loaded - Order: ${orderNumber || 'N/A'}`);
-  }, [orderNumber]);
 
   // Handle email submission for guest orders
   const handleEmailSubmit = async () => {
@@ -71,7 +66,7 @@ export default function OrderConfirmation() {
         // If 403 or 404, user needs to provide email (for guest orders)
         if (error.response?.status === 403 || error.response?.status === 404) {
           // Will show email input form
-          console.log('Order fetch failed, will show email input:', error.response?.data?.message);
+          // Guest order — will show email input form
         } else {
           toast.error(error.response?.data?.message || 'Failed to load order');
         }
@@ -89,18 +84,6 @@ export default function OrderConfirmation() {
   // Update page title
   usePageTitle(orderData?.orderNumber ? `Order Confirmed - ${orderData.orderNumber}` : 'Order Confirmation');
 
-  // Debug: Log order data to help diagnose issues
-  useEffect(() => {
-    if (orderData) {
-      console.log('Order data loaded:', {
-        orderNumber: orderData.orderNumber,
-        hasItems: !!orderData.items?.length,
-        hasShippingAddress: !!orderData.shippingAddress,
-        status: orderData.status,
-        fullOrder: orderData,
-      });
-    }
-  }, [orderData]);
 
   if (isLoading) {
     return (

@@ -1,242 +1,303 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
 import { Product } from '@/features/products/services/product.service';
 
 interface HeroSectionProps {
   featuredProducts?: Product[];
 }
 
-const FALLBACK_STYLES = [
-  { name: 'Rose Blush', accent: '#DD2C6C', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600', slug: undefined },
-  { name: 'French Classic', accent: '#E8B4B8', image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=600', slug: undefined },
-  { name: 'Berry Dream', accent: '#C71585', image: 'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=600', slug: undefined },
-  { name: 'Nude Glow', accent: '#DEB887', image: 'https://images.unsplash.com/photo-1571290274554-6a2eaa771e5f?w=600', slug: undefined },
+const features = [
+  'Lasts 2–3 weeks',
+  'Applied in 2 minutes',
+  'Reusable 15+ times',
+  'No damage · No glue',
 ];
 
-const ACCENT_PALETTE = ['#DD2C6C', '#E8B4B8', '#C71585', '#DEB887'];
+// Five abstract nail shapes fanned like fingers — pure SVG, zero photos
+const NailArtComposition = ({ compact = false }: { compact?: boolean }) => {
+  const W = compact ? 320 : 480;
+  const H = compact ? 320 : 480;
+  const s = compact ? 0.67 : 1;
 
-const stats = [
-  { value: '200+', label: 'Designs' },
-  { value: '50K+', label: 'Customers' },
-  { value: '4.9★', label: 'Rating' },
-  { value: '15+', label: 'Reuses' },
-];
+  // Each nail: cx, cy at center-bottom of nail, rotation, opacity scale
+  const nails = [
+    { tx: 64 * s,  ty: 295 * s, r: -22, op: 0.60, sz: 0.82 },
+    { tx: 152 * s, ty: 262 * s, r: -10, op: 0.80, sz: 0.92 },
+    { tx: 240 * s, ty: 250 * s, r:   0, op: 1.00, sz: 1.00 },
+    { tx: 328 * s, ty: 262 * s, r:  10, op: 0.80, sz: 0.92 },
+    { tx: 416 * s, ty: 295 * s, r:  22, op: 0.60, sz: 0.82 },
+  ];
 
-export const HeroSection = ({ featuredProducts }: HeroSectionProps) => {
-  const [active, setActive] = useState(0);
-
-  const styles =
-    featuredProducts && featuredProducts.length >= 4
-      ? featuredProducts.slice(0, 4).map((p, i) => ({
-          name: p.name,
-          accent: ACCENT_PALETTE[i],
-          image: p.primaryImage,
-          slug: p.slug,
-        }))
-      : FALLBACK_STYLES;
-
-  const current = styles[active];
-
-  const MainImage = () => (
-    <div className="relative w-full aspect-[3/4] max-w-xs mx-auto lg:max-w-none">
-      {/* Glow behind image */}
-      <div
-        className="absolute inset-0 rounded-3xl blur-3xl opacity-30 transition-all duration-700 scale-90"
-        style={{ background: `radial-gradient(circle, ${current.accent}, transparent 70%)` }}
-      />
-      {/* Image frame */}
-      <div className="relative rounded-3xl overflow-hidden border border-white/10 h-full">
-        {current.slug ? (
-          <Link to={`/products/${current.slug}`} className="block h-full">
-            <img
-              key={active}
-              src={current.image}
-              alt={current.name}
-              className="w-full h-full object-cover transition-all duration-500"
-              loading="eager"
-            />
-          </Link>
-        ) : (
-          <img
-            key={active}
-            src={current.image}
-            alt={current.name}
-            className="w-full h-full object-cover transition-all duration-500"
-            loading="eager"
-          />
-        )}
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D]/60 via-transparent to-transparent pointer-events-none" />
-        {/* Product name badge */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full pointer-events-none">
-          <span className="text-white text-xs font-medium truncate max-w-[160px] block text-center">
-            {current.name}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
+  // Almond nail path centred at origin (tip up, base down)
+  // width ~58, height ~148 at scale 1
+  const nailPath = (sz: number) => {
+    const w = 29 * sz, h = 74 * sz;
+    return `M0,${-h} C${w * 0.55},${-h} ${w},${-h * 0.65} ${w},${-h * 0.15} C${w},${h * 0.45} ${w * 0.55},${h} 0,${h} C${-w * 0.55},${h} ${-w},${h * 0.45} ${-w},${-h * 0.15} C${-w},${-h * 0.65} ${-w * 0.55},${-h} 0,${-h} Z`;
+  };
 
   return (
-    <section
-      className="relative min-h-[100svh] bg-[#0D0D0D] overflow-hidden"
-      style={{
-        backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px)',
-        backgroundSize: '28px 28px',
-      }}
-    >
-      {/* Ambient glow */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#DD2C6C]/8 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#DD2C6C]/5 rounded-full blur-[100px] pointer-events-none" />
+    <div className="relative w-full h-full flex items-center justify-center select-none">
+      {/* Glow behind the composition */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          width: W * 0.72, height: H * 0.55,
+          top: '50%', left: '50%',
+          transform: 'translate(-50%, -48%)',
+          background: 'radial-gradient(ellipse, rgba(221,44,108,0.22) 0%, transparent 68%)',
+          filter: 'blur(32px)',
+        }}
+      />
 
-      {/* ── DESKTOP ── */}
-      <div className="hidden md:flex items-center min-h-[100svh] container mx-auto px-6">
-        <div className="grid grid-cols-2 gap-12 lg:gap-20 items-center w-full py-20">
+      <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} fill="none">
+        <defs>
+          <linearGradient id="ng1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#F9A8C9" />
+            <stop offset="55%" stopColor="#DD2C6C" />
+            <stop offset="100%" stopColor="#9B1B47" />
+          </linearGradient>
+          <linearGradient id="ng2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#F472B6" />
+            <stop offset="55%" stopColor="#C42460" />
+            <stop offset="100%" stopColor="#7E1040" />
+          </linearGradient>
+          <filter id="nailGlow">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
 
-          {/* Left — content */}
+        {nails.map((n, i) => {
+          const path = nailPath(n.sz * s);
+          const isCenter = i === 2;
+          return (
+            <g key={i} transform={`translate(${n.tx}, ${n.ty}) rotate(${n.r})`}>
+              {/* Fill */}
+              <path
+                d={path}
+                fill={isCenter ? 'url(#ng1)' : 'url(#ng2)'}
+                fillOpacity={n.op}
+                filter={isCenter ? 'url(#nailGlow)' : undefined}
+              />
+              {/* Border */}
+              <path
+                d={path}
+                fill="none"
+                stroke="#F472B6"
+                strokeWidth={isCenter ? 1.2 : 0.8}
+                strokeOpacity={n.op * 0.55}
+              />
+              {/* Highlight streak */}
+              <ellipse
+                cx={-5 * n.sz * s}
+                cy={-52 * n.sz * s}
+                rx={6 * n.sz * s}
+                ry={14 * n.sz * s}
+                fill="white"
+                fillOpacity={isCenter ? 0.18 : 0.1}
+                transform="rotate(-8)"
+              />
+              {/* Center nail subtle art lines */}
+              {isCenter && (
+                <>
+                  <path
+                    d={`M${-10 * s},${10 * s} C${-8 * s},${2 * s} ${8 * s},${2 * s} ${10 * s},${10 * s}`}
+                    stroke="white" strokeWidth="0.8" strokeOpacity="0.22" fill="none"
+                  />
+                  <path
+                    d={`M${-8 * s},${28 * s} C${-6 * s},${20 * s} ${6 * s},${20 * s} ${8 * s},${28 * s}`}
+                    stroke="white" strokeWidth="0.8" strokeOpacity="0.16" fill="none"
+                  />
+                </>
+              )}
+            </g>
+          );
+        })}
+
+        {/* Gold diamond accents */}
+        {[
+          { x: 148 * s, y: 148 * s },
+          { x: 332 * s, y: 148 * s },
+          { x: 240 * s, y: 108 * s },
+        ].map((d, i) => (
+          <polygon
+            key={i}
+            points={`${d.x},${d.y - 5 * s} ${d.x + 3 * s},${d.y} ${d.x},${d.y + 5 * s} ${d.x - 3 * s},${d.y}`}
+            fill="#D4A853"
+            fillOpacity={0.6}
+          />
+        ))}
+
+        {/* Subtle outer dots */}
+        <circle cx={40 * s} cy={180 * s} r={2.5 * s} fill="#DD2C6C" fillOpacity={0.22} />
+        <circle cx={440 * s} cy={300 * s} r={2 * s} fill="#DD2C6C" fillOpacity={0.18} />
+        <circle cx={240 * s} cy={400 * s} r={2.5 * s} fill="#DD2C6C" fillOpacity={0.15} />
+      </svg>
+    </div>
+  );
+};
+
+export const HeroSection = ({ featuredProducts: _ }: HeroSectionProps) => {
+  return (
+    <section className="relative min-h-[100svh] bg-[#0D0D0D] overflow-hidden">
+
+      {/* Dot grid background */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px)',
+          backgroundSize: '28px 28px',
+        }}
+      />
+
+      {/* Ambient glow — top right */}
+      <div
+        className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(221,44,108,0.08) 0%, transparent 70%)', filter: 'blur(80px)' }}
+      />
+      {/* Ambient glow — bottom left */}
+      <div
+        className="absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(221,44,108,0.05) 0%, transparent 70%)', filter: 'blur(80px)' }}
+      />
+
+      {/* ═══════ DESKTOP ═══════ */}
+      <div className="hidden md:flex items-center min-h-[100svh] container mx-auto px-8">
+        <div className="grid grid-cols-2 xl:grid-cols-[1.15fr_0.85fr] gap-12 xl:gap-20 items-center w-full py-24">
+
+          {/* Left — copy */}
           <div className="space-y-8">
+
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm">
-              <span className="w-2 h-2 rounded-full bg-[#DD2C6C] animate-pulse" />
-              <span className="text-white/70 font-medium">New drops every week</span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#DD2C6C]/30 bg-[#DD2C6C]/8">
+              <Sparkles className="h-3.5 w-3.5 text-[#DD2C6C]" />
+              <span className="text-[#DD2C6C] text-xs font-semibold uppercase tracking-[0.15em]">
+                Premium Press-On Nail Art
+              </span>
             </div>
 
-            {/* Headline */}
-            <div>
-              <h1 className="text-6xl xl:text-7xl font-black leading-[1.0] tracking-tight">
-                <span className="block text-white">Press.</span>
-                <span className="block text-[#DD2C6C]">Wear.</span>
-                <span className="block text-white">Obsess.</span>
-              </h1>
+            {/* Headline — solid / stroke / muted alternating */}
+            <h1 className="font-black uppercase leading-[0.9] tracking-tight">
+              <span className="block text-[76px] xl:text-[88px] text-white">Salon</span>
+              <span
+                className="block text-[76px] xl:text-[88px]"
+                style={{ WebkitTextStroke: '2.5px #DD2C6C', color: 'transparent' }}
+              >
+                Nails.
+              </span>
+              <span className="block text-[76px] xl:text-[88px] text-white/70">At Home.</span>
+            </h1>
+
+            {/* Tagline rule */}
+            <div className="flex items-center gap-3">
+              <span className="h-px w-8 bg-[#DD2C6C]/50 flex-shrink-0" />
+              <p className="text-white/40 text-xs uppercase tracking-[0.22em] font-medium">
+                Salon quality · Zero effort
+              </p>
             </div>
 
-            {/* Subtitle */}
-            <p className="text-white/50 text-lg leading-relaxed max-w-sm">
-              Salon-quality press-on nails that last 2–3 weeks. Reusable 15+ times. Applied in 2 minutes.
-            </p>
-
-            {/* Swatches */}
-            <div>
-              <p className="text-white/30 text-xs uppercase tracking-widest mb-3">Pick a style</p>
-              <div className="flex gap-3">
-                {styles.map((s, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActive(i)}
-                    className="relative rounded-2xl transition-all duration-300 overflow-hidden"
-                    style={{ width: 56, height: 56 }}
-                  >
-                    <img src={s.image} alt={s.name} className="w-full h-full object-cover" />
-                    <div
-                      className={`absolute inset-0 rounded-2xl border-2 transition-all duration-300 ${
-                        active === i ? 'border-[#DD2C6C]' : 'border-transparent hover:border-white/40'
-                      }`}
-                    />
-                    {active === i && (
-                      <div className="absolute inset-0 bg-[#DD2C6C]/20 rounded-2xl" />
-                    )}
-                  </button>
-                ))}
-              </div>
+            {/* Feature pills */}
+            <div className="flex flex-wrap gap-2">
+              {features.map((f) => (
+                <span
+                  key={f}
+                  className="text-[11px] font-medium px-3 py-1.5 rounded-full border border-white/10 text-white/50"
+                >
+                  {f}
+                </span>
+              ))}
             </div>
 
-            {/* CTA */}
-            <div className="flex items-center gap-4">
+            {/* CTAs */}
+            <div className="flex items-center gap-5 pt-1">
               <Button
                 size="lg"
-                className="group bg-[#DD2C6C] hover:bg-[#c42460] text-white px-8 py-6 rounded-full font-bold text-base shadow-lg shadow-[#DD2C6C]/30 hover:shadow-[#DD2C6C]/50 hover:scale-105 transition-all"
+                className="group bg-[#DD2C6C] hover:bg-[#c42460] text-white px-9 py-6 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg shadow-[#DD2C6C]/25 hover:shadow-[#DD2C6C]/45 hover:scale-105 transition-all duration-300"
                 asChild
               >
                 <Link to="/products">
-                  Shop Now
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  Shop Collection
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
               <Link
                 to="/tutorial"
-                className="text-white/40 text-sm hover:text-white/70 transition-colors flex items-center gap-1.5 group"
+                className="text-white/30 text-sm hover:text-white/65 transition-colors flex items-center gap-1.5 group uppercase tracking-wider"
               >
                 How it works
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
           </div>
 
-          {/* Right — image */}
-          <MainImage />
+          {/* Right — abstract nail shapes */}
+          <div className="relative h-[500px] xl:h-[560px] flex items-center justify-center">
+            <NailArtComposition />
+          </div>
         </div>
       </div>
 
-      {/* ── MOBILE ── */}
-      <div className="md:hidden flex flex-col min-h-[100svh] px-5 pt-8 pb-6">
+      {/* ═══════ MOBILE ═══════ */}
+      <div className="md:hidden flex flex-col min-h-[100svh] px-5 pt-10 pb-8">
+
         {/* Badge */}
-        <div className="flex justify-center mb-5">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#DD2C6C] animate-pulse" />
-            <span className="text-white/60 font-medium">New drops every week</span>
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#DD2C6C]/30 bg-[#DD2C6C]/8">
+            <Sparkles className="h-3 w-3 text-[#DD2C6C]" />
+            <span className="text-[#DD2C6C] text-xs font-semibold uppercase tracking-wider">Press-On Nail Art</span>
           </div>
         </div>
 
+        {/* Nail art composition — compact */}
+        <div className="flex justify-center mb-4" style={{ height: 220 }}>
+          <NailArtComposition compact />
+        </div>
+
         {/* Headline */}
-        <div className="text-center mb-6">
-          <h1 className="text-5xl font-black leading-[1.05] tracking-tight">
-            <span className="block text-white">Press.</span>
-            <span className="block text-[#DD2C6C]">Wear.</span>
-            <span className="block text-white">Obsess.</span>
-          </h1>
-        </div>
-
-        {/* Image */}
-        <div className="flex-1 flex items-center justify-center py-4">
-          <MainImage />
-        </div>
-
-        {/* Swatches */}
-        <div className="flex justify-center gap-3 mb-6">
-          {styles.map((s, i) => (
-            <button
-              key={i}
-              onClick={() => setActive(i)}
-              className="relative rounded-xl overflow-hidden transition-all duration-300"
-              style={{ width: 44, height: 44 }}
+        <div className="text-center mb-5">
+          <h1 className="font-black uppercase leading-[0.9] tracking-tight">
+            <span className="block text-[52px] text-white">Salon</span>
+            <span
+              className="block text-[52px]"
+              style={{ WebkitTextStroke: '2px #DD2C6C', color: 'transparent' }}
             >
-              <img src={s.image} alt={s.name} className="w-full h-full object-cover" />
-              <div
-                className={`absolute inset-0 rounded-xl border-2 transition-all ${
-                  active === i ? 'border-[#DD2C6C]' : 'border-transparent'
-                }`}
-              />
-            </button>
+              Nails.
+            </span>
+            <span className="block text-[52px] text-white/70">At Home.</span>
+          </h1>
+          <p className="text-white/35 text-xs mt-3 uppercase tracking-[0.18em]">
+            Salon quality · Zero effort
+          </p>
+        </div>
+
+        {/* Feature pills */}
+        <div className="flex flex-wrap justify-center gap-2 mb-6">
+          {features.map((f) => (
+            <span
+              key={f}
+              className="text-[11px] font-medium px-3 py-1.5 rounded-full border border-white/10 text-white/45"
+            >
+              {f}
+            </span>
           ))}
         </div>
 
         {/* CTA */}
         <Button
           size="lg"
-          className="w-full bg-[#DD2C6C] hover:bg-[#c42460] text-white rounded-full font-bold py-6 shadow-lg shadow-[#DD2C6C]/30"
+          className="w-full bg-[#DD2C6C] hover:bg-[#c42460] text-white rounded-full font-bold py-6 shadow-lg shadow-[#DD2C6C]/25 uppercase tracking-wider text-sm"
           asChild
         >
           <Link to="/products">
-            Shop Now <ArrowRight className="ml-2 h-5 w-5" />
+            Shop Collection <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </Button>
       </div>
 
-      {/* Stats bar — desktop only */}
-      <div className="hidden md:block absolute bottom-0 left-0 right-0 border-t border-white/10">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-4 divide-x divide-white/10">
-            {stats.map(({ value, label }) => (
-              <div key={label} className="flex items-center justify-center gap-3 py-4">
-                <span className="text-2xl font-black text-[#DD2C6C]">{value}</span>
-                <span className="text-white/40 text-sm">{label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
     </section>
   );
 };

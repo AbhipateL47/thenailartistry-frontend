@@ -12,7 +12,7 @@ export const Logo = ({ className = '', variant = 'dark' }: LogoProps) => {
 
   return (
     <Link to="/" className={`flex items-center shrink-0 ${className}`} aria-label="The Nail Artistry">
-      <img src={src} alt="The Nail Artistry" className="h-9 w-auto" />
+      <img src={src} alt="The Nail Artistry" className="h-14 md:h-12 w-auto" />
     </Link>
   );
 };

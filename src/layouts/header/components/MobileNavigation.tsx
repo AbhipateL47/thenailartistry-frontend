@@ -2,7 +2,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { Menu, X, ChevronRight, Search, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import debounce from 'lodash.debounce';
 import {
   Sheet,
@@ -49,9 +48,18 @@ export const MobileNavigation = ({
       const trimmedValue = value.trim();
       if (trimmedValue) {
         navigate(`/products?search=${encodeURIComponent(trimmedValue)}`);
+        setMobileMenuOpen(false);
       }
     }, 500)
   ).current;
+
+  // Cancel any pending debounce and reset input the moment the sidebar closes
+  useEffect(() => {
+    if (!mobileMenuOpen) {
+      debouncedNavigate.cancel();
+      setSearchValue('');
+    }
+  }, [mobileMenuOpen, debouncedNavigate]);
 
   useEffect(() => {
     return () => {
@@ -62,7 +70,7 @@ export const MobileNavigation = ({
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
-    debouncedNavigate(value);
+    if (value.trim()) debouncedNavigate(value);
   };
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -72,6 +80,7 @@ export const MobileNavigation = ({
       debouncedNavigate.cancel();
       navigate(`/products?search=${encodeURIComponent(trimmedValue)}`);
       setSearchValue('');
+      setMobileMenuOpen(false);
     }
   };
 
@@ -83,32 +92,20 @@ export const MobileNavigation = ({
   return (
     <div className="md:hidden">
       <div className="container mx-auto px-4">
-        <div className="flex items-center h-16 relative">
-          {/* Left: Menu + Logo */}
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-10 w-10 flex-shrink-0"
-              onClick={() => setMobileMenuOpen(true)}
-            >
-              <Menu className="h-6 w-6 text-white/70" />
-            </Button>
-            <Logo className="h-12" variant="dark" />
-          </div>
+        <div className="flex items-center justify-between h-16 relative">
+          {/* Left: Hamburger */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 flex-shrink-0"
+            onClick={() => setMobileMenuOpen(true)}
+          >
+            <Menu className="h-6 w-6 text-white/70" />
+          </Button>
 
-          {/* Center: Search */}
-          <div className="flex-1 flex justify-center px-4">
-            <form onSubmit={handleSearchSubmit} className="relative w-full max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/30 pointer-events-none" />
-              <Input
-                type="search"
-                placeholder="I'm looking for..."
-                value={searchValue}
-                onChange={handleSearchChange}
-                className="w-full pl-9 pr-4 h-9 rounded-full bg-white/10 border-white/20 text-white placeholder:text-white/30 text-sm focus:border-[#DD2C6C] focus:ring-[#DD2C6C]"
-              />
-            </form>
+          {/* Center: Logo (absolute) */}
+          <div className="absolute left-1/2 -translate-x-1/2">
+            <Logo variant="dark" />
           </div>
 
           {/* Right: Cart */}
@@ -135,6 +132,20 @@ export const MobileNavigation = ({
                 <X className="h-5 w-5" />
               </Button>
             </SheetClose>
+          </div>
+
+          {/* Search */}
+          <div className="px-4 py-3 bg-[#0D0D0D] border-b border-white/8">
+            <form onSubmit={handleSearchSubmit} className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30 pointer-events-none" />
+              <input
+                type="search"
+                placeholder="Search products..."
+                value={searchValue}
+                onChange={handleSearchChange}
+                className="w-full pl-9 pr-4 h-10 rounded-full bg-[#1A1A1A] border border-white/12 text-white placeholder:text-white/30 text-sm outline-none focus:border-[#DD2C6C] transition-colors"
+              />
+            </form>
           </div>
 
           {/* Navigation Links */}

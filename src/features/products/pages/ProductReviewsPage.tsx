@@ -739,7 +739,7 @@ export default function ProductReviewsPage() {
                     )}
 
                     {/* Helpfulness */}
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                    <div className="flex items-center justify-between pt-3 border-t border-white/8">
                       <Button
                         variant="ghost"
                         size="sm"
@@ -748,7 +748,7 @@ export default function ProductReviewsPage() {
                           "h-8 px-3 text-sm transition-colors",
                           review.isHelpful
                             ? "text-[#DD2C6C] hover:text-[#DD2C6C] hover:bg-[#DD2C6C]/10 bg-[#DD2C6C]/5"
-                            : "text-white/45 hover:text-white hover:bg-gray-50"
+                            : "text-white/40 hover:text-white hover:bg-white/10"
                         )}
                         aria-label={review.isHelpful ? "Remove helpful vote" : "Mark review as helpful"}
                         aria-pressed={review.isHelpful}

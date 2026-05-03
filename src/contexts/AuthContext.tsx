@@ -27,25 +27,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // This is the ONLY way to check auth - cookies are httpOnly and not accessible via JS
   useEffect(() => {
     const initAuth = async () => {
-      console.log('🔐 AuthContext: Initializing auth check...');
       try {
         // Call GET /v1/auth/me - if cookie exists, it will work
         // Browser automatically sends httpOnly cookie with request
         const response = await authService.getMe();
         if (response.success && response.data?.user) {
-          console.log('✅ AuthContext: User authenticated', response.data.user.email || response.data.user.phone);
           setUser(response.data.user);
         } else {
-          console.log('❌ AuthContext: No user found in response');
           setUser(null);
         }
-      } catch (error: any) {
-        // 401 = no valid cookie = user is logged out
-        // This is expected and fine
-        console.log('❌ AuthContext: Auth check failed (401 - no valid cookie)');
+      } catch {
         setUser(null);
       } finally {
-        console.log('✅ AuthContext: Auth check complete');
         setIsLoading(false);
       }
     };

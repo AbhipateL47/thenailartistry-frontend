@@ -51,10 +51,6 @@ const Profile = () => {
   // This ensures hooks are called in the same order on every render
   usePageTitle(pageTitle);
   
-  // Log page load
-  useEffect(() => {
-    console.log(`📄 Profile Page Loaded - Tab: ${tab || 'overview'}, Path: ${location.pathname}`);
-  }, [tab, location.pathname]);
   
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -119,23 +115,15 @@ const Profile = () => {
   // Redirect to login only after auth check is complete
   useEffect(() => {
     // Wait for auth to finish loading
-    if (isLoading) {
-      console.log('⏳ Profile: Waiting for auth check...');
-      return;
-    }
-    
-    // Only redirect if we're sure user is not authenticated
+    if (isLoading) return;
+
     if (!isAuthenticated) {
-      console.log('🔒 Profile: User not authenticated, redirecting to login');
       navigate('/login', { state: { from: { pathname: location.pathname } } });
-    } else {
-      console.log('✅ Profile: User authenticated, rendering profile page');
     }
   }, [isLoading, isAuthenticated, navigate, location.pathname]);
 
   // Show loading state while checking auth
   if (isLoading) {
-    console.log('⏳ Profile: Loading auth state...');
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#fdf2f8] to-white">
         <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -152,7 +140,6 @@ const Profile = () => {
 
   // Show loading skeleton while redirecting (prevents white screen)
   if (!isAuthenticated || !user) {
-    console.log('🚫 Profile: Not authenticated, showing loading state...');
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#fdf2f8] to-white">
         <div className="container mx-auto px-4 py-8 max-w-6xl">

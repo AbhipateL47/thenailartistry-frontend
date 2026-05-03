@@ -26,6 +26,8 @@ export const Header = () => {
   const [isAtTop, setIsAtTop] = useState(true);
   const [isScrollingDown, setIsScrollingDown] = useState(false);
   const lastScrollY = useRef(0);
+  const scrollDirection = useRef<'up' | 'down' | 'none'>('none');
+  const scrollAccumulator = useRef(0);
 
   const handleMarqueeDismiss = () => {
     setIsMarqueeDismissed(true);
@@ -33,27 +35,53 @@ export const Header = () => {
 
   // Track scroll behavior
   useEffect(() => {
-    if (MARQUEE_BEHAVIOR === 0) return; // No scroll tracking needed
+    if (MARQUEE_BEHAVIOR === 0) return;
 
-    const SCROLL_THRESHOLD = 10;
-    
+    // How many px must travel in one direction before state changes.
+    // Asymmetric: harder to hide, easier to reveal — prevents flicker.
+    const HIDE_AFTER = 60;
+    const SHOW_AFTER = 30;
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       if (MARQUEE_BEHAVIOR === 2) {
-        // Mode 2: Only at top
         setIsAtTop(currentScrollY < 10);
-      } else if (MARQUEE_BEHAVIOR === 1) {
-        // Mode 1: Scroll direction based
-        const scrollDiff = currentScrollY - lastScrollY.current;
-        
-        // Only update if scrolled enough to prevent shivering
-        if (scrollDiff > SCROLL_THRESHOLD && currentScrollY > 50) {
+        lastScrollY.current = currentScrollY;
+        return;
+      }
+
+      // Mode 1: direction-based with hysteresis
+      const delta = currentScrollY - lastScrollY.current;
+      lastScrollY.current = currentScrollY;
+
+      // Always reveal when back at the very top
+      if (currentScrollY <= 10) {
+        scrollDirection.current = 'none';
+        scrollAccumulator.current = 0;
+        setIsScrollingDown(false);
+        return;
+      }
+
+      if (delta > 0) {
+        // Moving down — reset accumulator if direction just changed
+        if (scrollDirection.current !== 'down') {
+          scrollDirection.current = 'down';
+          scrollAccumulator.current = 0;
+        }
+        scrollAccumulator.current += delta;
+        if (scrollAccumulator.current >= HIDE_AFTER) {
           setIsScrollingDown(true);
-          lastScrollY.current = currentScrollY;
-        } else if (scrollDiff < -SCROLL_THRESHOLD) {
+        }
+      } else if (delta < 0) {
+        // Moving up — reset accumulator if direction just changed
+        if (scrollDirection.current !== 'up') {
+          scrollDirection.current = 'up';
+          scrollAccumulator.current = 0;
+        }
+        scrollAccumulator.current += Math.abs(delta);
+        if (scrollAccumulator.current >= SHOW_AFTER) {
           setIsScrollingDown(false);
-          lastScrollY.current = currentScrollY;
         }
       }
     };

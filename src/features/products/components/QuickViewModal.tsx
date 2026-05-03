@@ -17,13 +17,11 @@ interface QuickViewModalProps {
 
 export const QuickViewModal = ({ product, onClose }: QuickViewModalProps) => {
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedVariant, setSelectedVariant] = useState<string>('Both Hands');
   const { addItem, openDrawer } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
 
   useEffect(() => {
     setSelectedImage(0);
-    setSelectedVariant('Both Hands');
   }, [product?._id]);
 
   if (!product) return null;
@@ -49,7 +47,6 @@ export const QuickViewModal = ({ product, onClose }: QuickViewModalProps) => {
       price: finalPrice,
       image: product.primaryImage,
       quantity: 1,
-      variant: selectedVariant,
     });
     openDrawer();
     onClose();
@@ -141,29 +138,6 @@ export const QuickViewModal = ({ product, onClose }: QuickViewModalProps) => {
               ) : (
                 <span className="text-2xl font-bold">{formatCurrency(basePrice)}</span>
               )}
-            </div>
-
-            {/* Variant Selector */}
-            <div>
-              <p className="text-sm font-medium mb-2">Type: {selectedVariant}</p>
-              <div className="flex gap-2">
-                {['Both Hands', 'Single Hand'].map((variant) => (
-                  <Button
-                    key={variant}
-                    variant={selectedVariant === variant ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setSelectedVariant(variant)}
-                    className={cn(
-                      'text-xs px-4',
-                      selectedVariant === variant
-                        ? 'bg-primary text-white'
-                        : 'border-2 hover:bg-gray-50'
-                    )}
-                  >
-                    {variant}
-                  </Button>
-                ))}
-              </div>
             </div>
 
             {/* CTA Buttons */}
