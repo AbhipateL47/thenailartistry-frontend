@@ -8,7 +8,7 @@ export const uploadService = {
     const formData = new FormData();
     formData.append('image', file);
     
-    const response = await apiClient.post('/v1/upload/profile', formData, {
+    const response = await apiClient.post('/api/v1/upload/profile', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -23,7 +23,7 @@ export const uploadService = {
   },
 
   deleteProfileImage: async (): Promise<void> => {
-    await apiClient.delete('/v1/upload/profile');
+    await apiClient.delete('/api/v1/upload/profile');
   },
 
   uploadProductImages: async (files: File[]): Promise<{ imageUrls: string[] }> => {
@@ -32,7 +32,7 @@ export const uploadService = {
       formData.append('images', file);
     });
     
-    const response = await apiClient.post('/v1/upload/product', formData, {
+    const response = await apiClient.post('/api/v1/upload/product', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -44,7 +44,7 @@ export const uploadService = {
     const formData = new FormData();
     formData.append('image', file);
     
-    const response = await apiClient.post('/v1/upload/review', formData, {
+    const response = await apiClient.post('/api/v1/upload/review', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

@@ -39,7 +39,7 @@ export const saleService = {
   ): Promise<Sale[]> {
     try {
       const response = await apiClient.get<SalesResponse>(
-        `/v1/sales/active?placement=${placement}`,
+        `/api/v1/sales/active?placement=${placement}`,
         { signal }
       );
       return response.data.data || [];

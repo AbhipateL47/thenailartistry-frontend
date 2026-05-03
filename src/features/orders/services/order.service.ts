@@ -97,14 +97,14 @@ export interface Order {
 
 export const orderService = {
   async createOrderIntent(orderData: OrderIntentRequest): Promise<OrderIntentResponse> {
-    const response = await apiClient.post<OrderIntentResponse>('/v1/orders/intent', orderData);
+    const response = await apiClient.post<OrderIntentResponse>('/api/v1/orders/intent', orderData);
     return response.data;
   },
 
   async getOrderByNumber(orderNumber: string, email?: string, signal?: AbortSignal): Promise<Order> {
     const params = email ? { email } : {};
     const response = await apiClient.get<{ success: boolean; data: Order }>(
-      `/v1/orders/${orderNumber}`,
+      `/api/v1/orders/${orderNumber}`,
       { params }
     );
     return response.data.data;
@@ -114,7 +114,7 @@ export const orderService = {
     const response = await apiClient.get<{
       success: boolean;
       data: Order;
-    }>(`/v1/orders/track/${orderNumber}`);
+    }>(`/api/v1/orders/track/${orderNumber}`);
     return response.data.data;
   },
 
@@ -129,7 +129,7 @@ export const orderService = {
         cancelledAt: string;
         refundStatus?: string;
       };
-    }>(`/v1/user/orders/${orderId}/cancel`);
+    }>(`/api/v1/user/orders/${orderId}/cancel`);
     return response.data;
   },
 

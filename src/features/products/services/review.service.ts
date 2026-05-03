@@ -69,7 +69,7 @@ export const reviewService = {
     if (searchQuery && searchQuery.trim()) params.search = searchQuery.trim();
     if (rating && rating >= 1 && rating <= 5) params.rating = rating;
     const response = await apiClient.get<ReviewsResponse>(
-      `/v1/reviews/product/${productId}`,
+      `/api/v1/reviews/product/${productId}`,
       { params, signal }
     );
     return response.data;
@@ -78,7 +78,7 @@ export const reviewService = {
   // Get single review
   async getReview(reviewId: string): Promise<{ success: boolean; data: Review }> {
     const response = await apiClient.get<{ success: boolean; data: Review }>(
-      `/v1/reviews/${reviewId}`
+      `/api/v1/reviews/${reviewId}`
     );
     return response.data;
   },
@@ -86,7 +86,7 @@ export const reviewService = {
   // Create a new review (verified purchase)
   async createReview(data: CreateReviewRequest): Promise<{ success: boolean; message: string }> {
     const response = await apiClient.post<{ success: boolean; message: string }>(
-      '/v1/reviews',
+      '/api/v1/reviews',
       data
     );
     return response.data;
@@ -98,7 +98,7 @@ export const reviewService = {
     data: UpdateReviewRequest
   ): Promise<{ success: boolean; message: string; data: Review }> {
     const response = await apiClient.put<{ success: boolean; message: string; data: Review }>(
-      `/v1/reviews/${reviewId}`,
+      `/api/v1/reviews/${reviewId}`,
       data
     );
     return response.data;
@@ -107,7 +107,7 @@ export const reviewService = {
   // Delete a review
   async deleteReview(reviewId: string): Promise<{ success: boolean; message: string }> {
     const response = await apiClient.delete<{ success: boolean; message: string }>(
-      `/v1/reviews/${reviewId}`
+      `/api/v1/reviews/${reviewId}`
     );
     return response.data;
   },
@@ -115,7 +115,7 @@ export const reviewService = {
   // Toggle helpful vote for a review
   async markHelpful(reviewId: string): Promise<{ success: boolean; data: { helpfulCount: number; isHelpful: boolean } }> {
     const response = await apiClient.post<{ success: boolean; data: { helpfulCount: number; isHelpful: boolean } }>(
-      `/v1/reviews/${reviewId}/helpful`
+      `/api/v1/reviews/${reviewId}/helpful`
     );
     return response.data;
   },
@@ -123,7 +123,7 @@ export const reviewService = {
   // Get user's reviews
   async getMyReviews(page: number = 1, limit: number = 10): Promise<ReviewsResponse> {
     const response = await apiClient.get<ReviewsResponse>(
-      '/v1/reviews/user/my-reviews',
+      '/api/v1/reviews/user/my-reviews',
       {
         params: { page, limit },
       }

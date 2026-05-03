@@ -65,7 +65,7 @@ export const paymentService = {
    * Create Razorpay order
    */
   async createOrder(data: CreateRazorpayOrderRequest): Promise<CreateRazorpayOrderResponse> {
-    const response = await apiClient.post<CreateRazorpayOrderResponse>('/v1/payments/create-order', data);
+    const response = await apiClient.post<CreateRazorpayOrderResponse>('/api/v1/payments/create-order', data);
     return response.data;
   },
 
@@ -73,7 +73,7 @@ export const paymentService = {
    * Verify Razorpay payment
    */
   async verifyPayment(data: VerifyPaymentRequest): Promise<VerifyPaymentResponse> {
-    const response = await apiClient.post<VerifyPaymentResponse>('/v1/payments/verify', data);
+    const response = await apiClient.post<VerifyPaymentResponse>('/api/v1/payments/verify', data);
     return response.data;
   },
 
@@ -82,7 +82,7 @@ export const paymentService = {
    */
   async getPaymentStatus(idempotencyKey: string): Promise<PaymentStatusResponse> {
     const response = await apiClient.get<PaymentStatusResponse>(
-      `/v1/payments/status/${idempotencyKey}`
+      `/api/v1/payments/status/${idempotencyKey}`
     );
     return response.data;
   },

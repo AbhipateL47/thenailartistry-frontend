@@ -112,18 +112,18 @@ export const productService = {
       }
     }
 
-    const response = await apiClient.get<ProductsResponse>(`/v1/products?${queryParams.toString()}`, { signal });
+    const response = await apiClient.get<ProductsResponse>(`/api/v1/products?${queryParams.toString()}`, { signal });
     return response.data;
   },
 
   async getProduct(idOrSlug: string, signal?: AbortSignal): Promise<Product> {
-    const response = await apiClient.get<ProductResponse>(`/v1/products/${idOrSlug}`, { signal });
+    const response = await apiClient.get<ProductResponse>(`/api/v1/products/${idOrSlug}`, { signal });
     return response.data.data;
   },
 
   async getFeaturedProducts(limit?: number, signal?: AbortSignal): Promise<Product[]> {
     const response = await apiClient.get<{ success: boolean; data: Product[] }>(
-      `/v1/products/featured${limit ? `?limit=${limit}` : ''}`,
+      `/api/v1/products/featured${limit ? `?limit=${limit}` : ''}`,
       { signal }
     );
     return response.data.data;
@@ -131,7 +131,7 @@ export const productService = {
 
   async getSaleProducts(limit?: number, signal?: AbortSignal): Promise<Product[]> {
     const response = await apiClient.get<{ success: boolean; data: Product[] }>(
-      `/v1/products/sale${limit ? `?limit=${limit}` : ''}`,
+      `/api/v1/products/sale${limit ? `?limit=${limit}` : ''}`,
       { signal }
     );
     return response.data.data;
@@ -158,7 +158,7 @@ export const productService = {
   // Get product attributes for filters
   async getProductAttributes(signal?: AbortSignal): Promise<ProductAttribute[]> {
     const response = await apiClient.get<{ success: boolean; data: ProductAttribute[] }>(
-      '/v1/product-attributes',
+      '/api/v1/product-attributes',
       { signal }
     );
     return response.data.data;
@@ -167,7 +167,7 @@ export const productService = {
   // Get product recommendations (You May Also Like)
   async getRecommendations(productId: string, limit?: number, signal?: AbortSignal): Promise<Product[]> {
     const response = await apiClient.get<{ success: boolean; data: Product[] }>(
-      `/v1/products/${productId}/recommendations${limit ? `?limit=${limit}` : ''}`,
+      `/api/v1/products/${productId}/recommendations${limit ? `?limit=${limit}` : ''}`,
       { signal }
     );
     return response.data.data;

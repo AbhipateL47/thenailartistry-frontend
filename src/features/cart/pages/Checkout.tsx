@@ -229,7 +229,7 @@ export default function Checkout() {
     try {
       // Always send original subtotal (never discounted) for minCartValue validation
       // Backend will calculate discount on original subtotal
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://api.thenailartistry.store'}/v1/coupons/validate`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://api.thenailartistry.store'}/api/v1/coupons/validate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

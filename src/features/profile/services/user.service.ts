@@ -72,38 +72,38 @@ export interface UserProfile {
 export const userService = {
   // Profile
   async getProfile(): Promise<UserProfile> {
-    const response = await apiClient.get('/v1/user/profile');
+    const response = await apiClient.get('/api/v1/user/profile');
     return response.data.data;
   },
 
   async updateProfile(data: { name?: string; phone?: string; email?: string }): Promise<UserProfile> {
-    const response = await apiClient.put('/v1/user/profile', data);
+    const response = await apiClient.put('/api/v1/user/profile', data);
     return response.data.data;
   },
 
   // Addresses
   async getAddresses(): Promise<Address[]> {
-    const response = await apiClient.get('/v1/user/addresses');
+    const response = await apiClient.get('/api/v1/user/addresses');
     return response.data.data;
   },
 
   async addAddress(data: Omit<Address, '_id'>): Promise<Address> {
-    const response = await apiClient.post('/v1/user/addresses', data);
+    const response = await apiClient.post('/api/v1/user/addresses', data);
     return response.data.data;
   },
 
   async updateAddress(addressId: string, data: Partial<Address>): Promise<Address> {
-    const response = await apiClient.put(`/v1/user/addresses/${addressId}`, data);
+    const response = await apiClient.put(`/api/v1/user/addresses/${addressId}`, data);
     return response.data.data;
   },
 
   async deleteAddress(addressId: string): Promise<void> {
-    await apiClient.delete(`/v1/user/addresses/${addressId}`);
+    await apiClient.delete(`/api/v1/user/addresses/${addressId}`);
   },
 
   // Orders
   async getOrders(page: number = 1, limit: number = 5): Promise<{ data: Order[]; pagination: { page: number; limit: number; total: number; pages: number; hasMore: boolean } }> {
-    const response = await apiClient.get('/v1/user/orders', {
+    const response = await apiClient.get('/api/v1/user/orders', {
       params: { page, limit },
     });
     return {
@@ -113,23 +113,23 @@ export const userService = {
   },
 
   async getOrder(orderId: string): Promise<Order> {
-    const response = await apiClient.get(`/v1/user/orders/${orderId}`);
+    const response = await apiClient.get(`/api/v1/user/orders/${orderId}`);
     return response.data.data;
   },
 
   // Notifications
   async getNotificationPreferences(): Promise<NotificationPreferences> {
-    const response = await apiClient.get('/v1/user/notifications');
+    const response = await apiClient.get('/api/v1/user/notifications');
     return response.data.data;
   },
 
   async updateNotificationPreferences(prefs: Partial<NotificationPreferences>): Promise<NotificationPreferences> {
-    const response = await apiClient.put('/v1/user/notifications', prefs);
+    const response = await apiClient.put('/api/v1/user/notifications', prefs);
     return response.data.data;
   },
 
   // Password (using auth endpoint)
   async changePassword(data: { currentPassword: string; newPassword: string }): Promise<void> {
-    await apiClient.put('/v1/auth/password', data);
+    await apiClient.put('/api/v1/auth/password', data);
   },
 };

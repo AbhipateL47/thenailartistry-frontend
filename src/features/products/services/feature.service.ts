@@ -18,7 +18,7 @@ interface FeaturesResponse {
 export const featureService = {
   // Get all active features
   getFeatures: async (): Promise<Feature[]> => {
-    const response = await apiClient.get<FeaturesResponse>('/v1/features');
+    const response = await apiClient.get<FeaturesResponse>('/api/v1/features');
     return response.data.data;
   },
 };

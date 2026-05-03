@@ -25,14 +25,14 @@ export interface WishlistActionResponse {
 export const wishlistService = {
   // Get user's wishlist
   async getWishlist(): Promise<Product[]> {
-    const response = await apiClient.get<WishlistResponse>('/v1/user/wishlist');
+    const response = await apiClient.get<WishlistResponse>('/api/v1/user/wishlist');
     return response.data.data;
   },
 
   // Add product to wishlist
   async addToWishlist(productId: string): Promise<WishlistActionResponse> {
     const response = await apiClient.post<WishlistActionResponse>(
-      `/v1/user/wishlist/${productId}`
+      `/api/v1/user/wishlist/${productId}`
     );
     return response.data;
   },
@@ -40,7 +40,7 @@ export const wishlistService = {
   // Remove product from wishlist
   async removeFromWishlist(productId: string): Promise<WishlistActionResponse> {
     const response = await apiClient.delete<WishlistActionResponse>(
-      `/v1/user/wishlist/${productId}`
+      `/api/v1/user/wishlist/${productId}`
     );
     return response.data;
   },
@@ -48,14 +48,14 @@ export const wishlistService = {
   // Toggle product in wishlist
   async toggleWishlist(productId: string): Promise<WishlistToggleResponse> {
     const response = await apiClient.patch<WishlistToggleResponse>(
-      `/v1/user/wishlist/${productId}`
+      `/api/v1/user/wishlist/${productId}`
     );
     return response.data;
   },
 
   // Clear wishlist
   async clearWishlist(): Promise<void> {
-    await apiClient.delete('/v1/user/wishlist');
+    await apiClient.delete('/api/v1/user/wishlist');
   },
 };
 

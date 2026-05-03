@@ -18,7 +18,7 @@ export const announcementService = {
    */
   async getAnnouncements(): Promise<Announcement[]> {
     try {
-      const response = await apiClient.get<AnnouncementsResponse>('/v1/announcements');
+      const response = await apiClient.get<AnnouncementsResponse>('/api/v1/announcements');
       return response.data.announcements || [];
     } catch (error) {
       console.error('Error fetching announcements:', error);
