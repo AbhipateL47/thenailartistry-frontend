@@ -15,22 +15,20 @@ const features = [
 ];
 
 // Five abstract nail shapes fanned like fingers — pure SVG, zero photos
+// Both desktop and mobile instances coexist in the DOM (one CSS-hidden), so
+// gradient/filter IDs must be unique per instance to avoid cross-SVG reference
+// collisions that cause fills to resolve as transparent.
 const NailArtComposition = ({ compact = false }: { compact?: boolean }) => {
-  const W = compact ? 320 : 480;
-  const H = compact ? 320 : 480;
-  const s = compact ? 0.67 : 1;
+  const p = compact ? 'cm' : 'dk'; // unique ID prefix per instance
 
-  // Each nail: cx, cy at center-bottom of nail, rotation, opacity scale
   const nails = [
-    { tx: 64 * s,  ty: 295 * s, r: -22, op: 0.60, sz: 0.82 },
-    { tx: 152 * s, ty: 262 * s, r: -10, op: 0.80, sz: 0.92 },
-    { tx: 240 * s, ty: 250 * s, r:   0, op: 1.00, sz: 1.00 },
-    { tx: 328 * s, ty: 262 * s, r:  10, op: 0.80, sz: 0.92 },
-    { tx: 416 * s, ty: 295 * s, r:  22, op: 0.60, sz: 0.82 },
+    { tx: 64,  ty: 295, r: -22, op: 0.60, sz: 0.82 },
+    { tx: 152, ty: 262, r: -10, op: 0.80, sz: 0.92 },
+    { tx: 240, ty: 250, r:   0, op: 1.00, sz: 1.00 },
+    { tx: 328, ty: 262, r:  10, op: 0.80, sz: 0.92 },
+    { tx: 416, ty: 295, r:  22, op: 0.60, sz: 0.82 },
   ];
 
-  // Almond nail path centred at origin (tip up, base down)
-  // width ~58, height ~148 at scale 1
   const nailPath = (sz: number) => {
     const w = 29 * sz, h = 74 * sz;
     return `M0,${-h} C${w * 0.55},${-h} ${w},${-h * 0.65} ${w},${-h * 0.15} C${w},${h * 0.45} ${w * 0.55},${h} 0,${h} C${-w * 0.55},${h} ${-w},${h * 0.45} ${-w},${-h * 0.15} C${-w},${-h * 0.65} ${-w * 0.55},${-h} 0,${-h} Z`;
@@ -42,7 +40,7 @@ const NailArtComposition = ({ compact = false }: { compact?: boolean }) => {
       <div
         className="absolute pointer-events-none"
         style={{
-          width: W * 0.72, height: H * 0.55,
+          width: '72%', height: '55%',
           top: '50%', left: '50%',
           transform: 'translate(-50%, -48%)',
           background: 'radial-gradient(ellipse, rgba(221,44,108,0.22) 0%, transparent 68%)',
@@ -50,19 +48,20 @@ const NailArtComposition = ({ compact = false }: { compact?: boolean }) => {
         }}
       />
 
-      <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} fill="none">
+      {/* viewBox fixed at 480×480; width/height 100% so the container controls size */}
+      <svg viewBox="0 0 480 480" width="100%" height="100%" fill="none">
         <defs>
-          <linearGradient id="ng1" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id={`${p}-ng1`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#F9A8C9" />
             <stop offset="55%" stopColor="#DD2C6C" />
             <stop offset="100%" stopColor="#9B1B47" />
           </linearGradient>
-          <linearGradient id="ng2" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id={`${p}-ng2`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#F472B6" />
             <stop offset="55%" stopColor="#C42460" />
             <stop offset="100%" stopColor="#7E1040" />
           </linearGradient>
-          <filter id="nailGlow">
+          <filter id={`${p}-nailGlow`}>
             <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
@@ -72,18 +71,16 @@ const NailArtComposition = ({ compact = false }: { compact?: boolean }) => {
         </defs>
 
         {nails.map((n, i) => {
-          const path = nailPath(n.sz * s);
+          const path = nailPath(n.sz);
           const isCenter = i === 2;
           return (
             <g key={i} transform={`translate(${n.tx}, ${n.ty}) rotate(${n.r})`}>
-              {/* Fill */}
               <path
                 d={path}
-                fill={isCenter ? 'url(#ng1)' : 'url(#ng2)'}
+                fill={isCenter ? `url(#${p}-ng1)` : `url(#${p}-ng2)`}
                 fillOpacity={n.op}
-                filter={isCenter ? 'url(#nailGlow)' : undefined}
+                filter={isCenter ? `url(#${p}-nailGlow)` : undefined}
               />
-              {/* Border */}
               <path
                 d={path}
                 fill="none"
@@ -91,25 +88,23 @@ const NailArtComposition = ({ compact = false }: { compact?: boolean }) => {
                 strokeWidth={isCenter ? 1.2 : 0.8}
                 strokeOpacity={n.op * 0.55}
               />
-              {/* Highlight streak */}
               <ellipse
-                cx={-5 * n.sz * s}
-                cy={-52 * n.sz * s}
-                rx={6 * n.sz * s}
-                ry={14 * n.sz * s}
+                cx={-5 * n.sz}
+                cy={-52 * n.sz}
+                rx={6 * n.sz}
+                ry={14 * n.sz}
                 fill="white"
                 fillOpacity={isCenter ? 0.18 : 0.1}
                 transform="rotate(-8)"
               />
-              {/* Center nail subtle art lines */}
               {isCenter && (
                 <>
                   <path
-                    d={`M${-10 * s},${10 * s} C${-8 * s},${2 * s} ${8 * s},${2 * s} ${10 * s},${10 * s}`}
+                    d="M-10,10 C-8,2 8,2 10,10"
                     stroke="white" strokeWidth="0.8" strokeOpacity="0.22" fill="none"
                   />
                   <path
-                    d={`M${-8 * s},${28 * s} C${-6 * s},${20 * s} ${6 * s},${20 * s} ${8 * s},${28 * s}`}
+                    d="M-8,28 C-6,20 6,20 8,28"
                     stroke="white" strokeWidth="0.8" strokeOpacity="0.16" fill="none"
                   />
                 </>
@@ -118,24 +113,22 @@ const NailArtComposition = ({ compact = false }: { compact?: boolean }) => {
           );
         })}
 
-        {/* Gold diamond accents */}
         {[
-          { x: 148 * s, y: 148 * s },
-          { x: 332 * s, y: 148 * s },
-          { x: 240 * s, y: 108 * s },
+          { x: 148, y: 148 },
+          { x: 332, y: 148 },
+          { x: 240, y: 108 },
         ].map((d, i) => (
           <polygon
             key={i}
-            points={`${d.x},${d.y - 5 * s} ${d.x + 3 * s},${d.y} ${d.x},${d.y + 5 * s} ${d.x - 3 * s},${d.y}`}
+            points={`${d.x},${d.y - 5} ${d.x + 3},${d.y} ${d.x},${d.y + 5} ${d.x - 3},${d.y}`}
             fill="#D4A853"
             fillOpacity={0.6}
           />
         ))}
 
-        {/* Subtle outer dots */}
-        <circle cx={40 * s} cy={180 * s} r={2.5 * s} fill="#DD2C6C" fillOpacity={0.22} />
-        <circle cx={440 * s} cy={300 * s} r={2 * s} fill="#DD2C6C" fillOpacity={0.18} />
-        <circle cx={240 * s} cy={400 * s} r={2.5 * s} fill="#DD2C6C" fillOpacity={0.15} />
+        <circle cx={40}  cy={180} r={2.5} fill="#DD2C6C" fillOpacity={0.22} />
+        <circle cx={440} cy={300} r={2}   fill="#DD2C6C" fillOpacity={0.18} />
+        <circle cx={240} cy={400} r={2.5} fill="#DD2C6C" fillOpacity={0.15} />
       </svg>
     </div>
   );
@@ -253,7 +246,7 @@ export const HeroSection = ({ featuredProducts: _ }: HeroSectionProps) => {
         </div>
 
         {/* Nail art composition — compact */}
-        <div className="flex justify-center mb-4" style={{ height: 220 }}>
+        <div className="flex justify-center mb-4" style={{ height: 280 }}>
           <NailArtComposition compact />
         </div>
 

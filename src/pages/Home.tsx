@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from 'react';
-import { HeroSection } from '@/features/home/components/HeroSectionV5';
+import { HeroSection } from '@/features/home/components/HeroSection';
 import { SaleBannerSection } from '@/features/home/components/SaleBannerSection';
 import { FeaturesSection } from '@/features/home/components/FeaturesSection';
 import { categories } from '@/features/home/constants/homeData';
