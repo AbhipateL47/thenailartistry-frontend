@@ -35,6 +35,7 @@ import NotFound from "./pages/NotFound";
 import ShippingAndReturn from "./pages/ShippingAndReturn";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import { NewsletterUnsubscribe } from "./pages/NewsletterUnsubscribe";
 
 const queryClient = new QueryClient();
 
@@ -48,7 +49,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
     '/products', '/cart', '/checkout', '/contact', '/tutorial', '/about',
     '/shipping', '/shipping-and-returns', '/terms', '/terms-and-conditions',
     '/privacy', '/privacy-policy', '/profile', '/wishlist',
-    '/order-confirmation', '/orders', '/reviews', '/'
+    '/order-confirmation', '/orders', '/reviews', '/newsletter', '/'
   ];
   
   // Check if current pathname matches any known route pattern
@@ -117,6 +118,7 @@ const App = () => (
                     <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
